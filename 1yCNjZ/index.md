@@ -2,6 +2,10 @@
 
 ### 祝・上田電鉄別所線復旧
 
+いらっしゃいませ。あなたは<img src="https://ss1.xrea.com/shioiri.s1001.xrea.com/x/cgi-bin/npc/npc.cgi?i=/virtual/shioiri/npc.idx&L=1yCNjZ&p=on&d=1000,0">人めのお客様です。
+
+キリ番ゲット
+
 2021年3月28日
 一日限りのコーヒースタンド by 一六会
 
