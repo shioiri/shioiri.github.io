@@ -3,7 +3,7 @@ title: 一六会コーヒーショップ
 ---
 # 一六会コーヒーショップへようこそ
 
-あなたは <img src="https://ss1.xrea.com/shioiri.s1001.xrea.com/x/cgi-bin/npc/npc.cgi?i=/virtual/shioiri/npc.idx&L=YJet0C&p=on&d=1000,0"> 番目のお客様です。
+いらっしゃいませ。あなたは <img src="https://ss1.xrea.com/shioiri.s1001.xrea.com/x/cgi-bin/npc/npc.cgi?i=/virtual/shioiri/npc.idx&L=YJet0C&p=on&d=1000,0"> 番目のお客様です。
 
 ### おしながき
 
@@ -55,3 +55,5 @@ title: 一六会コーヒーショップ
 
 - [おいでよ西塩田 Twitter @OideNishiShioda](https://twitter.com/OideNishiShioda)
 - [一六会 Facebook @16kai](https://www.facebook.com/16kai)
+
+2021-03-28
