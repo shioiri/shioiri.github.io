@@ -1,5 +1,6 @@
 ---
 name: 一六会コーヒーショップ
+title: shioiri@github.io
 ---
 # 一六会コーヒーショップへようこそ
 
