@@ -3,13 +3,15 @@ name: 一六会コーヒーショップ
 ---
 # 一六会コーヒーショップへようこそ
 
-<img src="https://ss1.xrea.com/shioiri.s1001.xrea.com/x/cgi-bin/npc/npc.cgi?i=/virtual/shioiri/npc.idx&L=YJet0C&p=on&d=1000,0">
+あなたは <img src="https://ss1.xrea.com/shioiri.s1001.xrea.com/x/cgi-bin/npc/npc.cgi?i=/virtual/shioiri/npc.idx&L=YJet0C&p=on&d=1000,0"> 番目のお客様です。
 
-おしながき
+- おしながき
 
-- ホットコーヒー　100円
-- コーヒーとクッキーのセット　150円
-- わたあめ　無料
+-- ホットコーヒー　100円
+-- コーヒーとクッキーのセット　150円
+-- わたあめ　無料
+
+
 
 ホットコーヒーは山田神社の湧き水を~~使用しています~~使用する予定でした…。
 
