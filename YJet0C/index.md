@@ -11,7 +11,7 @@ name: 一六会コーヒーショップ
 - コーヒーとクッキーのセット　150円
 - わたあめ　無料
 
-コーヒーは山田神社の湧き水を使用して~~ 淹れています ~~ 入れる予定でした…。
+コーヒーは山田神社の湧き水を使用して~~淹れています~~ 入れる予定でした…。
 
 ## 一六会って？
 
@@ -29,5 +29,5 @@ name: 一六会コーヒーショップ
 
 最後までお読みいただき、ありがとうございました！
 
-- おいでよ西塩田 Twitter
-- 一六会 Facebook
+- [おいでよ西塩田 Twitter @OideNishiShioda](https://twitter.com/OideNishiShioda)
+- [一六会 Facebook @16kai](https://facebook.com/16kai)
