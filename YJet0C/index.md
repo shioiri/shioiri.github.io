@@ -53,7 +53,7 @@ title: 一六会コーヒーショップ
 
 最後までお読みいただき、ありがとうございました！
 
-- [おいでよ西塩田 Twitter @OideNishiShioda](https://twitter.com/OideNishiShioda)
+- [おいでよ西塩田 Twitter @oideNishiShioda](https://twitter.com/oideNishiShioda)
 - [一六会 Facebook @16kai](https://www.facebook.com/16kai)
 
 2021-03-28
