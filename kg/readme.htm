@@ -1,0 +1,175 @@
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=Shift_JIS">
+<title>WwwMail Ver3.26利用メモ</title>
+<style type="text/css">
+<!--
+BODY {
+    color: #333333;
+}
+H2 {
+    width: 100%;
+    font-weight: bold;
+    color: #ffffff;
+    background-color: #8484ee;
+    border: 1px none #8888f8;
+    border-top: 1px solid #8888f8;
+    border-left: 1px solid #8888f8;
+    border-right: 1px solid #666699;
+    border-bottom: 1px solid #666699;
+    padding: 5px 3px 3px 0.5em;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+H3 {
+    width: 100%;
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 1.3em;
+    background-color: #8484ee;
+    border: 1px none #8888f8;
+    border-top: 1px solid #8888f8;
+    border-left: 1px solid #8888f8;
+    border-right: 1px solid #666699;
+    border-bottom: 1px solid #666699;
+    padding: 7px 3px 5px 0.5em;
+}
+H4 {
+    width: 100%;
+    font-weight: bold;
+    font-size: 1em;
+    color: #ffffff;
+    background-color: #8484ee;
+    border: 1px none #8888f8;
+    border-top: 1px solid #ccccff;
+    border-left: 1px solid #ccccff;
+    border-right: 1px solid #666699;
+    border-bottom: 1px solid #666699;
+    padding: 5px 3px 3px 0.5em;
+}
+P {
+    text-indent: 1em;
+}
+PRE.c {
+    border: 1px solid gray;
+    padding: 5px;
+    white-space: pre;
+    width: 100%;
+    background-color: #fffff0;
+}
+DT {
+    font-weight: bold;
+}
+OL LI P {
+    text-indent: 0em;
+    margin-top: 0em;
+}
+OL LI {
+    margin-top: 1em;
+}
+UL LI {
+    margin-top: 0em;
+}
+.i {
+    margin: 0em 1em 0em 1em;
+}
+A:link {
+    color: #000099;
+}
+A:visited {
+    color: #000099;
+}
+A:hover {
+    color: #ff0000;
+}
+-->
+</style>
+</head>
+<body>
+<h2>■ WwwMail Ver3.26利用メモ</h2>
+
+<h4>■ <a name="WhatIs">WwwMailとは？</a></h4>
+<div class=i>
+<p>アンケートフォームなど、Webページ上のフォームに入力したデータを電子メールで受信できるようにするためのCGIです。最新版は下記のページから取得してください。</p>
+<ul>
+<li><a href="http://www.tohoho-web.com/wwwsoft.htm">http://www.tohoho-web.com/wwwsoft.htm</a>
+</ul>
+</div>
+
+<h4>■ 使用条件</h4>
+<div class=i>
+<p>基本的にフリーソフトです。私用・商用に関わらず、自由に改造・利用・流用・再配布可能です。出典や作者の明示も必須ではありません。（ただし、jcode.pl および mimew.pl はそれぞれの使用条件に従ってください。）</p>
+</div>
+
+<h4>■ 動作条件</h4>
+<div class=i>
+<p>WwwMail は Web サーバーにインストールします。WwwMail をインストールするには、使用している Web サーバーが Perl による CGI をサポートしていることが必要です。サーバーは UNIX 系でも Windows 系でも構いませんが、サーバーが UNIX 系の場合は sendmail コマンドによる電子メール送信が可能なこと、サーバーが Windows 系の場合は、BLATJ.EXE コマンドの設置が可能なことが条件になります。</p>
+</div>
+
+<h4>■ 更新履歴</h4>
+<div class=i>
+<table>
+<tr><td>Ver3.26</td><td>文字化け対応。iso-2022-jp を指定するようにした。</td></tr>
+<tr><td>Ver3.25</td><td>エラーメッセージが文字化けすることがある問題を修正。</td></tr>
+<tr><td>Ver3.24</td><td>BLATJ使用時に送信できないことがある問題に対応</td></tr>
+<tr><td>Ver3.23</td><td>3.22の対応ミスを修正</td></tr>
+<tr><td>Ver3.22</td><td>文字化け対応（出力をシフトJISに変更）</td></tr>
+<tr><td>Ver3.21</td><td>リニューアル版</td></tr>
+</table>
+</div>
+
+<h4>■ 設置方法</h4>
+<div class=i>
+<ol>
+<li>CGIの設置に慣れていない人は、「<a href="http://www.tohoho-web.com/wwwcgi.htm">とほほのCGI入門</a>」などを読んで、簡単なCGIスクリプトの設置を練習してください。以下の説明は、CGI の設置を習得された方を対象に行います。
+<li>WebサーバーがWindows系の場合は、別途、電子メール送信コマンド BLATJ.EXE （Mendes氏が開発し、川俣氏が日本語化したもの）が必要です。下記のページから BLATJ.EXE を入手し、BLATJ.EXE のインストール（-installオプション）を行ってください。Windows 95でも動作します。
+<ul>
+<li><a href="http://www.piedey.co.jp/blatj/index.html">http://www.piedey.co.jp/blatj/index.html</a>
+</ul>
+<li>WebサーバーがUNIX系の場合は、sendmailによる電子メールの送信が可能であることを確認してください。ダメモトでやってみる手もありますが、わからなければ、サーバーの管理者かプロバイダにお問い合わせください。
+<li>wwwmail.cgi をテキストエディタで開き、★印の項目を説明に従って編集してください。
+<li>Webサーバーに、wwwmail.cgi, wwwmail.htm, jcode.pl, mimew.pl の4つのファイルを転送してください。4つのファイルは同じディレクトリ（フォルダ）に転送してください。この際、ファイルの改行コードが、Webサーバーに適したものになるようにしてください。Windows系マシンからUNIX系サーバーに転送する際は、ご使用のFTPソフトのテキストモード（アスキーモード）で転送すれば大丈夫でしょう。改行コードに関する詳細は「<a href="http://www.tohoho-web.com/wwwxx011.htm">改行コードについて</a>」を参照してください。
+<li>WebサーバーがUNIX系の場合は、wwwmail.cgi ファイルのパーミッションを 755（rwxr-xr-x）に設定してください。パーミッションに関する詳細は「<a href="http://www.tohoho-web.com/wwwxx012.htm">パーミッションを変更するには</a>」を参照してください。
+<li>ブラウザから、Webサーバー上のwwwmail.htmを開き、フォームに適当な値を入力して送信ボタンを押してください。設置がうまくいっていれば、しばらくしてメールが届くはずです。
+<li>wwwmail.htmの内容は例として添付していますので、適当に変更しても構いませんし、似たようなフォームを他のHTMLページに貼り付けても構いません。フォームの追加・削除など自由に変更可能です。ただし、NAME="EMAIL" という名前を持つフォーム部品だけは特別な意味を持っていて、これが存在し、かつ、正式なメールアドレスが入力されれば、そのメールアドレスにも写し（Cc:）メールが届くようになります。
+</ol>
+</div>
+
+<h4>■ うまく動作しない時は</h4>
+<div class=i>
+<p>うまく動作しない場合は、ブラウザからWebサーバー上の wwwmail.cgi を直接開いてみてください。</p>
+<ol>
+<li>wwwmail.cgiの内容がそのまま表示されてしまう場合は、Webサーバー上で、.cgi という拡張子に対するWebサーバーの設定が行われていないことが考えられます。サーバーがUNIX系（Apacheなど）の場合は .htaccess ファイルの設定が必要です。サーバーがWindow系（IISなど）の場合は、MIMEタイプの設定などの作業が必要です。
+<li>「Server Error」などのエラーが表示されてしまう場合は、スクリプトの改行コードが誤っている、perlのパス名が誤っているなど、CGIの設置が正常に行われていない可能性があります。
+<li>CGIの設置がうまくいっていれば「CGIは正常に動作しています。」と表示されます。問題があれば、その後に「/usr/lib/sendmail がありません。」などのエラーメッセージが表示されます。
+</ol>
+<p>1. や 2. の場合は、「<a href="http://www.tohoho-web.com/wwwcgi.htm">とほほのCGI入門</a>」などを参考に原因解析を行ってください。どうしても解決できない場合は、質問メールを受け付けています。「<a href="http://www.tohoho-web.com/wwwquest.htm">とほほにメールを送る</a>」の注意事項をよく読んで質問メールを発行してください。</p>
+</div>
+
+<h4>■ Ｑ＆Ａ</h4>
+<div class=i>
+<ol>
+<li>メールを複数のアドレスに送信するには？
+<p>wwwmail.cgi の $mailto を、「$mailto = 'aaa@xxx.zzz bbb@xxx.zzz';」のように、スペースで区切ってアドレスを併記してください。テストの際に、同じアドレスを2つ併記した場合は1通しか送信されませんので、ご注意ください。</p>
+</div>
+
+<h4>■ 注意事項</h4>
+<div class=i>
+<ol>
+<li>フォームの書き方に関する詳細は「<a href="http://www.tohoho-web.com/html/">とほほのHTMLリファレンス</a>」を参照してください。
+<li>このキットに含まれているファイルは、Windows用のファイル（シフトJISで改行コードが CR LF）です。UNIXやMacintoshをご使用の場合は適切な漢字変換ツールや、複数改行コード対応エディタなどをご使用ください。
+<li>プロバイダによっては、sendmailコマンドが存在していてもメールの送信は禁止されている場合があります。
+<li>sendmailコマンドでは、To: と Cc: に同じアドレスを指定すると、これをまとめて１通しか送信しないようです。
+</ol>
+</div>
+
+<h4>■ 謝辞</h4>
+<div class=i>
+<p>このツールキットでは、utashiro氏の開発された jcode.pl(v2.6) および、生田氏の開発された mimew.pl(v2.02) を利用＆添付させていただいています。有用なライブラリを提供してくださった両氏に感謝させていただきます。</p>
+</div>
+<hr>
+<div>Copyright (C) 1997-2002 杜甫々</div>
+<div>初版：1997年6月8日、最終更新：2002年9月8日</div>
+<div>http://www.tohoho-web.com/soft/wmail.htm</div>
+</body>
+</html>
