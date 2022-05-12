@@ -16,10 +16,10 @@
 00015 L|<!-- End Wayback Rewrite JS Include -->           ||       |                                                  
 00016 L|                                                  ||       |                                                  
 00017 L| <meta http-equiv="content-type" content="text/htm||       |                                                  
-00018  | <title>O‹c‰@‹cˆõ ‰Á“¡ Šw</title>                ||00006  | <title>O‹c‰@‹cˆõ ‰Á“¡ Šw</title>                
+00018  | <title>è¡†è­°é™¢è­°å“¡ åŠ è—¤ å­¦</title>                ||00006  | <title>è¡†è­°é™¢è­°å“¡ åŠ è—¤ å­¦</title>                
 00019 L| <meta http-equiv="content-style-type" content="te||00007 R| <meta http-equiv="content-style-type" content="te
-00020 L| <meta name="keywords" content="‰Á“¡,Šw,‰Á“¡Šw,‚© ||00008 R| <meta name="keywords" content="‰Á“¡,Šw,‰Á“¡Šw,‚© 
-00021 L| <meta name="description" content="O‹c‰@‹cˆõA‰Á ||00009 R| <meta name="description" content="O‹c‰@‹cˆõA‰Á 
+00020 L| <meta name="keywords" content="åŠ è—¤,å­¦,åŠ è—¤å­¦,ã‹ ||00008 R| <meta name="keywords" content="åŠ è—¤,å­¦,åŠ è—¤å­¦,ã‹ 
+00021 L| <meta name="description" content="è¡†è­°é™¢è­°å“¡ã€åŠ  ||00009 R| <meta name="description" content="è¡†è­°é™¢è­°å“¡ã€åŠ  
 00022 L| <meta http-equiv="Content-Script-Type" content="t||00010 R| <meta http-equiv="Content-Script-Type" content="t
 00023 L| <meta http-equiv="imagetoolbar" content="no"/>   ||00011 R| <meta http-equiv="imagetoolbar" content="no" />  
 00024 L| <link rel="alternate" type="application/rss+xml" ||00012 R| <link rel="alternate" type="application/rss+xml" 
@@ -202,15 +202,15 @@
        |                                                  ||00050 R|<script type="text/javascript" charset="UTF-8" src
 00200  |</head>                                           ||00051  |</head>                                           
 00201  |<body>                                            ||00052  |<body>                                            
-00202  |<!-- Ÿ Head copy Ÿ =============================||00053  |<!-- Ÿ Head copy Ÿ =============================
+00202  |<!-- â—† Head copy â—† =============================||00053  |<!-- â—† Head copy â—† =============================
 00203  |<div id="headcopy">                               ||00054  |<div id="headcopy">                               
-00204  |<h1>O‹c‰@‹cˆõA‰Á“¡Šw‚ÌŒöŽ®ƒEƒFƒuƒTƒCƒg‚Å‚·B‘–¯||00055  |<h1>O‹c‰@‹cˆõA‰Á“¡Šw‚ÌŒöŽ®ƒEƒFƒuƒTƒCƒg‚Å‚·B‘–¯
+00204  |<h1>è¡†è­°é™¢è­°å“¡ã€åŠ è—¤å­¦ã®å…¬å¼ã‚¦ã‚§ãƒ–ã‚µã‚¤ãƒˆã§ã™ã€‚å›½æ°‘||00055  |<h1>è¡†è­°é™¢è­°å“¡ã€åŠ è—¤å­¦ã®å…¬å¼ã‚¦ã‚§ãƒ–ã‚µã‚¤ãƒˆã§ã™ã€‚å›½æ°‘
 00205  |</div><!-- END: id:headcopy -->                   ||00056  |</div><!-- END: id:headcopy -->                   
-00206  |<div id="wrapper"><!-- ¡BEGIN id:wrapper -->     ||00057  |<div id="wrapper"><!-- ¡BEGIN id:wrapper -->     
-00207  |<!-- Ÿ Header Ÿ ================================||00058  |<!-- Ÿ Header Ÿ ================================
+00206  |<div id="wrapper"><!-- â– BEGIN id:wrapper -->     ||00057  |<div id="wrapper"><!-- â– BEGIN id:wrapper -->     
+00207  |<!-- â—† Header â—† ================================||00058  |<!-- â—† Header â—† ================================
 00208  |<div id="header">                                 ||00059  |<div id="header">                                 
 00209 L|<div id="logo"><a href="https://web.archive.org/we||00060 R|<div id="logo"><a href="http://php53.shioiri.com/k
-00210  |<!-- Ÿ Navigator Ÿ =============================||00061  |<!-- Ÿ Navigator Ÿ =============================
+00210  |<!-- â—† Navigator â—† =============================||00061  |<!-- â—† Navigator â—† =============================
 00211  |<div id="navigator">                              ||00062  |<div id="navigator">                              
 00212 L|    <ul class="list1"><li class="focus"><a href="h||00063 R|    <ul class="list1" ><li class="focus"><a href="
 00213 L|<li><a href="https://web.archive.org/web/201402091||00064 R|<li><a href="http://php53.shioiri.com/kg2/index.ph
@@ -221,15 +221,15 @@
 00218 L|<li><a href="https://web.archive.org/web/201402091||00069 R|<li><a href="http://php53.shioiri.com/kg2/index.ph
 00219 L|<li><a href="https://web.archive.org/web/201402091||00070 R|<li><a href="http://php53.shioiri.com/kg2/index.ph
 00220  |</div>                                            ||00071  |</div>                                            
-00221  |<!-- Ÿ Content Ÿ ===============================||00072  |<!-- Ÿ Content Ÿ ===============================
-00222  |<div id="main"><!-- ¡BEGIN id:main -->           ||00073  |<div id="main"><!-- ¡BEGIN id:main -->           
-00223  |<div id="wrap_content"><!-- ¡BEGIN id:wrap_conten||00074  |<div id="wrap_content"><!-- ¡BEGIN id:wrap_conten
-00224  |<div id="content"><!-- ¡BEGIN id:content -->     ||00075  |<div id="content"><!-- ¡BEGIN id:content -->     
+00221  |<!-- â—† Content â—† ===============================||00072  |<!-- â—† Content â—† ===============================
+00222  |<div id="main"><!-- â– BEGIN id:main -->           ||00073  |<div id="main"><!-- â– BEGIN id:main -->           
+00223  |<div id="wrap_content"><!-- â– BEGIN id:wrap_conten||00074  |<div id="wrap_content"><!-- â– BEGIN id:wrap_conten
+00224  |<div id="content"><!-- â– BEGIN id:content -->     ||00075  |<div id="content"><!-- â– BEGIN id:content -->     
 00225  |<h2 class="title">FrontPage</h2>                  ||00076  |<h2 class="title">FrontPage</h2>                  
-00226  |<div id="body"><!-- ¡BEGIN id:body -->           ||00077  |<div id="body"><!-- ¡BEGIN id:body -->           
+00226  |<div id="body"><!-- â– BEGIN id:body -->           ||00077  |<div id="body"><!-- â– BEGIN id:body -->           
 00227 L|<!-- BODYCONTENTS START --><p><a href="https://web||00078 R|<!-- BODYCONTENTS START --><p><a href="http://php5
 00228  |<p><span style="font-size:24px;display:inline;line||00079  |<p><span style="font-size:24px;display:inline;line
-00229  |<p>‚±‚Ì‘‚Í¡AŒµ‚µ‚¢‹Ç–Ê‚É’u‚©‚ê‚Ä‚¢‚Ü‚·B‘–¯‚Í ||00080  |<p>‚±‚Ì‘‚Í¡AŒµ‚µ‚¢‹Ç–Ê‚É’u‚©‚ê‚Ä‚¢‚Ü‚·B‘–¯‚Í 
+00229  |<p>ã“ã®å›½ã¯ä»Šã€åŽ³ã—ã„å±€é¢ã«ç½®ã‹ã‚Œã¦ã„ã¾ã™ã€‚å›½æ°‘ã¯ ||00080  |<p>ã“ã®å›½ã¯ä»Šã€åŽ³ã—ã„å±€é¢ã«ç½®ã‹ã‚Œã¦ã„ã¾ã™ã€‚å›½æ°‘ã¯ 
 00230 L|<div class="fb-like" data-href="http://www.kato-ga||00081 R|<div class="fb-like" data-href="http://www.kato-ga
 00231 L|<p><a href="https://web.archive.org/web/2014020915||00082 R|<p><a href="http://php53.shioiri.com/kg2/index.php
 00232 L|<a href="https://web.archive.org/web/2014020915333||00083 R|<a href="http://php53.shioiri.com/kg2/index.php?%E
@@ -238,10 +238,10 @@
 00235 L|<h4 id="content_1_1"><a href="https://web.archive.||00086 R|<h4 id="content_1_1"><a href="http://www.election.
 00236 L|<div class="img_margin_right" style="float:right;z||00087 R|<div class="img_margin_right" style="float:right;z
 00237  |                                                  ||00088  |                                                  
-00238  |<p>‰Á“¡Šw‚ª“úX‚ÌŠˆ“®‚âŽv‚¢‚ð‚Â‚Ã‚Á‚Ä‚¢‚Ü‚·B</p> ||00089  |<p>‰Á“¡Šw‚ª“úX‚ÌŠˆ“®‚âŽv‚¢‚ð‚Â‚Ã‚Á‚Ä‚¢‚Ü‚·B</p> 
+00238  |<p>åŠ è—¤å­¦ãŒæ—¥ã€…ã®æ´»å‹•ã‚„æ€ã„ã‚’ã¤ã¥ã£ã¦ã„ã¾ã™ã€‚</p> ||00089  |<p>åŠ è—¤å­¦ãŒæ—¥ã€…ã®æ´»å‹•ã‚„æ€ã„ã‚’ã¤ã¥ã£ã¦ã„ã¾ã™ã€‚</p> 
 00239 L|<div>                                             ||00090 R|<p>showrss: cannot get rss from server.</p>       
 00240 L|<ul class="list1">                                ||00091 R|                                                  
-00241 L|<li><a href="https://web.archive.org/web/201402091||00092 R|<div style="text-align:right"><p>¨<a href="http:/
+00241 L|<li><a href="https://web.archive.org/web/201402091||00092 R|<div style="text-align:right"><p>â†’<a href="http:/
 00242 L|<li><a href="https://web.archive.org/web/201402091||       |                                                  
 00243 L|<li><a href="https://web.archive.org/web/201402091||       |                                                  
 00244 L|<li><a href="https://web.archive.org/web/201402091||       |                                                  
@@ -249,45 +249,45 @@
 00246 L|</ul>                                             ||       |                                                  
 00247 L|                                                  ||       |                                                  
 00248 L|</div>                                            ||       |                                                  
-00249 L|<div style="text-align:right"><p>¨<a href="https:||       |                                                  
+00249 L|<div style="text-align:right"><p>â†’<a href="https:||       |                                                  
 00250  |<div class="clear"></div>                         ||00093  |<div class="clear"></div>                         
 00251  |                                                  ||00094  |                                                  
 00252 L|<h4 id="content_1_2"><a href="https://web.archive.||00095 R|<h4 id="content_1_2"><a href="http://php53.shioiri
-00253  |<p>‰Á“¡Šw‚Ì‹cˆõŠˆ“®AƒXƒPƒWƒ…[ƒ‹‚È‚Ç‚ð‚²Ð‰î‚·‚é ||00096  |<p>‰Á“¡Šw‚Ì‹cˆõŠˆ“®AƒXƒPƒWƒ…[ƒ‹‚È‚Ç‚ð‚²Ð‰î‚·‚é 
+00253  |<p>åŠ è—¤å­¦ã®è­°å“¡æ´»å‹•ã€ã‚¹ã‚±ã‚¸ãƒ¥ãƒ¼ãƒ«ãªã©ã‚’ã”ç´¹ä»‹ã™ã‚‹ ||00096  |<p>åŠ è—¤å­¦ã®è­°å“¡æ´»å‹•ã€ã‚¹ã‚±ã‚¸ãƒ¥ãƒ¼ãƒ«ãªã©ã‚’ã”ç´¹ä»‹ã™ã‚‹ 
 00254  |                                                  ||00097  |                                                  
-00255 L|<div style="text-align:right"><p>¨<a href="https:||00098 R|<div style="text-align:right"><p>¨<a href="http:/
+00255 L|<div style="text-align:right"><p>â†’<a href="https:||00098 R|<div style="text-align:right"><p>â†’<a href="http:/
 00256  |                                                  ||00099  |                                                  
 00257 L|<h4 id="content_1_3"><a href="https://web.archive.||00100 R|<h4 id="content_1_3"><a href="http://php53.shioiri
-00258  |<p>‰Á“¡Šw‚ª­Ž¡Šˆ“®‚ðŽn‚ß‚Ä‚©‚çA‚±‚ê‚Ü‚Å‚ÌŠˆ“®‚ð ||00101  |<p>‰Á“¡Šw‚ª­Ž¡Šˆ“®‚ðŽn‚ß‚Ä‚©‚çA‚±‚ê‚Ü‚Å‚ÌŠˆ“®‚ð 
-00259 L|<div style="text-align:right"><p>¨<a href="https:||00102 R|<div style="text-align:right"><p>¨<a href="http:/
+00258  |<p>åŠ è—¤å­¦ãŒæ”¿æ²»æ´»å‹•ã‚’å§‹ã‚ã¦ã‹ã‚‰ã€ã“ã‚Œã¾ã§ã®æ´»å‹•ã‚’ ||00101  |<p>åŠ è—¤å­¦ãŒæ”¿æ²»æ´»å‹•ã‚’å§‹ã‚ã¦ã‹ã‚‰ã€ã“ã‚Œã¾ã§ã®æ´»å‹•ã‚’ 
+00259 L|<div style="text-align:right"><p>â†’<a href="https:||00102 R|<div style="text-align:right"><p>â†’<a href="http:/
 00260  |                                                  ||00103  |                                                  
-00261  |<h3 id="content_1_4">’–Ú‚Ì‹LŽ–  <a class="anchor"||00104  |<h3 id="content_1_4">’–Ú‚Ì‹LŽ–  <a class="anchor"
+00261  |<h3 id="content_1_4">æ³¨ç›®ã®è¨˜äº‹  <a class="anchor"||00104  |<h3 id="content_1_4">æ³¨ç›®ã®è¨˜äº‹  <a class="anchor"
 00262  |                                                  ||00105  |                                                  
 00263 L|<h4 id="content_1_5"><a href="https://web.archive.||00106 R|<h4 id="content_1_5"><a href="http://php53.shioiri
-00264  |<p>‰Á“¡Šw‚Ì­Ž¡Šˆ“®‚ðŽx‚¦‚Ä‚¢‚½‚¾‚­Œã‰‡‰ïˆõA‚¨‚æ ||00107  |<p>‰Á“¡Šw‚Ì­Ž¡Šˆ“®‚ðŽx‚¦‚Ä‚¢‚½‚¾‚­Œã‰‡‰ïˆõA‚¨‚æ 
-00265 L|<div style="text-align:right"><p>¨<a href="https:||00108 R|<div style="text-align:right"><p>¨<a href="http:/
+00264  |<p>åŠ è—¤å­¦ã®æ”¿æ²»æ´»å‹•ã‚’æ”¯ãˆã¦ã„ãŸã ãå¾Œæ´ä¼šå“¡ã€ãŠã‚ˆ ||00107  |<p>åŠ è—¤å­¦ã®æ”¿æ²»æ´»å‹•ã‚’æ”¯ãˆã¦ã„ãŸã ãå¾Œæ´ä¼šå“¡ã€ãŠã‚ˆ 
+00265 L|<div style="text-align:right"><p>â†’<a href="https:||00108 R|<div style="text-align:right"><p>â†’<a href="http:/
 00266  |                                                  ||00109  |                                                  
 00267 L|<h4 id="content_1_6"><a href="https://web.archive.||00110 R|<h4 id="content_1_6"><a href="http://php53.shioiri
-00268  |<p>‘‰ïŒ©Šw‚ð‚µ‚Ä‚Ý‚Ü‚¹‚ñ‚©BŒ©Šw‚É‚ÍŽ–‘O‚Ì‚¨\‚µ ||00111  |<p>‘‰ïŒ©Šw‚ð‚µ‚Ä‚Ý‚Ü‚¹‚ñ‚©BŒ©Šw‚É‚ÍŽ–‘O‚Ì‚¨\‚µ 
-00269 L|<div style="text-align:right"><p>¨<a href="https:||00112 R|<div style="text-align:right"><p>¨<a href="http:/
+00268  |<p>å›½ä¼šè¦‹å­¦ã‚’ã—ã¦ã¿ã¾ã›ã‚“ã‹ã€‚è¦‹å­¦ã«ã¯äº‹å‰ã®ãŠç”³ã— ||00111  |<p>å›½ä¼šè¦‹å­¦ã‚’ã—ã¦ã¿ã¾ã›ã‚“ã‹ã€‚è¦‹å­¦ã«ã¯äº‹å‰ã®ãŠç”³ã— 
+00269 L|<div style="text-align:right"><p>â†’<a href="https:||00112 R|<div style="text-align:right"><p>â†’<a href="http:/
 00270  |                                                  ||00113  |                                                  
 00271 L|<h4 id="content_1_7"><a href="https://web.archive.||00114 R|<h4 id="content_1_7"><a href="http://php53.shioiri
-00272  |<p>­“}‹@ŠÖŽiŠ‘®“–Žžj‚ÌƒoƒbƒNƒiƒ“ƒo[‚ð‚²——‚¢ ||00115  |<p>­“}‹@ŠÖŽiŠ‘®“–Žžj‚ÌƒoƒbƒNƒiƒ“ƒo[‚ð‚²——‚¢ 
-00273 L|<div style="text-align:right"><p>¨<a href="https:||00116 R|<div style="text-align:right"><p>¨<a href="http:/
+00272  |<p>æ”¿å…šæ©Ÿé–¢èªŒï¼ˆæ‰€å±žå½“æ™‚ï¼‰ã®ãƒãƒƒã‚¯ãƒŠãƒ³ãƒãƒ¼ã‚’ã”è¦§ã„ ||00115  |<p>æ”¿å…šæ©Ÿé–¢èªŒï¼ˆæ‰€å±žå½“æ™‚ï¼‰ã®ãƒãƒƒã‚¯ãƒŠãƒ³ãƒãƒ¼ã‚’ã”è¦§ã„ 
+00273 L|<div style="text-align:right"><p>â†’<a href="https:||00116 R|<div style="text-align:right"><p>â†’<a href="http:/
 00274  |<div class="contents">                            ||00117  |<div class="contents">                            
 00275  |<a id="contents_1"></a>                           ||00118  |<a id="contents_1"></a>                           
-00276 L|<ul class="list2"><li><a href="#h9fefb81">  ‹cˆõŠˆ||00119 R|<ul class="list2" ><li><a href="#h9fefb81">  ‹cˆõ 
-00277 L|<ul class="list3"><li><a href="#madef58e">  ‰Á“¡Šw||00120 R|<ul class="list3" ><li><a href="#madef58e">  ‰Á“¡ 
-00278  |<li><a href="#u2edb942">  ‚¨’m‚ç‚¹ </a></li>      ||00121  |<li><a href="#u2edb942">  ‚¨’m‚ç‚¹ </a></li>      
-00279  |<li><a href="#n3c50ebf">  ‚±‚ê‚Ü‚Å‚Ì‹L˜^ </a></li>||00122  |<li><a href="#n3c50ebf">  ‚±‚ê‚Ü‚Å‚Ì‹L˜^ </a></li>
-00280  |<li><a href="#h806f1cb">  ’–Ú‚Ì‹LŽ– </a>         ||00123  |<li><a href="#h806f1cb">  ’–Ú‚Ì‹LŽ– </a>         
-00281 L|<ul class="list3"><li><a href="#vfddb6c4">  Œã‰‡‰ï||00124 R|<ul class="list3" ><li><a href="#vfddb6c4">  Œã‰‡ 
-00282  |<li><a href="#bec73011">  ‘‰ïŒ©Šw‚Ì‚²ˆÄ“à </a></l||00125  |<li><a href="#bec73011">  ‘‰ïŒ©Šw‚Ì‚²ˆÄ“à </a></l
-00283  |<li><a href="#b80a9a0c">  ­“}‹@ŠÖŽ †ŠO </a></li||00126  |<li><a href="#b80a9a0c">  ­“}‹@ŠÖŽ †ŠO </a></li
+00276 L|<ul class="list2"><li><a href="#h9fefb81">  è­°å“¡æ´»||00119 R|<ul class="list2" ><li><a href="#h9fefb81">  è­°å“¡ 
+00277 L|<ul class="list3"><li><a href="#madef58e">  åŠ è—¤å­¦||00120 R|<ul class="list3" ><li><a href="#madef58e">  åŠ è—¤ 
+00278  |<li><a href="#u2edb942">  ãŠçŸ¥ã‚‰ã› </a></li>      ||00121  |<li><a href="#u2edb942">  ãŠçŸ¥ã‚‰ã› </a></li>      
+00279  |<li><a href="#n3c50ebf">  ã“ã‚Œã¾ã§ã®è¨˜éŒ² </a></li>||00122  |<li><a href="#n3c50ebf">  ã“ã‚Œã¾ã§ã®è¨˜éŒ² </a></li>
+00280  |<li><a href="#h806f1cb">  æ³¨ç›®ã®è¨˜äº‹ </a>         ||00123  |<li><a href="#h806f1cb">  æ³¨ç›®ã®è¨˜äº‹ </a>         
+00281 L|<ul class="list3"><li><a href="#vfddb6c4">  å¾Œæ´ä¼š||00124 R|<ul class="list3" ><li><a href="#vfddb6c4">  å¾Œæ´ 
+00282  |<li><a href="#bec73011">  å›½ä¼šè¦‹å­¦ã®ã”æ¡ˆå†… </a></l||00125  |<li><a href="#bec73011">  å›½ä¼šè¦‹å­¦ã®ã”æ¡ˆå†… </a></l
+00283  |<li><a href="#b80a9a0c">  æ”¿å…šæ©Ÿé–¢èªŒ å·å¤– </a></li||00126  |<li><a href="#b80a9a0c">  æ”¿å…šæ©Ÿé–¢èªŒ å·å¤– </a></li
 00284  |</div>                                            ||00127  |</div>                                            
 00285  |                                                  ||00128  |                                                  
 00286  |<p>}}</p>                                         ||00129  |<p>}}</p>                                         
-00287  |<!-- BODYCONTENTS END --></div><!--  END id:body ||00130  |<!-- BODYCONTENTS END --></div><!--  END id:body 
+00287  |<!-- BODYCONTENTS END --></div><!-- â–¡END id:body ||00130  |<!-- BODYCONTENTS END --></div><!-- â–¡END id:body 
 00288  |<!-- summary start -->                            ||00131  |<!-- summary start -->                            
 00289  |                                                  ||00132  |                                                  
 00290  |                                                  ||00133  |                                                  
@@ -296,20 +296,20 @@
 00293  |                                                  ||00136  |                                                  
 00294  |                                                  ||00137  |                                                  
 00295  |                                                  ||00138  |                                                  
-00296  |<!-- summary end --></div><!--  END id:content --||00139  |<!-- summary end --></div><!--  END id:content --
-00297  |</div><!--   END id:wrap_content -->             ||00140  |</div><!--   END id:wrap_content -->             
-00298  |<!-- ŸsidebarŸ =================================||00141  |<!-- ŸsidebarŸ =================================
-00299  |<div id="wrap_sidebar"><!-- ¡BEGIN id:wrap_sideba||00142  |<div id="wrap_sidebar"><!-- ¡BEGIN id:wrap_sideba
+00296  |<!-- summary end --></div><!-- â–¡END id:content --||00139  |<!-- summary end --></div><!-- â–¡END id:content --
+00297  |</div><!-- â–¡ END id:wrap_content -->             ||00140  |</div><!-- â–¡ END id:wrap_content -->             
+00298  |<!-- â—†sidebarâ—† =================================||00141  |<!-- â—†sidebarâ—† =================================
+00299  |<div id="wrap_sidebar"><!-- â– BEGIN id:wrap_sideba||00142  |<div id="wrap_sidebar"><!-- â– BEGIN id:wrap_sideba
 00300  |<div id="sidebar">                                ||00143  |<div id="sidebar">                                
-00301  |<!-- ¡BEGIN id:menubar -->                       ||00144  |<!-- ¡BEGIN id:menubar -->                       
+00301  |<!-- â– BEGIN id:menubar -->                       ||00144  |<!-- â– BEGIN id:menubar -->                       
 00302  |<div id="menubar" class="bar">                    ||00145  |<div id="menubar" class="bar">                    
 00303 L|<div style="text-align:center"><p><img src="https:||00146 R|<div style="text-align:center"><p><img src="http:/
 00304 L|<div style="text-align:center"><p><a href="https:/||00147 R|<div style="text-align:center"><p><a href="http://
-00305 L|ƒTƒCƒ“‚Í‚k<br/>                                   ||00148 R|ƒTƒCƒ“‚Í‚k<br />                                  
-00306  |ƒŠƒxƒ‰ƒ‹éŒ¾B</p></div>                          ||00149  |ƒŠƒxƒ‰ƒ‹éŒ¾B</p></div>                          
+00305 L|ã‚µã‚¤ãƒ³ã¯ï¼¬<br/>                                   ||00148 R|ã‚µã‚¤ãƒ³ã¯ï¼¬<br />                                  
+00306  |ãƒªãƒ™ãƒ©ãƒ«å®£è¨€ã€‚</p></div>                          ||00149  |ãƒªãƒ™ãƒ©ãƒ«å®£è¨€ã€‚</p></div>                          
 00307 L|<div style="text-align:center"><p><a href="https:/||00150 R|<div style="text-align:center"><p><a href="http://
 00308 L|<p><a href="https://web.archive.org/web/2014020915||00151 R|<p><a href="http://www.election.ne.jp/10863/"><img
-00309  |<h2 id="content_4_0">Å‹ß‚ÌƒuƒƒO 5Œ</h2>        ||00152  |<h2 id="content_4_0">Å‹ß‚ÌƒuƒƒO 5Œ</h2>        
+00309  |<h2 id="content_4_0">æœ€è¿‘ã®ãƒ–ãƒ­ã‚° 5ä»¶</h2>        ||00152  |<h2 id="content_4_0">æœ€è¿‘ã®ãƒ–ãƒ­ã‚° 5ä»¶</h2>        
 00310 L|<div>                                             ||00153 R|<p>showrss: cannot get rss from server.</p>       
 00311 L|<strong>2012-12-03</strong>                       ||00154 R|                                                  
 00312 L|<ul>                                              ||       |                                                  
@@ -333,7 +333,7 @@
 00330 L|</ul>                                             ||       |                                                  
 00331 L|                                                  ||       |                                                  
 00332 L|</div>                                            ||       |                                                  
-00333  |<h5>ÅV‚Ì‹LŽ– 10Œ</h5>                          ||00155  |<h5>ÅV‚Ì‹LŽ– 10Œ</h5>                          
+00333  |<h5>æœ€æ–°ã®è¨˜äº‹ 10ä»¶</h5>                          ||00155  |<h5>æœ€æ–°ã®è¨˜äº‹ 10ä»¶</h5>                          
 00334  |<div><strong>2012-12-01</strong>                  ||00156  |<div><strong>2012-12-01</strong>                  
 00335  |<ul>                                              ||00157  |<ul>                                              
 00336 L| <li><a href="https://web.archive.org/web/20140209||00158 R| <li><a href="http://php53.shioiri.com/kg2/index.p
@@ -366,7 +366,7 @@
 00363 L| <li><a href="https://web.archive.org/web/20140209||00185 R| <li><a href="http://php53.shioiri.com/kg2/index.p
 00364  |</ul>                                             ||00186  |</ul>                                             
 00365  |</div>                                            ||00187  |</div>                                            
-00366  |<h5>l‹C‚Ì‹LŽ– 10Œ</h5><div><ul>                 ||00188  |<h5>l‹C‚Ì‹LŽ– 10Œ</h5><div><ul>                 
+00366  |<h5>äººæ°—ã®è¨˜äº‹ 10ä»¶</h5><div><ul>                 ||00188  |<h5>äººæ°—ã®è¨˜äº‹ 10ä»¶</h5><div><ul>                 
 00367 L| <li><a href="https://web.archive.org/web/20140209||00189 R| <li><a href="http://php53.shioiri.com/kg2/index.p
 00368 L| <li><a href="https://web.archive.org/web/20140209||00190 R| <li><a href="http://php53.shioiri.com/kg2/index.p
 00369 L| <li><a href="https://web.archive.org/web/20140209||00191 R| <li><a href="http://php53.shioiri.com/kg2/index.p
@@ -379,37 +379,37 @@
 00376 L| <li><a href="https://web.archive.org/web/20140209||00198 R| <li><a href="http://php53.shioiri.com/kg2/index.p
 00377  |</ul>                                             ||00199  |</ul>                                             
 00378  |</div>                                            ||00200  |</div>                                            
-00379 L|<div style="text-align:center"><p>O‹c‰@‹cˆõ<br/> ||00201 R|<div style="text-align:center"><p>O‹c‰@‹cˆõ<br />
-00380  |‰Á“¡@Šw@Ž––±Š</p></div>                        ||00202  |‰Á“¡@Šw@Ž––±Š</p></div>                        
+00379 L|<div style="text-align:center"><p>è¡†è­°é™¢è­°å“¡<br/> ||00201 R|<div style="text-align:center"><p>è¡†è­°é™¢è­°å“¡<br />
+00380  |åŠ è—¤ã€€å­¦ã€€äº‹å‹™æ‰€</p></div>                        ||00202  |åŠ è—¤ã€€å­¦ã€€äº‹å‹™æ‰€</p></div>                        
 00381 L|<div style="text-align:center"><p><a href="https:/||00203 R|<div style="text-align:center"><p><a href="mailto:
 00382 L|<div style="text-align:center"><p><a href="https:/||00204 R|<div style="text-align:center"><p><a href="http://
 00383 L|<a href="https://web.archive.org/web/2014020915333||00205 R|<a href="http://php53.shioiri.com/kg2/index.php?%E
 00384 L|<p><span style="color:gray"><span style="font-size||00206 R|<p><span style="color:gray"><span style="font-size
 00385  |                                                  ||00207  |                                                  
 00386  |</div>                                            ||00208  |</div>                                            
-00387  |<!--  END id:menubar --></div><!--  END id:sideb||00209  |<!--  END id:menubar --></div><!--  END id:sideb
-00388  |</div><!--  END id:wrap_sidebar -->              ||00210  |</div><!--  END id:wrap_sidebar -->              
-00389  |</div><!--  END id:main -->                      ||00211  |</div><!--  END id:main -->                      
-00390  |<!-- Ÿ navigator2 Ÿ ============================||00212  |<!-- Ÿ navigator2 Ÿ ============================
-00391  |<div id="navigator2"><!-- ¡BEGIN id:navigator2 --||00213  |<div id="navigator2"><!-- ¡BEGIN id:navigator2 --
+00387  |<!-- â–¡END id:menubar --></div><!-- â–¡END id:sideb||00209  |<!-- â–¡END id:menubar --></div><!-- â–¡END id:sideb
+00388  |</div><!-- â–¡END id:wrap_sidebar -->              ||00210  |</div><!-- â–¡END id:wrap_sidebar -->              
+00389  |</div><!-- â–¡END id:main -->                      ||00211  |</div><!-- â–¡END id:main -->                      
+00390  |<!-- â—† navigator2 â—† ============================||00212  |<!-- â—† navigator2 â—† ============================
+00391  |<div id="navigator2"><!-- â– BEGIN id:navigator2 --||00213  |<div id="navigator2"><!-- â– BEGIN id:navigator2 --
 00392 L|    <p><a href="https://web.archive.org/web/201402||00214 R|    <p><a href="http://php53.shioiri.com/kg2/index
-00393  |<!--QLOOKƒAƒNƒZƒX‰ðÍ-->                          ||00215  |<!--QLOOKƒAƒNƒZƒX‰ðÍ-->                          
+00393  |<!--QLOOKã‚¢ã‚¯ã‚»ã‚¹è§£æž-->                          ||00215  |<!--QLOOKã‚¢ã‚¯ã‚»ã‚¹è§£æž-->                          
 00394 L|<a href="https://web.archive.org/web/2014020915333||00216 R|<a href="http://analytics.qlook.net/" target="_bla
-00395  |<!--/QLOOKƒAƒNƒZƒX‰ðÍ-->                         ||00217  |<!--/QLOOKƒAƒNƒZƒX‰ðÍ-->                         
-00396  |</div><!--  END id:navigator2 -->                ||00218  |</div><!--  END id:navigator2 -->                
-00397  |<!-- Ÿ Footer Ÿ ================================||00219  |<!-- Ÿ Footer Ÿ ================================
-00398  |<div id="footer"><!-- ¡BEGIN id:footer -->       ||00220  |<div id="footer"><!-- ¡BEGIN id:footer -->       
-00399  |<div id="copyright"><!-- ¡BEGIN id:copyright --> ||00221  |<div id="copyright"><!-- ¡BEGIN id:copyright --> 
+00395  |<!--/QLOOKã‚¢ã‚¯ã‚»ã‚¹è§£æž-->                         ||00217  |<!--/QLOOKã‚¢ã‚¯ã‚»ã‚¹è§£æž-->                         
+00396  |</div><!-- â–¡END id:navigator2 -->                ||00218  |</div><!-- â–¡END id:navigator2 -->                
+00397  |<!-- â—† Footer â—† ================================||00219  |<!-- â—† Footer â—† ================================
+00398  |<div id="footer"><!-- â– BEGIN id:footer -->       ||00220  |<div id="footer"><!-- â– BEGIN id:footer -->       
+00399  |<div id="copyright"><!-- â– BEGIN id:copyright --> ||00221  |<div id="copyright"><!-- â– BEGIN id:copyright --> 
 00400 L|<p> Copyright &copy; 2014 <a href="https://web.arc||00222 R|<p> Copyright &copy; 2022 <a href="http://www.kato
-00401  | §395-0051 ’·–ìŒ§”Ñ“cŽs‚‰H’¬6-1-3CTEL 0265-22-2||00223  | §395-0051 ’·–ìŒ§”Ñ“cŽs‚‰H’¬6-1-3CTEL 0265-22-2
-00402  |</div><!--  END id:copyright -->                 ||00224  |</div><!--  END id:copyright -->                 
-00403  |<!-- Ÿ Toobar Ÿ ================================||00225  |<!-- Ÿ Toobar Ÿ ================================
-00404  |</div><!--  END id:footer -->                    ||00226  |</div><!--  END id:footer -->                    
-00405  |<!-- Ÿ END Ÿ ===================================||00227  |<!-- Ÿ END Ÿ ===================================
-00406  |</div><!--  END id:wrapper -->                   ||00228  |</div><!--  END id:wrapper -->                   
-00407  |<!-- ¡@QHM copy right¡ ========================||00229  |<!-- ¡@QHM copy right¡ ========================
+00401  | ã€’395-0051 é•·é‡ŽçœŒé£¯ç”°å¸‚é«˜ç¾½ç”º6-1-3ï¼ŒTEL 0265-22-2||00223  | ã€’395-0051 é•·é‡ŽçœŒé£¯ç”°å¸‚é«˜ç¾½ç”º6-1-3ï¼ŒTEL 0265-22-2
+00402  |</div><!-- â–¡END id:copyright -->                 ||00224  |</div><!-- â–¡END id:copyright -->                 
+00403  |<!-- â—† Toobar â—† ================================||00225  |<!-- â—† Toobar â—† ================================
+00404  |</div><!-- â–¡END id:footer -->                    ||00226  |</div><!-- â–¡END id:footer -->                    
+00405  |<!-- â—† END â—† ===================================||00227  |<!-- â—† END â—† ===================================
+00406  |</div><!-- â–¡END id:wrapper -->                   ||00228  |</div><!-- â–¡END id:wrapper -->                   
+00407  |<!-- â– ã€€QHM copy rightâ–  ========================||00229  |<!-- â– ã€€QHM copy rightâ–  ========================
 00408  |<div id="licence">                                ||00230  |<div id="licence">                                
-00409  |<!-- ¡@W3C ƒƒS¡ ==============================||00231  |<!-- ¡@W3C ƒƒS¡ ==============================
+00409  |<!-- â– ã€€W3C ãƒ­ã‚´â–  ==============================||00231  |<!-- â– ã€€W3C ãƒ­ã‚´â–  ==============================
 00410  |<p style="text-align:right; margin-top:5px;">     ||00232  |<p style="text-align:right; margin-top:5px;">     
 00411 L|    <a href="https://web.archive.org/web/201402091||00233 R|    <a href="http://php53.shioiri.com/kg2/index.ph
 00412 L|    <a href="https://web.archive.org/web/201402091||00234 R|    <a href="http://validator.w3.org/check?uri=ref
@@ -417,7 +417,7 @@
        |                                                  ||00236 R|        alt="Valid XHTML 1.0 Transitional" height=
 00413  |</p>                                              ||00237  |</p>                                              
 00414  |</div>                                            ||00238  |</div>                                            
-00415  |<!-- ¡@ƒAƒNƒZƒXƒ^ƒO¡ ==========================||00239  |<!-- ¡@ƒAƒNƒZƒXƒ^ƒO¡ ==========================
+00415  |<!-- â– ã€€ã‚¢ã‚¯ã‚»ã‚¹ã‚¿ã‚°â–  ==========================||00239  |<!-- â– ã€€ã‚¢ã‚¯ã‚»ã‚¹ã‚¿ã‚°â–  ==========================
 00416  |</body>                                           ||00240  |</body>                                           
 00417  |</html>                                           ||00241  |</html>                                           
 00418 L|<!--                                              ||       |                                                  
