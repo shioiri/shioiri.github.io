@@ -2,7 +2,7 @@
 
 /* PageAction
 ----------------------------------------------------------------------------- */
-/* •\¦ */
+/* è¡¨ç¤º */
 #page_action .pa_edit,
 #page_action .pa_attach,
 #page_action .pa_diff,
@@ -24,7 +24,7 @@
 	background-image:url("../../../image/backup.png");
 }
 
-/* ”ñ•\¦ */
+/* éè¡¨ç¤º */
 .pa_reload,
 .pa_newpage,
 .pa_freeze,
@@ -141,7 +141,7 @@ strong.word9{
 	color:white;
 }
 
-/* Amazon (amazon.inc.php‚Ì‰ü‘¢)
+/* Amazon (amazon.inc.phpã®æ”¹é€ )
 ----------------------------------------------------------------------------- */
 .amazon{
 	padding:.5em 1.5em .5em 1.5em;
@@ -271,7 +271,7 @@ div.contents{
 	margin:15px 0px;
 }
 div.contents:before{
-	content:"‚à‚­‚¶";
+	content:"ã‚‚ãã˜";
 	color:#fff;
 	background-color:#999;
 	font-size:12px;
