@@ -2,6 +2,7 @@ import os
 import re
 import json
 import shutil
+import markdown
 from collections import defaultdict
 
 def parse_markdown(filepath):
@@ -32,22 +33,19 @@ def parse_markdown(filepath):
         meta = {"title": "No Title", "date": "none", "categories": "", "tags": ""}
         body = raw_content
 
-    # 本文の簡易HTML構造化（見出し、箇条書きリスト、改行処理）
     body_html = body.strip()
-    body_html = re.sub(r'^### (.*?)$', r'<h3>\1</h3>', body_html, flags=re.MULTILINE)
-    body_html = re.sub(r'^\* (.*?)$', r'<li>\1</li>', body_html, flags=re.MULTILINE)
-    body_html = re.sub(r'((?:<li>.*?</li>\s*)+)', r'<ul>\1</ul>', body_html)
     
-    # 【縦横400px上限・対称制限版】
-    # 長辺最大400pxの均等リミッターを採用。正方形・縦長・横長の全アセットが美しく調和する回路。
+    # 【画像の独自構造化回路】
+    # markdownエンジンへ渡す前に、画像の記述だけは独自の中央配置・キャプション付きHTMLへ事前置換しておく
     def replace_image_with_caption(match):
         alt_text = match.group(1).strip()
         img_src = match.group(2).strip()
         
+        # HTMLの前後に改行（\n\n）を入れ、後段のエンジンがブロック要素として正しく認識できるように保護
         html = (
-            f'<a href="{img_src}" target="_blank" title="クリックで拡大（別タブ）" style="display:block; text-decoration:none; margin:20px 0;">'
+            f'\n\n<a href="{img_src}" target="_blank" title="クリックで拡大（別タブ）" style="display:block; text-decoration:none; margin:20px 0;">\n'
             f'<img src="{img_src}" alt="{alt_text}" style="max-width:min(100%, 400px); max-height:400px; width:auto; height:auto; '
-            f'display:block; margin:20px auto; border:1px solid #ddd; box-shadow:0 2px 4px rgba(0,0,0,0.05); cursor:pointer;">'
+            f'display:block; margin:20px auto; border:1px solid #ddd; box-shadow:0 2px 4px rgba(0,0,0,0.05); cursor:pointer;">\n'
         )
         
         if alt_text:
@@ -55,15 +53,18 @@ def parse_markdown(filepath):
                 f'<span style="display:block; max-width:min(100%, 400px); text-align:center; '
                 f'font-size:0.85em; color:#666; margin:-12px auto 25px auto; font-family:sans-serif;">'
                 f'{alt_text}'
-                f'</span>'
+                f'</span>\n'
             )
             
-        html += '</a>'
+        html += '</a>\n\n'
         return html
 
     body_html = re.sub(r'!\[(.*?)\]\((.*?)\)', replace_image_with_caption, body_html)
     
-    body_html = '<p>' + body_html.replace('\n\n', '</p><p>').replace('\n', '<br>') + '</p>'
+    # 【根本治療】純正Markdownエンジンによる一括翻訳
+    # extensions=['tables'] : 表組みに対応
+    # extensions=['nl2br']  : 通常の改行を <br> タグに変換し、意図した改行を維持する
+    body_html = markdown.markdown(body_html, extensions=['tables', 'nl2br'])
     
     return meta, body_html
 
@@ -150,7 +151,6 @@ def main():
                     "p": web_path
                 }
                 
-                # dateに9999が含まれる固定ページを除外する安全弁
                 is_standalone = date_str in ['none', 'n/a', '', 'unknown'] or '9999' in date_str
                 if not is_standalone:
                     all_articles.append(article_data)
@@ -172,20 +172,19 @@ def main():
                     "is_standalone": is_standalone
                 })
             
-            # ドットファイル以外の画像資産などを検出した場合、その場で出力先フォルダへ複製
             elif not filename.startswith('.'):
                 os.makedirs(output_dir, exist_ok=True)
                 dst_file = os.path.join(output_dir, filename)
                 shutil.copy2(src_file, dst_file)
                 print(f"Asset Copied: {dst_file}")
 
-    # 2. 存在する「月別アーカイブ」のリンクHTML（<li>）を降順で組み立てる
+    # 存在する「月別アーカイブ」のリンクHTML（<li>）を降順で組み立てる
     monthly_menu_base_list = []
     for y_m in sorted(monthly_articles.keys(), reverse=True):
         display_name = f"{y_m.replace('/', '年')}月"
         monthly_menu_base_list.append({"path": f"{y_m}/index.html", "name": display_name})
 
-    # 3. 解析済みのデータを元に、各個別HTMLを実際のファイルに出力
+    # 解析済みのデータを元に、各個別HTMLを実際のファイルに出力
     for post in compiled_posts:
         dp = post["depth_prefix"]
         m_menu_html = ""
@@ -207,20 +206,16 @@ def main():
             if post["is_standalone"]:
                 meta_info_html = ''
             else:
-                # カンマ区切りのタグ文字列を分解・整形してハッシュタグ化する前処理
                 raw_tags = post["meta"].get("tags", "").strip()
                 if raw_tags:
-                    # カンマやスペースで分割し、空要素を除外して各要素の先頭に「#」を付与
                     tag_list = [f"#{t.strip()}" for t in re.split(r'[, ]+', raw_tags) if t.strip()]
                     formatted_tags = " ".join(tag_list)
                 else:
                     formatted_tags = ""
 
-                # 【デザイン最適化】日本語の見出し表現を廃止し、記号セパレーターを用いた極めてシンプルな出力構造へ変換
                 p_date = post["meta"].get("date", "").strip()
                 p_cat = post["meta"].get("categories", "").strip()
                 
-                # 要素の有無に応じた結合（パイプライン演算）
                 meta_segments = [p_date, p_cat, formatted_tags]
                 meta_text = " | ".join([seg for seg in meta_segments if seg])
 
@@ -238,12 +233,12 @@ def main():
                 f.write(html_content)
             print(f"Compiled: {post['web_path']}")
 
-    # 4. 全体検索用JSONデータの書き出し
+    # 全体検索用JSONデータの書き出し
     os.makedirs('assets', exist_ok=True)
     with open('assets/articles.json', 'w', encoding='utf-8') as f:
         json.dump(all_articles, f, ensure_ascii=False)
         
-    # 5. 各種インデックスページの出力処理
+    # 各種インデックスページの出力処理
     top_m_menu_html = "".join([f"<li><a href='{m['path']}'>{m['name']}</a></li>" for m in monthly_menu_base_list])
     generate_index_page(top_page_title, all_articles, '', template, 'index.html', top_m_menu_html, custom_body_html=top_page_html)
     print("Generated: index.html")
