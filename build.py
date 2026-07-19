@@ -41,11 +41,17 @@ def parse_markdown(filepath):
     
     return meta, body_html
 
-def generate_index_page(title, articles, depth_prefix, template, output_filepath, monthly_menu_html):
+def generate_index_page(title, articles, depth_prefix, template, output_filepath, monthly_menu_html, custom_body_html=None):
     """
-    指定された記事リストを元に、共通テンプレートを適用した一覧インデックスHTMLを出力する。
+    共通テンプレートを適用した一覧インデックスHTML（トップやアーカイブ）を出力する。
+    custom_body_htmlが指定されている場合は、記事一覧の前にそのHTMLを挿入する。
     """
-    list_body_html = '<ul class="archive-list">'
+    list_body_html = ''
+    if custom_body_html:
+        list_body_html += custom_body_html
+        list_body_html += '<h3 style="margin-top:40px; border-left:4px solid #333; padding-left:10px;">新着記事一覧</h3>'
+
+    list_body_html += '<ul class="archive-list">'
     for art in sorted(articles, key=lambda x: x['d'], reverse=True):
         list_body_html += f"<li><a href='{depth_prefix}{art['p']}'>{art['t']}</a><span class='date'>{art['d']}</span></li>"
     list_body_html += "</ul>"
@@ -70,8 +76,9 @@ def main():
     yearly_articles = defaultdict(list)
     monthly_articles = defaultdict(list)
     
-    # 記事ファイルを格納する一時リスト
     compiled_posts = []
+    top_page_html = None # top.mdから解析された本文を格納する変数
+    top_page_title = '最新記事一覧' # デフォルトタイトル
 
     # 1. _posts フォルダ内を再帰的に走査し、メタデータと構造を先行解析
     for root, dirs, files in os.walk(post_dir):
@@ -91,7 +98,14 @@ def main():
             if filename.endswith('.md'):
                 meta, body_html = parse_markdown(src_file)
                 
-                # プロフィールはインデックス解析から除外して直接処理
+                # 【トップページ専用の分岐回路】
+                if filename == 'top.md':
+                    top_page_html = body_html
+                    top_page_title = meta.get('title', '最新記事一覧')
+                    print("Parsed: top.md (Reserved for index.html)")
+                    continue
+                
+                # プロフィール専用の分岐回路
                 if filename == 'profile.md':
                     compiled_posts.append({
                         "type": "profile",
@@ -114,7 +128,6 @@ def main():
                     "p": web_path
                 }
                 
-                # 独立ページ（dateがnoneなど）でなければアーカイブ配列に登録
                 is_standalone = date_str in ['none', 'n/a', '', 'unknown']
                 if not is_standalone:
                     all_articles.append(article_data)
@@ -142,8 +155,7 @@ def main():
                 shutil.copy2(src_file, dst_file)
                 print(f"Asset Copied: {dst_file}")
 
-    # 2. 【動的メニュー回路】存在する「月別アーカイブ」のリンクHTML（<li>）を降順で組み立てる
-    # 各ページからの相対階層計算に対応させるため、ベースとなる文字列のみ作成
+    # 2. 存在する「月別アーカイブ」のリンクHTML（<li>）を降順で組み立てる
     monthly_menu_base_list = []
     for y_m in sorted(monthly_articles.keys(), reverse=True):
         display_name = f"{y_m.replace('/', '年')}月"
@@ -151,7 +163,6 @@ def main():
 
     # 3. 解析済みのデータを元に、各個別HTMLを実際のファイルに出力
     for post in compiled_posts:
-        # 各ページの階層深さに応じて、左メニュー内の月別リンクパスを補正変換
         dp = post["depth_prefix"]
         m_menu_html = ""
         for m_item in monthly_menu_base_list:
@@ -166,7 +177,7 @@ def main():
             html_content = html_content.replace('{{BODY}}', post["body_html"])
             with open('profile.html', 'w', encoding='utf-8') as f:
                 f.write(html_content)
-            print("Compiled: profile.html (With Dynamic Left Menu)")
+            print("Compiled: profile.html")
             
         elif post["type"] == "post":
             os.makedirs(post["output_dir"], exist_ok=True)
@@ -192,11 +203,11 @@ def main():
     with open('assets/articles.json', 'w', encoding='utf-8') as f:
         json.dump(all_articles, f, ensure_ascii=False)
         
-    # 5. 各種インデックス（アーカイブ）ページの出力処理
-    # 5-1. 全体トップ用の月別メニューHTML組み立て
+    # 5. 各種インデックスページの出力処理
+    # 5-1. 全体トップ（index.html）の生成（top.mdの本文があれば結合）
     top_m_menu_html = "".join([f"<li><a href='{m['path']}'>{m['name']}</a></li>" for m in monthly_menu_base_list])
-    generate_index_page('最新記事一覧', all_articles, '', template, 'index.html', top_m_menu_html)
-    print("Generated: 全体トップページ (index.html)")
+    generate_index_page(top_page_title, all_articles, '', template, 'index.html', top_m_menu_html, custom_body_html=top_page_html)
+    print("Generated: 全体トップページ (index.html, Content fused from top.md)")
     
     # 5-2. 年別アーカイブページの自動生成
     for year, articles in yearly_articles.items():
