@@ -207,8 +207,24 @@ def main():
             if post["is_standalone"]:
                 meta_info_html = ''
             else:
-                # 【改修箇所】メタデータ出力タグに直接 margin-bottom: 35px; と display: block; を流し込み、本文との間隔を確実に確保
-                meta_info_html = f'<time class="post-date-meta" style="display:block; margin-bottom:35px;">日付: {post["meta"].get("date", "")} | カテゴリ: {post["meta"].get("categories", "")} | タグ: {post["meta"].get("tags", "")}</time>'
+                # カンマ区切りのタグ文字列を分解・整形してハッシュタグ化する前処理
+                raw_tags = post["meta"].get("tags", "").strip()
+                if raw_tags:
+                    # カンマやスペースで分割し、空要素を除外して各要素の先頭に「#」を付与
+                    tag_list = [f"#{t.strip()}" for t in re.split(r'[, ]+', raw_tags) if t.strip()]
+                    formatted_tags = " ".join(tag_list)
+                else:
+                    formatted_tags = ""
+
+                # 【デザイン最適化】日本語の見出し表現を廃止し、記号セパレーターを用いた極めてシンプルな出力構造へ変換
+                p_date = post["meta"].get("date", "").strip()
+                p_cat = post["meta"].get("categories", "").strip()
+                
+                # 要素の有無に応じた結合（パイプライン演算）
+                meta_segments = [p_date, p_cat, formatted_tags]
+                meta_text = " | ".join([seg for seg in meta_segments if seg])
+
+                meta_info_html = f'<time class="post-date-meta" style="display:block; margin-bottom:35px; color:#666; font-size:0.9em;">{meta_text}</time>'
             
             html_content = template
             html_content = html_content.replace('{{RELATIVE_DEPTH}}', dp)
