@@ -35,35 +35,37 @@ def parse_markdown(filepath):
 
     body_html = body.strip()
     
-    # 【画像の独自構造化回路】
-    # markdownエンジンへ渡す前に、画像の記述だけは独自の中央配置・キャプション付きHTMLへ事前置換しておく
+    # 【画像・キャプション間隔の根本治療】
+    # 純正エンジンの自動段落化（<p>挿入）による隙間の肥大化を防ぐため、
+    # 完全に独立したブロックとしてインラインCSSを再チューニングします。
     def replace_image_with_caption(match):
         alt_text = match.group(1).strip()
         img_src = match.group(2).strip()
         
-        # HTMLの前後に改行（\n\n）を入れ、後段のエンジンがブロック要素として正しく認識できるように保護
+        # 不要な改行文字を排除し、画像直下のマージンを「8px」に、下のキャプションとの余白をカチッと制御
         html = (
-            f'\n\n<a href="{img_src}" target="_blank" title="クリックで拡大（別タブ）" style="display:block; text-decoration:none; margin:20px 0;">\n'
-            f'<img src="{img_src}" alt="{alt_text}" style="max-width:min(100%, 400px); max-height:400px; width:auto; height:auto; '
-            f'display:block; margin:20px auto; border:1px solid #ddd; box-shadow:0 2px 4px rgba(0,0,0,0.05); cursor:pointer;">\n'
+            f'<div style="display:block; text-align:center; margin:25px auto; width:100%; max-width:400px;">'
+            f'<a href="{img_src}" target="_blank" title="クリックで拡大（別タブ）" style="display:block; text-decoration:none;">'
+            f'<img src="{img_src}" alt="{alt_text}" style="max-width:100%; max-height:400px; width:auto; height:auto; '
+            f'display:block; margin:0 auto; border:1px solid #ddd; box-shadow:0 2px 4px rgba(0,0,0,0.05); cursor:pointer;">'
+            f'</a>'
         )
         
+        # 画像のすぐ次の行にピタッと吸いつくようにマージンを「8px」に固定
         if alt_text:
             html += (
-                f'<span style="display:block; max-width:min(100%, 400px); text-align:center; '
-                f'font-size:0.85em; color:#666; margin:-12px auto 25px auto; font-family:sans-serif;">'
+                f'<span style="display:block; text-align:center; font-size:0.85em; color:#666; '
+                f'margin:8px auto 0 auto; padding:0; font-family:sans-serif; line-height:1.2;">'
                 f'{alt_text}'
-                f'</span>\n'
+                f'</span>'
             )
             
-        html += '</a>\n\n'
+        html += '</div>'
         return html
 
     body_html = re.sub(r'!\[(.*?)\]\((.*?)\)', replace_image_with_caption, body_html)
     
-    # 【根本治療】純正Markdownエンジンによる一括翻訳
-    # extensions=['tables'] : 表組みに対応
-    # extensions=['nl2br']  : 通常の改行を <br> タグに変換し、意図した改行を維持する
+    # 純正Markdownエンジンによる一括翻訳（余計な改行パッチを廃止）
     body_html = markdown.markdown(body_html, extensions=['tables', 'nl2br'])
     
     return meta, body_html
