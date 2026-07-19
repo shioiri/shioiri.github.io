@@ -5,8 +5,7 @@ import shutil
 import markdown
 from collections import defaultdict
 
-# 【根本治療】SNSクローラー用のベース絶対URL定義
-# SNS（X, Facebook等）の仕様に準拠するため、og:imageを絶対URLで出力する回路を構成
+# SNSクローラー用のベース絶対URL定義
 BASE_URL = "https://shioiri.github.io/"
 
 def parse_markdown(filepath):
@@ -42,7 +41,6 @@ def parse_markdown(filepath):
     # 【SNS連携：1枚目の画像ファイル名抽出回路】
     first_img_match = re.search(r'!\[.*?\]\((.*?)\)', body_html)
     if first_img_match:
-        # パスの中に含まれるかもしれない相対記号やフォルダ名を削り、純粋な「ファイル名のみ」を抽出
         img_filename = os.path.basename(first_img_match.group(1).strip())
         meta['og_image_filename'] = img_filename
     else:
@@ -104,8 +102,10 @@ def generate_index_page(title, articles, depth_prefix, template, output_filepath
     index_html_content = index_html_content.replace('{{DYNAMIC_MONTHLY_MENU}}', monthly_menu_html)
     index_html_content = index_html_content.replace('{{TITLE}}', title)
     index_html_content = index_html_content.replace('{{META_INFO}}', '')
+    index_html_content = index_html_content.replace('{{MIDDLE_META}}', '')
     index_html_content = index_html_content.replace('{{OG_DESCRIPTION}}', '記事の一覧・アーカイブページです。')
     index_html_content = index_html_content.replace('{{OG_IMAGE_TAG}}', '')
+    index_html_content = index_html_content.replace('{{TWITTER_IMAGE_TAG}}', '')
     index_html_content = index_html_content.replace('{{BODY}}', list_body_html)
     
     with open(output_filepath, 'w', encoding='utf-8') as f:
@@ -218,6 +218,7 @@ def main():
             html_content = html_content.replace('{{BODY}}', post["body_html"])
             html_content = html_content.replace('{{OG_DESCRIPTION}}', '塩入友広のプロフィールページです。')
             html_content = html_content.replace('{{OG_IMAGE_TAG}}', '')
+            html_content = html_content.replace('{{TWITTER_IMAGE_TAG}}', '')
             with open('profile.html', 'w', encoding='utf-8') as f:
                 f.write(html_content)
             print("Compiled: profile.html")
@@ -242,20 +243,22 @@ def main():
 
                 meta_info_html = f'<time class="post-date-meta" style="display:block; margin-bottom:35px; color:#666; font-size:0.9em;">{meta_text}</time>'
             
-            # 【絶対パス変換回路の適用】
+            # 【絶対パス同期回路】
             img_filename = post["meta"].get("og_image_filename")
             if img_filename:
-                # 記事の配置されている物理フォルダ階層（output_dir）とファイル名を組み合わせ、ドメインに直結
-                if post["output_dir"] == ".":
+                clean_dir = post["output_dir"].replace('\\', '/')
+                if clean_dir == ".":
                     absolute_img_url = f"{BASE_URL}{img_filename}"
                 else:
-                    clean_dir = post["output_dir"].replace('\\', '/')
                     absolute_img_url = f"{BASE_URL}{clean_dir}/{img_filename}"
                     
                 og_image_tag = f'<meta property="og:image" content="{absolute_img_url}">'
+                twitter_image_tag = f'<meta name="twitter:image" content="{absolute_img_url}">'
             else:
                 og_image_tag = ''
+                twitter_image_tag = ''
 
+            # 【根本治療】個別記事（post）のHTML置換回路に、不足していたX用の置換処理を追加
             html_content = template
             html_content = html_content.replace('{{RELATIVE_DEPTH}}', dp)
             html_content = html_content.replace('{{DYNAMIC_MONTHLY_MENU}}', m_menu_html)
@@ -263,6 +266,7 @@ def main():
             html_content = html_content.replace('{{META_INFO}}', meta_info_html)
             html_content = html_content.replace('{{OG_DESCRIPTION}}', post["meta"].get("og_description", ""))
             html_content = html_content.replace('{{OG_IMAGE_TAG}}', og_image_tag)
+            html_content = html_content.replace('{{TWITTER_IMAGE_TAG}}', twitter_image_tag) # 正確に配線完了
             html_content = html_content.replace('{{BODY}}', post["body_html"])
             
             output_html_path = os.path.join(post["output_dir"], post["filename"].replace('.md', '.html'))
