@@ -37,6 +37,10 @@ def parse_markdown(filepath):
     body_html = re.sub(r'^### (.*?)$', r'<h3>\1</h3>', body_html, flags=re.MULTILINE)
     body_html = re.sub(r'^\* (.*?)$', r'<li>\1</li>', body_html, flags=re.MULTILINE)
     body_html = re.sub(r'((?:<li>.*?</li>\s*)+)', r'<ul>\1</ul>', body_html)
+    
+    # 【追加機能】Markdownの画像記法をHTMLのimgタグに翻訳する回路（レスポンシブ対応）
+    body_html = re.sub(r'!\[(.*?)\]\((.*?)\)', r'<img src="\2" alt="\1" style="max-width:100%; height:auto; display:block; margin:20px 0;">', body_html)
+    
     body_html = '<p>' + body_html.replace('\n\n', '</p><p>').replace('\n', '<br>') + '</p>'
     
     return meta, body_html
@@ -44,7 +48,6 @@ def parse_markdown(filepath):
 def generate_index_page(title, articles, depth_prefix, template, output_filepath, monthly_menu_html, custom_body_html=None):
     """
     共通テンプレートを適用した一覧インデックスHTML（トップやアーカイブ）を出力する。
-    custom_body_htmlが指定されている場合は、記事一覧の前にそのHTMLを挿入する。
     """
     list_body_html = ''
     if custom_body_html:
@@ -77,10 +80,10 @@ def main():
     monthly_articles = defaultdict(list)
     
     compiled_posts = []
-    top_page_html = None # top.mdから解析された本文を格納する変数
-    top_page_title = '最新記事一覧' # デフォルトタイトル
+    top_page_html = None
+    top_page_title = '最新記事一覧'
 
-    # 1. _posts フォルダ内を再帰的に走査し、メタデータと構造を先行解析
+    # _posts フォルダ内を再帰的に走査し、HTML生成とアセットコピーをその場で実行
     for root, dirs, files in os.walk(post_dir):
         rel_path = os.path.relpath(root, post_dir)
         
@@ -98,14 +101,11 @@ def main():
             if filename.endswith('.md'):
                 meta, body_html = parse_markdown(src_file)
                 
-                # 【トップページ専用の分岐回路】
                 if filename == 'top.md':
                     top_page_html = body_html
                     top_page_title = meta.get('title', '最新記事一覧')
-                    print("Parsed: top.md (Reserved for index.html)")
                     continue
                 
-                # プロフィール専用の分岐回路
                 if filename == 'profile.md':
                     compiled_posts.append({
                         "type": "profile",
@@ -128,7 +128,8 @@ def main():
                     "p": web_path
                 }
                 
-                is_standalone = date_str in ['none', 'n/a', '', 'unknown']
+                # dateに9999が含まれる固定ページを除外する安全弁
+                is_standalone = date_str in ['none', 'n/a', '', 'unknown'] or '9999' in date_str
                 if not is_standalone:
                     all_articles.append(article_data)
                     if len(date_str) >= 7 and date_str[4] == '-':
@@ -149,6 +150,7 @@ def main():
                     "is_standalone": is_standalone
                 })
             
+            # ドットファイル以外の画像資産などを検出した場合、その場で出力先フォルダへ複製
             elif not filename.startswith('.'):
                 os.makedirs(output_dir, exist_ok=True)
                 dst_file = os.path.join(output_dir, filename)
@@ -204,26 +206,23 @@ def main():
         json.dump(all_articles, f, ensure_ascii=False)
         
     # 5. 各種インデックスページの出力処理
-    # 5-1. 全体トップ（index.html）の生成（top.mdの本文があれば結合）
     top_m_menu_html = "".join([f"<li><a href='{m['path']}'>{m['name']}</a></li>" for m in monthly_menu_base_list])
     generate_index_page(top_page_title, all_articles, '', template, 'index.html', top_m_menu_html, custom_body_html=top_page_html)
-    print("Generated: 全体トップページ (index.html, Content fused from top.md)")
+    print("Generated: index.html")
     
-    # 5-2. 年別アーカイブページの自動生成
     for year, articles in yearly_articles.items():
         os.makedirs(year, exist_ok=True)
         target_path = os.path.join(year, 'index.html')
         year_m_menu_html = "".join([f"<li><a href='../{m['path']}'>{m['name']}</a></li>" for m in monthly_menu_base_list])
         generate_index_page(f"{year}年 記事一覧", articles, '../', template, target_path, year_m_menu_html)
-        print(f"Generated: 年別アーカイブ ({target_path})")
+        print(f"Generated: {target_path}")
         
-    # 5-3. 月別アーカイブページの自動生成
     for y_m, articles in monthly_articles.items():
         os.makedirs(y_m, exist_ok=True)
         target_path = os.path.join(y_m, 'index.html')
         month_m_menu_html = "".join([f"<li><a href='../../{m['path']}'>{m['name']}</a></li>" for m in monthly_menu_base_list])
         generate_index_page(f"{y_m.replace('/', '年')}月 記事一覧", articles, '../../', template, target_path, month_m_menu_html)
-        print(f"Generated: 月別アーカイブ ({target_path})")
+        print(f"Generated: {target_path}")
 
 if __name__ == '__main__':
     main()
