@@ -38,11 +38,11 @@ def parse_markdown(filepath):
     body_html = re.sub(r'^\* (.*?)$', r'<li>\1</li>', body_html, flags=re.MULTILINE)
     body_html = re.sub(r'((?:<li>.*?</li>\s*)+)', r'<ul>\1</ul>', body_html)
     
-    # 【完全バグ修正版】aタグを display: block にすることで、親要素のレスポンシブ幅へ完全に同調させる
-    # PCでは最大横500px/縦400pxを維持し、スマホではポートレートも含めて100%自動連動縮小します。
+    # 【アスペクト比完全固定・レスポンシブ版】
+    # width: auto と height: auto で画像の縦横比を完全に保護し、上限リミッターのみでサイズを制御する堅牢な回路。
     img_replacement = (
-        r'<a href="\2" target="_blank" title="クリックで拡大（別タブ）" style="display:block; text-decoration:none; max-width:min(100%, 500px); margin:20px 0;">'
-        r'<img src="\2" alt="\1" style="max-width:100%; max-height:400px; width:100%; height:auto; '
+        r'<a href="\2" target="_blank" title="クリックで拡大（別タブ）" style="display:block; text-decoration:none; margin:20px 0;">'
+        r'<img src="\2" alt="\1" style="max-width:min(100%, 500px); max-height:400px; width:auto; height:auto; '
         r'display:block; border:1px solid #ddd; box-shadow:0 2px 4px rgba(0,0,0,0.05); cursor:pointer;">'
         r'</a>'
     )
