@@ -1,6 +1,8 @@
 import os
 import re
 import json
+import shutil
+from collections import defaultdict
 
 def parse_markdown(filepath):
     """
@@ -32,6 +34,25 @@ def parse_markdown(filepath):
     
     return meta, body_html
 
+def generate_index_page(title, articles, depth_prefix, template, output_filepath):
+    """
+    指定された記事リストを元に、共通テンプレートを適用した一覧インデックスHTMLを出力する。
+    """
+    list_body_html = '<ul class="archive-list">'
+    # 日付の新しい順にソート
+    for art in sorted(articles, key=lambda x: x['d'], reverse=True):
+        list_body_html += f"<li><a href='{depth_prefix}{art['p']}'>{art['t']}</a><span class='date'>{art['d']}</span></li>"
+    list_body_html += "</ul>"
+    
+    index_html_content = template
+    index_html_content = index_html_content.replace('{{RELATIVE_DEPTH}}', depth_prefix)
+    index_html_content = index_html_content.replace('{{TITLE}}', title)
+    index_html_content = index_html_content.replace('{{META_INFO}}', '')
+    index_html_content = index_html_content.replace('{{BODY}}', list_body_html)
+    
+    with open(output_filepath, 'w', encoding='utf-8') as f:
+        f.write(index_html_content)
+
 def main():
     post_dir = '_posts'
     
@@ -39,80 +60,95 @@ def main():
     with open('template.html', 'r', encoding='utf-8') as f:
         template = f.read()
         
-    articles_index = []
+    all_articles = []
+    yearly_articles = defaultdict(list)
+    monthly_articles = defaultdict(list)
 
-    # 1. _posts フォルダ内を年月階層まで再帰的に探索して個別記事を生成
+    # 1. _posts フォルダ内を再帰的にスキャン
     for root, dirs, files in os.walk(post_dir):
-        for filename in files:
-            if filename.endswith('.md'):
-                md_path = os.path.join(root, filename)
-                
-                # フォルダ階層の抽出 (例: '2026/07')
-                rel_path = os.path.relpath(root, post_dir)
-                if rel_path == '.':
-                    output_dir = '.'
-                    depth_prefix = ''
-                else:
-                    output_dir = rel_path
-                    # 物理階層の深さに応じて「../」を自動計算
-                    depth = len(output_dir.split(os.sep))
-                    depth_prefix = '../' * depth
+        # 階層パスの解析 (例: _posts/2026/07/19/01 -> 2026/07/19/01)
+        rel_path = os.path.relpath(root, post_dir)
+        if rel_path == '.':
+            continue
+            
+        output_dir = rel_path
+        depth = len(output_dir.split(os.sep))
+        depth_prefix = '../' * depth
 
-                # 出力先フォルダ（2026/07 など）がなければ物理作成
+        # 同階層に存在するファイルの選別処理
+        for filename in files:
+            src_file = os.path.join(root, filename)
+            
+            # 1-1. Markdownファイル（記事本体）の場合のコンパイル処理
+            if filename.endswith('.md'):
                 os.makedirs(output_dir, exist_ok=True)
+                meta, body_html = parse_markdown(src_file)
                 
-                # Markdownの解析
-                meta, body_html = parse_markdown(md_path)
-                
-                # 個別記事専用の日付・メタ情報タグ
                 meta_info_html = f'<time class="post-date-meta">日付: {meta.get("date", "")} | カテゴリ: {meta.get("categories", "")} | タグ: {meta.get("tags", "")}</time>'
                 
-                # 金型（template.html）への流し込みと個別HTMLの組み立て
                 html_content = template
                 html_content = html_content.replace('{{RELATIVE_DEPTH}}', depth_prefix)
                 html_content = html_content.replace('{{TITLE}}', meta.get('title', ''))
                 html_content = html_content.replace('{{META_INFO}}', meta_info_html)
                 html_content = html_content.replace('{{BODY}}', body_html)
                 
-                # HTMLファイルの物理出力（例：2026/07/000000.html）
+                # index.md なら index.html、01.md なら 01.html として出力
                 html_filename = filename.replace('.md', '.html')
-                output_path = os.path.join(output_dir, html_filename)
-                with open(output_path, 'w', encoding='utf-8') as f:
+                output_html_path = os.path.join(output_dir, html_filename)
+                with open(output_html_path, 'w', encoding='utf-8') as f:
                     f.write(html_content)
                 
-                # Webサイト上での公開URLパスを計算してインデックス用に記録
-                web_path = f"./{output_dir}/{html_filename}".replace('\\', '/')
-                articles_index.append({
+                # ルートから見た対象HTMLへのWeb公開相対パスを計算
+                web_path = f"{output_dir}/{html_filename}".replace('\\', '/')
+                
+                article_data = {
                     "t": meta.get('title', ''),
                     "d": meta.get('date', ''),
                     "p": web_path
-                })
+                }
+                
+                # 各種インデックス配列表へ分類蓄積
+                all_articles.append(article_data)
+                
+                date_str = meta.get('date', '0000-00-00')
+                if len(date_str) >= 7:
+                    year = date_str[0:4]   # 例: "2026"
+                    month = date_str[5:7]  # 例: "07"
+                    yearly_articles[year].append(article_data)
+                    monthly_articles[f"{year}/{month}"].append(article_data)
+                
                 print(f"Compiled: {web_path}")
+                
+            # 1-2. 画像やPDFなどメディアファイルの場合、そのまま公開フォルダへバイナリ等価コピー
+            elif not filename.startswith('.'):
+                os.makedirs(output_dir, exist_ok=True)
+                dst_file = os.path.join(output_dir, filename)
+                shutil.copy2(src_file, dst_file)
+                print(f"Asset Copied: {dst_file}")
 
-    # 2. 検索用のインデックスJSONデータをassetsフォルダ内へ保存
+    # 2. 全体検索用JSONデータの書き出し
     os.makedirs('assets', exist_ok=True)
     with open('assets/articles.json', 'w', encoding='utf-8') as f:
-        json.dump(articles_index, f, ensure_ascii=False)
+        json.dump(all_articles, f, ensure_ascii=False)
         
-    # 3. トップページ（index.html）の生成（個別記事と共通の金型を適用）
-    # 3-1. 本文エリアに流し込む記事一覧のHTML（リスト構造）を組み立てる
-    list_body_html = '<ul class="archive-list">'
-    # 日付（date）の新しい順（降順）にソートして並び替え
-    for art in sorted(articles_index, key=lambda x: x['d'], reverse=True):
-        list_body_html += f"<li><a href='{art['p']}'>{art['t']}</a><span class='date'>{art['d']}</span></li>"
-    list_body_html += "</ul>"
+    # 3. 各種一覧インデックス（アーカイブ）ページの全自動生成
+    # 3-1. ルート直下のメインインデックス (shioiri.github.io/index.html)
+    generate_index_page('最新記事一覧', all_articles, '', template, 'index.html')
+    print("Generated: 全体トップページ (index.html)")
     
-    # 3-2. 金型（template.html）へ流し込み（ルート配置のため階層深さプレフィックスは空文字 '' ）
-    index_html_content = template
-    index_html_content = index_html_content.replace('{{RELATIVE_DEPTH}}', '')
-    index_html_content = index_html_content.replace('{{TITLE}}', '最新記事一覧')
-    index_html_content = index_html_content.replace('{{META_INFO}}', '') # トップページには日付等のメタ行は不要なため完全消去
-    index_html_content = index_html_content.replace('{{BODY}}', list_body_html)
-    
-    # 3-3. ルート直下に index.html として物理保存
-    with open('index.html', 'w', encoding='utf-8') as f:
-        f.write(index_html_content)
-    print("Compiled: index.html (Unified Layout)")
+    # 3-2. 年別アーカイブページの自動生成 (例: 2026/index.html)
+    for year, articles in yearly_articles.items():
+        os.makedirs(year, exist_ok=True)
+        target_path = os.path.join(year, 'index.html')
+        generate_index_page(f"{year}年 記事一覧", articles, '../', template, target_path)
+        print(f"Generated: 年別アーカイブ ({target_path})")
+        
+    # 3-3. 月別アーカイブページの自動生成 (例: 2026/07/index.html)
+    for y_m, articles in monthly_articles.items():
+        os.makedirs(y_m, exist_ok=True)
+        target_path = os.path.join(y_m, 'index.html')
+        generate_index_page(f"{y_m.replace('/', '年')}月 記事一覧", articles, '../../', template, target_path)
+        print(f"Generated: 月別アーカイブ ({target_path})")
 
 if __name__ == '__main__':
     main()
