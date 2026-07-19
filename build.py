@@ -38,8 +38,8 @@ def parse_markdown(filepath):
     body_html = re.sub(r'^\* (.*?)$', r'<li>\1</li>', body_html, flags=re.MULTILINE)
     body_html = re.sub(r'((?:<li>.*?</li>\s*)+)', r'<ul>\1</ul>', body_html)
     
-    # 【追加機能】Markdownの画像記法をHTMLのimgタグに翻訳する回路（レスポンシブ対応）
-    body_html = re.sub(r'!\[(.*?)\]\((.*?)\)', r'<img src="\2" alt="\1" style="max-width:100%; height:auto; display:block; margin:20px 0;">', body_html)
+    # 【改良】縦横比のバランスを自動制御する画像翻訳回路（縦長画像の巨大化を防ぐリミッター）
+    body_html = re.sub(r'!\[(.*?)\]\((.*?)\)', r'<img src="\2" alt="\1" style="max-width:100%; max-height:400px; height:auto; width:auto; display:block; margin:20px 0;">', body_html)
     
     body_html = '<p>' + body_html.replace('\n\n', '</p><p>').replace('\n', '<br>') + '</p>'
     
