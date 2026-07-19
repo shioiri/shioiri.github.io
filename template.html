@@ -4,24 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{TITLE}} - Tomohiro Shioiri Archive</title>
-    <!-- ★ 既存の引き込んできたローカルCSSを最優先で読み込む（資産の活用） -->
+    <!-- 既存のローカルCSS（資産）を最優先で読み込み -->
     <link rel="stylesheet" href="{{RELATIVE_DEPTH}}assets/css/style.css">
     
     <style>
         /* ==========================================================================
-           既存の style.css（Minimalテーマ）に対するスクラッチ差分アドオン回路
+           Minimalテーマの資産を活かしたスクラッチ修正アドオン回路（決定版）
            ========================================================================== */
 
-        /* 1. PC大画面（768px以上）での2カラム最適化 */
-        @media screen and (min-width: 768px) {
-            /* Minimalテーマが持つ width: 90% や max-width の制限を2カラム用に解放 */
+        /* 【問題2の解決】チェックボックスを如何なる環境でも絶対に非表示にする */
+        #menu-toggle { display: none !important; }
+
+        /* --------------------------------------------------------------------------
+           1. PC大画面側（1025px以上）の処理：完全な2カラムを固定（ハンバーガー不要）
+           -------------------------------------------------------------------------- */
+        @media screen and (min-width: 1025px) {
             .wrapper {
                 max-width: 860px !important;
                 width: 100% !important;
                 display: flex !important;
+                flex-direction: row !important;
                 justify-content: space-between !important;
             }
-            /* 左右の要素の回り込み（float）を無効化し、Flexboxで厳密に等巾配置 */
             header {
                 width: 260px !important;
                 float: none !important;
@@ -34,12 +38,72 @@
                 float: none !important;
                 margin-top: 0 !important;
             }
-            /* 大画面ではスマホ用スイッチ群を完全隔離（隠蔽） */
-            #menu-toggle, .menu-btn { display: none !important; }
+            /* 大画面ではハンバーガーボタンを完全隠蔽、メニューは常時露出 */
+            .menu-btn { display: none !important; }
             .nav-menu { display: block !important; }
         }
 
-        /* 2. メニュー内の意匠・構造定義 */
+        /* --------------------------------------------------------------------------
+           2. スマホ・タブレット・中画面側（1024px以下）の処理：1カラム＋ハンバーガーメニュー
+           -------------------------------------------------------------------------- */
+        @media screen and (max-width: 1024px) {
+            .wrapper {
+                width: 90% !important;
+                max-width: 640px !important;
+                display: block !important;
+                margin: 0 auto !important;
+            }
+            header {
+                width: 100% !important;
+                float: none !important;
+                position: relative !important;
+                border-bottom: 1px solid #e5e5e5;
+                padding-bottom: 15px;
+                margin-bottom: 25px !important;
+            }
+            section {
+                width: 100% !important;
+                float: none !important;
+                margin-top: 0 !important;
+            }
+            
+            /* この領域下でのみ、三本線ボタンを出現させる */
+            .menu-btn {
+                cursor: pointer;
+                float: right;
+                position: relative;
+                width: 28px;
+                height: 20px;
+                display: block !important;
+                z-index: 10;
+                margin-top: -38px; /* タイトル右側へジャスト配置 */
+            }
+            .menu-btn span, .menu-btn span::before, .menu-btn span::after {
+                content: '';
+                display: block;
+                height: 2px;
+                width: 100%;
+                background-color: #111111;
+                position: absolute;
+                transition: all 0.25s ease-in-out;
+            }
+            .menu-btn span { top: 9px; }
+            .menu-btn span::before { top: -7px; }
+            .menu-btn span::after { top: 7px; }
+            
+            /* ✕印変形ロジック */
+            #menu-toggle:checked ~ .menu-btn span { background-color: transparent; }
+            #menu-toggle:checked ~ .menu-btn span::before { transform: rotate(45deg); top: 0; }
+            #menu-toggle:checked ~ .menu-btn span::after { transform: rotate(-45deg); top: 0; }
+            
+            /* 初期状態は非表示、チェックボックスON（ボタンタップ）で展開 */
+            .nav-menu { display: none; clear: both; margin-top: 15px; }
+            #menu-toggle:checked ~ .nav-menu { display: block !important; }
+        }
+
+        /* --------------------------------------------------------------------------
+           3. メニュー内部・共通意匠デザイン（上書き干渉防止対策）
+           -------------------------------------------------------------------------- */
         .nav-menu {
             list-style: none !important;
             padding: 0 !important;
@@ -61,7 +125,6 @@
         .sub-menu a { font-weight: normal !important; color: #444444; }
         .disabled-link { color: #999999 !important; font-size: 0.85rem; cursor: not-allowed; }
 
-        /* 記事一覧（アーカイブ）の整列制御 */
         .archive-list { list-style: none !important; padding-left: 0 !important; }
         .archive-list li {
             display: flex;
@@ -71,47 +134,6 @@
             border-bottom: 1px solid #eeeeee;
         }
         .archive-list .date { color: #666666; font-size: 0.85rem; white-space: nowrap; }
-
-        /* 3. スマホ小画面（767px以下）でのハンバーガー格納回路 */
-        @media screen and (max-width: 767px) {
-            header {
-                position: relative !important;
-                border-bottom: 1px solid #e5e5e5;
-                padding-bottom: 15px;
-            }
-            /* スマホ時のみ三本線ボタンを出現させる */
-            .menu-btn {
-                cursor: pointer;
-                float: right;
-                position: relative;
-                width: 28px;
-                height: 20px;
-                display: block;
-                z-index: 10;
-                margin-top: -38px; /* タイトル横への配置調整 */
-            }
-            .menu-btn span, .menu-btn span::before, .menu-btn span::after {
-                content: '';
-                display: block;
-                height: 2px;
-                width: 100%;
-                background-color: #111111;
-                position: absolute;
-                transition: all 0.25s ease-in-out;
-            }
-            .menu-btn span { top: 9px; }
-            .menu-btn span::before { top: -7px; }
-            .menu-btn span::after { top: 7px; }
-            
-            /* ✕印変形ロジック */
-            #menu-toggle:checked ~ .menu-btn span { background-color: transparent; }
-            #menu-toggle:checked ~ .menu-btn span::before { transform: rotate(45deg); top: 0; }
-            #menu-toggle:checked ~ .menu-btn span::after { transform: rotate(-45deg); top: 0; }
-            
-            /* 初期状態は非表示、チェック時に展開 */
-            .nav-menu { display: none; clear: both; margin-top: 15px; }
-            #menu-toggle:checked ~ .nav-menu { display: block; }
-        }
     </style>
 </head>
 <body>
@@ -120,7 +142,7 @@
             <h1><a href="{{RELATIVE_DEPTH}}index.html" style="color:inherit; text-decoration:none;">Tomohiro Shioiri</a></h1>
             <p>アーカイブウェブサイト</p>
             
-            <!-- スマホ開閉用インターロックスイッチ -->
+            <!-- スマホ開閉用隠蔽スイッチ -->
             <input type="checkbox" id="menu-toggle">
             <label for="menu-toggle" class="menu-btn"><span></span></label>
             
