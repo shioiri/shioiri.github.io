@@ -23,10 +23,7 @@ def parse_markdown(filepath):
                 key = key.strip()
                 val_str = value.strip()
                 
-                # 【根本治療】文字列全体の前後および、カンマ区切り前後の不要なクォーテーション・ブラケットを一括除去
-                # 配列形式（[a, b]）や個別のクォーテーション囲みに完全対応
                 val_str = re.sub(r'^[\"\'\[ ]+|[\"\'\] ]+$', '', val_str)
-                # カンマ周辺のクォーテーション（例: " , " や ' , '）を綺麗に掃除して統一
                 val_str = re.sub(r'\s*[\"\']\s*,\s*[\"\']\s*', ', ', val_str)
                 val_str = re.sub(r'\s*,\s*', ', ', val_str)
                 
@@ -38,8 +35,8 @@ def parse_markdown(filepath):
     # 本文の簡易HTML構造化（見出し、箇条書きリスト、改行処理）
     body_html = body.strip()
     body_html = re.sub(r'^### (.*?)$', r'<h3>\1</h3>', body_html, flags=re.MULTILINE)
-    body_html = re.sub(r'^\d+\.\s+(.*?)$', r'<li>\1</li>', body_html, flags=re.MULTILINE)
-    body_html = re.sub(r'((?:<li>.*?</li>\s*)+)', r'<ol>\1</ol>', body_html)
+    body_html = re.sub(r'^\* (.*?)$', r'<li>\1</li>', body_html, flags=re.MULTILINE) # 箇条書き対応の強化
+    body_html = re.sub(r'((?:<li>.*?</li>\s*)+)', r'<ul>\1</ul>', body_html)
     body_html = '<p>' + body_html.replace('\n\n', '</p><p>').replace('\n', '<br>') + '</p>'
     
     return meta, body_html
@@ -49,7 +46,6 @@ def generate_index_page(title, articles, depth_prefix, template, output_filepath
     指定された記事リストを元に、共通テンプレートを適用した一覧インデックスHTMLを出力する。
     """
     list_body_html = '<ul class="archive-list">'
-    # 日付の新しい順にソート
     for art in sorted(articles, key=lambda x: x['d'], reverse=True):
         list_body_html += f"<li><a href='{depth_prefix}{art['p']}'>{art['t']}</a><span class='date'>{art['d']}</span></li>"
     list_body_html += "</ul>"
@@ -66,7 +62,6 @@ def generate_index_page(title, articles, depth_prefix, template, output_filepath
 def main():
     post_dir = '_posts'
     
-    # 金型（共通テンプレート）の読み込み
     with open('template.html', 'r', encoding='utf-8') as f:
         template = f.read()
         
@@ -77,22 +72,38 @@ def main():
     # 1. _posts フォルダ内を再帰的にスキャン
     for root, dirs, files in os.walk(post_dir):
         rel_path = os.path.relpath(root, post_dir)
+        
+        # 階層深さと相対パスプレフィックスの決定
         if rel_path == '.':
-            continue
-            
-        output_dir = rel_path
-        depth = len(output_dir.split(os.sep))
-        depth_prefix = '../' * depth
+            output_dir = '.'
+            depth_prefix = ''
+        else:
+            output_dir = rel_path
+            depth = len(output_dir.split(os.sep))
+            depth_prefix = '../' * depth
 
-        # 同階層に存在するファイルの選別処理
         for filename in files:
             src_file = os.path.join(root, filename)
             
-            # 1-1. Markdownファイル（記事本体）の場合のコンパイル処理
+            # 1-1. Markdownファイルの処理
             if filename.endswith('.md'):
-                os.makedirs(output_dir, exist_ok=True)
                 meta, body_html = parse_markdown(src_file)
                 
+                # 【プロフィール(profile.md)専用の分岐回路】
+                if filename == 'profile.md':
+                    html_content = template
+                    html_content = html_content.replace('{{RELATIVE_DEPTH}}', '') # ルート配置のため空文字
+                    html_content = html_content.replace('{{TITLE}}', meta.get('title', 'プロフィール'))
+                    html_content = html_content.replace('{{META_INFO}}', '') # プロフィールに日付等のメタ行は不要
+                    html_content = html_content.replace('{{BODY}}', body_html)
+                    
+                    with open('profile.html', 'w', encoding='utf-8') as f:
+                        f.write(html_content)
+                    print("Compiled: profile.html (From Markdown)")
+                    continue # 通常の記事一覧プロセス（以降の処理）には流さない
+                
+                # 以下、通常記事のコンパイル処理
+                os.makedirs(output_dir, exist_ok=True)
                 meta_info_html = f'<time class="post-date-meta">日付: {meta.get("date", "")} | カテゴリ: {meta.get("categories", "")} | タグ: {meta.get("tags", "")}</time>'
                 
                 html_content = template
