@@ -38,15 +38,32 @@ def parse_markdown(filepath):
     body_html = re.sub(r'^\* (.*?)$', r'<li>\1</li>', body_html, flags=re.MULTILINE)
     body_html = re.sub(r'((?:<li>.*?</li>\s*)+)', r'<ul>\1</ul>', body_html)
     
-    # 【アスペクト比完全固定・レスポンシブ版】
-    # width: auto と height: auto で画像の縦横比を完全に保護し、上限リミッターのみでサイズを制御する堅牢な回路。
-    img_replacement = (
-        r'<a href="\2" target="_blank" title="クリックで拡大（別タブ）" style="display:block; text-decoration:none; margin:20px 0;">'
-        r'<img src="\2" alt="\1" style="max-width:min(100%, 500px); max-height:400px; width:auto; height:auto; '
-        r'display:block; border:1px solid #ddd; box-shadow:0 2px 4px rgba(0,0,0,0.05); cursor:pointer;">'
-        r'</a>'
-    )
-    body_html = re.sub(r'!\[(.*?)\]\((.*?)\)', img_replacement, body_html)
+    # 【キャプション自動生成版】
+    # カッコ内の文字列を、画像の次の行に文字サイズ85%・グレー色の中央配置テキストとして自動出力するロジック
+    def replace_image_with_caption(match):
+        alt_text = match.group(1).strip()
+        img_src = match.group(2).strip()
+        
+        # 基本の画像リンク構造を定義
+        html = (
+            f'<a href="{img_src}" target="_blank" title="クリックで拡大（別タブ）" style="display:block; text-decoration:none; margin:20px 0;">'
+            f'<img src="{img_src}" alt="{alt_text}" style="max-width:min(100%, 500px); max-height:400px; width:auto; height:auto; '
+            f'display:block; border:1px solid #ddd; box-shadow:0 2px 4px rgba(0,0,0,0.05); cursor:pointer;">'
+        )
+        
+        # もしカッコ内に文字が入力されていれば、次の行にキャプション行をドッキングする
+        if alt_text:
+            html += (
+                f'<span style="display:block; max-width:min(100%, 500px); text-align:center; '
+                f'font-size:0.85em; color:#666; margin-top:8px; font-family:sans-serif;">'
+                f'▲ {alt_text}'
+                f'</span>'
+            )
+            
+        html += '</a>'
+        return html
+
+    body_html = re.sub(r'!\[(.*?)\]\((.*?)\)', replace_image_with_caption, body_html)
     
     body_html = '<p>' + body_html.replace('\n\n', '</p><p>').replace('\n', '<br>') + '</p>'
     
