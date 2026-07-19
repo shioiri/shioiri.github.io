@@ -5,6 +5,10 @@ import shutil
 import markdown
 from collections import defaultdict
 
+# 【根本治療】SNSクローラー用のベース絶対URL定義
+# SNS（X, Facebook等）の仕様に準拠するため、og:imageを絶対URLで出力する回路を構成
+BASE_URL = "https://shioiri.github.io/"
+
 def parse_markdown(filepath):
     """
     Markdownファイルを読み込み、Front Matter（メタデータ）と本文HTMLを分離・抽出する。
@@ -35,19 +39,20 @@ def parse_markdown(filepath):
 
     body_html = body.strip()
     
-    # 【SNS連携：1枚目の画像抽出回路】
-    # 本文内から最初のマークダウン画像形式を検索し、パスを特定する
+    # 【SNS連携：1枚目の画像ファイル名抽出回路】
     first_img_match = re.search(r'!\[.*?\]\((.*?)\)', body_html)
-    meta['og_image'] = first_img_match.group(1).strip() if first_img_match else None
+    if first_img_match:
+        # パスの中に含まれるかもしれない相対記号やフォルダ名を削り、純粋な「ファイル名のみ」を抽出
+        img_filename = os.path.basename(first_img_match.group(1).strip())
+        meta['og_image_filename'] = img_filename
+    else:
+        meta['og_image_filename'] = None
 
     # 【SNS連携：冒頭40文字の要約抽出回路】
-    # マークダウン記号、HTMLタグ、改行を完全に剥ぎ取って純粋なプレーンテキストにする
-    plain_text = re.sub(r'!\[.*?\]\(.*?\)', '', body_html) # 画像記述を排除
-    plain_text = re.sub(r'<[^>]*>', '', plain_text)         # HTMLタグを排除
-    plain_text = re.sub(r'[#\*_\-`\[\]\(\)]', '', plain_text) # マークダウン記号を排除
-    plain_text = "".join(plain_text.split())                # 空白・改行を完全圧縮
-    
-    # 確実に対象テキストを40文字（境界値リミッター）で切り出し
+    plain_text = re.sub(r'!\[.*?\]\(.*?\)', '', body_html)
+    plain_text = re.sub(r'<[^>]*>', '', plain_text)
+    plain_text = re.sub(r'[#\*_\-`\[\]\(\)]', '', plain_text)
+    plain_text = "".join(plain_text.split())
     meta['og_description'] = plain_text[:40] + ('...' if len(plain_text) > 40 else '') if plain_text else "記事の個別ページです。"
 
     # 【画像・キャプション配置の最適化関数】
@@ -76,7 +81,6 @@ def parse_markdown(filepath):
 
     body_html = re.sub(r'!\[(.*?)\]\((.*?)\)', replace_image_with_caption, body_html)
     
-    # 純正Markdownエンジンによる翻訳
     body_html = markdown.markdown(body_html, extensions=['tables', 'nl2br'])
     
     return meta, body_html
@@ -95,7 +99,6 @@ def generate_index_page(title, articles, depth_prefix, template, output_filepath
         list_body_html += f"<li><a href='{depth_prefix}{art['p']}'>{art['t']}</a><span class='date'>{art['d']}</span></li>"
     list_body_html += "</ul>"
     
-    # トップ・アーカイブ用のSNSメタダミータグ処理
     index_html_content = template
     index_html_content = index_html_content.replace('{{RELATIVE_DEPTH}}', depth_prefix)
     index_html_content = index_html_content.replace('{{DYNAMIC_MONTHLY_MENU}}', monthly_menu_html)
@@ -239,14 +242,19 @@ def main():
 
                 meta_info_html = f'<time class="post-date-meta" style="display:block; margin-bottom:35px; color:#666; font-size:0.9em;">{meta_text}</time>'
             
-            # 【SNS連携：動的置換ロジックの実行】
-            og_img = post["meta"].get("og_image")
-            if og_img:
-                # 記事が階層下（例：2026/07/等）に配置されるため、画像パスの相対位置を補正してタグ化
-                full_img_url = f'{dp}{og_img}'
-                og_image_tag = f'<meta property="og:image" content="{full_img_url}">'
+            # 【絶対パス変換回路の適用】
+            img_filename = post["meta"].get("og_image_filename")
+            if img_filename:
+                # 記事の配置されている物理フォルダ階層（output_dir）とファイル名を組み合わせ、ドメインに直結
+                if post["output_dir"] == ".":
+                    absolute_img_url = f"{BASE_URL}{img_filename}"
+                else:
+                    clean_dir = post["output_dir"].replace('\\', '/')
+                    absolute_img_url = f"{BASE_URL}{clean_dir}/{img_filename}"
+                    
+                og_image_tag = f'<meta property="og:image" content="{absolute_img_url}">'
             else:
-                og_image_tag = '' # 画像がない場合はタグごと消去（画像なしカード化）
+                og_image_tag = ''
 
             html_content = template
             html_content = html_content.replace('{{RELATIVE_DEPTH}}', dp)
