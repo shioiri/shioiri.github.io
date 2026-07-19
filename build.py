@@ -38,21 +38,21 @@ def parse_markdown(filepath):
     body_html = re.sub(r'^\* (.*?)$', r'<li>\1</li>', body_html, flags=re.MULTILINE)
     body_html = re.sub(r'((?:<li>.*?</li>\s*)+)', r'<ul>\1</ul>', body_html)
     
-    # 【記号排除・完全中央揃え版】
-    # カッコ内の文字列を、余計な記号を付けずにそのままテキストとして直下へ出力します。
+    # 【縦横400px上限・対称制限版】
+    # 長辺最大400pxの均等リミッターを採用。正方形・縦長・横長の全アセットが美しく調和する回路。
     def replace_image_with_caption(match):
         alt_text = match.group(1).strip()
         img_src = match.group(2).strip()
         
         html = (
             f'<a href="{img_src}" target="_blank" title="クリックで拡大（別タブ）" style="display:block; text-decoration:none; margin:20px 0;">'
-            f'<img src="{img_src}" alt="{alt_text}" style="max-width:min(100%, 500px); max-height:400px; width:auto; height:auto; '
+            f'<img src="{img_src}" alt="{alt_text}" style="max-width:min(100%, 400px); max-height:400px; width:auto; height:auto; '
             f'display:block; margin:20px auto; border:1px solid #ddd; box-shadow:0 2px 4px rgba(0,0,0,0.05); cursor:pointer;">'
         )
         
         if alt_text:
             html += (
-                f'<span style="display:block; max-width:min(100%, 500px); text-align:center; '
+                f'<span style="display:block; max-width:min(100%, 400px); text-align:center; '
                 f'font-size:0.85em; color:#666; margin:-12px auto 25px auto; font-family:sans-serif;">'
                 f'{alt_text}'
                 f'</span>'
