@@ -207,7 +207,8 @@ def main():
             if post["is_standalone"]:
                 meta_info_html = ''
             else:
-                meta_info_html = f'<time class="post-date-meta">日付: {post["meta"].get("date", "")} | カテゴリ: {post["meta"].get("categories", "")} | タグ: {post["meta"].get("tags", "")}</time>'
+                # 【改修箇所】メタデータ出力タグに直接 margin-bottom: 35px; と display: block; を流し込み、本文との間隔を確実に確保
+                meta_info_html = f'<time class="post-date-meta" style="display:block; margin-bottom:35px;">日付: {post["meta"].get("date", "")} | カテゴリ: {post["meta"].get("categories", "")} | タグ: {post["meta"].get("tags", "")}</time>'
             
             html_content = template
             html_content = html_content.replace('{{RELATIVE_DEPTH}}', dp)
