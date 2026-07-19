@@ -32,16 +32,16 @@ def parse_markdown(filepath):
         meta = {"title": "No Title", "date": "none", "categories": "", "tags": ""}
         body = raw_content
 
-    # 本文の簡易HTML構造化（見出し、箇条書きリスト、改行処理）
+    # 本文の簡易HTML構造化（見出し、箇取りリスト、改行処理）
     body_html = body.strip()
     body_html = re.sub(r'^### (.*?)$', r'<h3>\1</h3>', body_html, flags=re.MULTILINE)
     body_html = re.sub(r'^\* (.*?)$', r'<li>\1</li>', body_html, flags=re.MULTILINE)
     body_html = re.sub(r'((?:<li>.*?</li>\s*)+)', r'<ul>\1</ul>', body_html)
     
-    # 【完全版】PCでは最大横500px/縦400pxに抑えつつ、スマホ画面では両方とも横幅に追従して自動縮小する多重安全回路
+    # 【バグ修正版】width: 100% と max二重制限の組み合わせにより、ポートレート画像もスマホ幅で確実に追従縮小する回路
     img_replacement = (
         r'<a href="\2" target="_blank" title="クリックで拡大（別タブ）" style="display:inline-block; text-decoration:none; max-width:100%;"> '
-        r'<img src="\2" alt="\1" style="max-width:min(100%, 500px); max-height:400px; width:auto; height:auto; '
+        r'<img src="\2" alt="\1" style="max-width:min(100%, 500px); max-height:400px; width:100%; height:auto; '
         r'display:block; margin:20px 0; border:1px solid #ddd; box-shadow:0 2px 4px rgba(0,0,0,0.05); cursor:pointer;">'
         r'</a>'
     )
