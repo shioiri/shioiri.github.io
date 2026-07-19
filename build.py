@@ -32,17 +32,18 @@ def parse_markdown(filepath):
         meta = {"title": "No Title", "date": "none", "categories": "", "tags": ""}
         body = raw_content
 
-    # 本文の簡易HTML構造化（見出し、箇取りリスト、改行処理）
+    # 本文の簡易HTML構造化（見出し、箇条書きリスト、改行処理）
     body_html = body.strip()
     body_html = re.sub(r'^### (.*?)$', r'<h3>\1</h3>', body_html, flags=re.MULTILINE)
     body_html = re.sub(r'^\* (.*?)$', r'<li>\1</li>', body_html, flags=re.MULTILINE)
     body_html = re.sub(r'((?:<li>.*?</li>\s*)+)', r'<ul>\1</ul>', body_html)
     
-    # 【バグ修正版】width: 100% と max二重制限の組み合わせにより、ポートレート画像もスマホ幅で確実に追従縮小する回路
+    # 【完全バグ修正版】aタグを display: block にすることで、親要素のレスポンシブ幅へ完全に同調させる
+    # PCでは最大横500px/縦400pxを維持し、スマホではポートレートも含めて100%自動連動縮小します。
     img_replacement = (
-        r'<a href="\2" target="_blank" title="クリックで拡大（別タブ）" style="display:inline-block; text-decoration:none; max-width:100%;"> '
-        r'<img src="\2" alt="\1" style="max-width:min(100%, 500px); max-height:400px; width:100%; height:auto; '
-        r'display:block; margin:20px 0; border:1px solid #ddd; box-shadow:0 2px 4px rgba(0,0,0,0.05); cursor:pointer;">'
+        r'<a href="\2" target="_blank" title="クリックで拡大（別タブ）" style="display:block; text-decoration:none; max-width:min(100%, 500px); margin:20px 0;">'
+        r'<img src="\2" alt="\1" style="max-width:100%; max-height:400px; width:100%; height:auto; '
+        r'display:block; border:1px solid #ddd; box-shadow:0 2px 4px rgba(0,0,0,0.05); cursor:pointer;">'
         r'</a>'
     )
     body_html = re.sub(r'!\[(.*?)\]\((.*?)\)', img_replacement, body_html)
@@ -181,7 +182,6 @@ def main():
             html_content = html_content.replace('{{RELATIVE_DEPTH}}', '')
             html_content = html_content.replace('{{DYNAMIC_MONTHLY_MENU}}', m_menu_html)
             html_content = html_content.replace('{{TITLE}}', post["meta"].get('title', 'プロフィール'))
-            html_content = html_content.replace('{{META_INFO}}', '')
             html_content = html_content.replace('{{BODY}}', post["body_html"])
             with open('profile.html', 'w', encoding='utf-8') as f:
                 f.write(html_content)
