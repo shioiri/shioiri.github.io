@@ -35,14 +35,26 @@ def parse_markdown(filepath):
 
     body_html = body.strip()
     
-    # 【画像・キャプション間隔の根本治療】
-    # 純正エンジンの自動段落化（<p>挿入）による隙間の肥大化を防ぐため、
-    # 完全に独立したブロックとしてインラインCSSを再チューニングします。
+    # 【SNS連携：1枚目の画像抽出回路】
+    # 本文内から最初のマークダウン画像形式を検索し、パスを特定する
+    first_img_match = re.search(r'!\[.*?\]\((.*?)\)', body_html)
+    meta['og_image'] = first_img_match.group(1).strip() if first_img_match else None
+
+    # 【SNS連携：冒頭40文字の要約抽出回路】
+    # マークダウン記号、HTMLタグ、改行を完全に剥ぎ取って純粋なプレーンテキストにする
+    plain_text = re.sub(r'!\[.*?\]\(.*?\)', '', body_html) # 画像記述を排除
+    plain_text = re.sub(r'<[^>]*>', '', plain_text)         # HTMLタグを排除
+    plain_text = re.sub(r'[#\*_\-`\[\]\(\)]', '', plain_text) # マークダウン記号を排除
+    plain_text = "".join(plain_text.split())                # 空白・改行を完全圧縮
+    
+    # 確実に対象テキストを40文字（境界値リミッター）で切り出し
+    meta['og_description'] = plain_text[:40] + ('...' if len(plain_text) > 40 else '') if plain_text else "記事の個別ページです。"
+
+    # 【画像・キャプション配置の最適化関数】
     def replace_image_with_caption(match):
         alt_text = match.group(1).strip()
         img_src = match.group(2).strip()
         
-        # 不要な改行文字を排除し、画像直下のマージンを「8px」に、下のキャプションとの余白をカチッと制御
         html = (
             f'<div style="display:block; text-align:center; margin:25px auto; width:100%; max-width:400px;">'
             f'<a href="{img_src}" target="_blank" title="クリックで拡大（別タブ）" style="display:block; text-decoration:none;">'
@@ -51,7 +63,6 @@ def parse_markdown(filepath):
             f'</a>'
         )
         
-        # 画像のすぐ次の行にピタッと吸いつくようにマージンを「8px」に固定
         if alt_text:
             html += (
                 f'<span style="display:block; text-align:center; font-size:0.85em; color:#666; '
@@ -65,7 +76,7 @@ def parse_markdown(filepath):
 
     body_html = re.sub(r'!\[(.*?)\]\((.*?)\)', replace_image_with_caption, body_html)
     
-    # 純正Markdownエンジンによる一括翻訳（余計な改行パッチを廃止）
+    # 純正Markdownエンジンによる翻訳
     body_html = markdown.markdown(body_html, extensions=['tables', 'nl2br'])
     
     return meta, body_html
@@ -84,11 +95,14 @@ def generate_index_page(title, articles, depth_prefix, template, output_filepath
         list_body_html += f"<li><a href='{depth_prefix}{art['p']}'>{art['t']}</a><span class='date'>{art['d']}</span></li>"
     list_body_html += "</ul>"
     
+    # トップ・アーカイブ用のSNSメタダミータグ処理
     index_html_content = template
     index_html_content = index_html_content.replace('{{RELATIVE_DEPTH}}', depth_prefix)
     index_html_content = index_html_content.replace('{{DYNAMIC_MONTHLY_MENU}}', monthly_menu_html)
     index_html_content = index_html_content.replace('{{TITLE}}', title)
     index_html_content = index_html_content.replace('{{META_INFO}}', '')
+    index_html_content = index_html_content.replace('{{OG_DESCRIPTION}}', '記事の一覧・アーカイブページです。')
+    index_html_content = index_html_content.replace('{{OG_IMAGE_TAG}}', '')
     index_html_content = index_html_content.replace('{{BODY}}', list_body_html)
     
     with open(output_filepath, 'w', encoding='utf-8') as f:
@@ -180,13 +194,13 @@ def main():
                 shutil.copy2(src_file, dst_file)
                 print(f"Asset Copied: {dst_file}")
 
-    # 存在する「月別アーカイブ」のリンクHTML（<li>）を降順で組み立てる
+    # 2. 存在する「月別アーカイブ」のリンクHTML（<li>）を降順で組み立てる
     monthly_menu_base_list = []
     for y_m in sorted(monthly_articles.keys(), reverse=True):
         display_name = f"{y_m.replace('/', '年')}月"
         monthly_menu_base_list.append({"path": f"{y_m}/index.html", "name": display_name})
 
-    # 解析済みのデータを元に、各個別HTMLを実際のファイルに出力
+    # 3. 解析済みのデータを元に、各個別HTMLを実際のファイルに出力
     for post in compiled_posts:
         dp = post["depth_prefix"]
         m_menu_html = ""
@@ -199,6 +213,8 @@ def main():
             html_content = html_content.replace('{{DYNAMIC_MONTHLY_MENU}}', m_menu_html)
             html_content = html_content.replace('{{TITLE}}', post["meta"].get('title', 'プロフィール'))
             html_content = html_content.replace('{{BODY}}', post["body_html"])
+            html_content = html_content.replace('{{OG_DESCRIPTION}}', '塩入友広のプロフィールページです。')
+            html_content = html_content.replace('{{OG_IMAGE_TAG}}', '')
             with open('profile.html', 'w', encoding='utf-8') as f:
                 f.write(html_content)
             print("Compiled: profile.html")
@@ -223,11 +239,22 @@ def main():
 
                 meta_info_html = f'<time class="post-date-meta" style="display:block; margin-bottom:35px; color:#666; font-size:0.9em;">{meta_text}</time>'
             
+            # 【SNS連携：動的置換ロジックの実行】
+            og_img = post["meta"].get("og_image")
+            if og_img:
+                # 記事が階層下（例：2026/07/等）に配置されるため、画像パスの相対位置を補正してタグ化
+                full_img_url = f'{dp}{og_img}'
+                og_image_tag = f'<meta property="og:image" content="{full_img_url}">'
+            else:
+                og_image_tag = '' # 画像がない場合はタグごと消去（画像なしカード化）
+
             html_content = template
             html_content = html_content.replace('{{RELATIVE_DEPTH}}', dp)
             html_content = html_content.replace('{{DYNAMIC_MONTHLY_MENU}}', m_menu_html)
             html_content = html_content.replace('{{TITLE}}', post["meta"].get('title', ''))
             html_content = html_content.replace('{{META_INFO}}', meta_info_html)
+            html_content = html_content.replace('{{OG_DESCRIPTION}}', post["meta"].get("og_description", ""))
+            html_content = html_content.replace('{{OG_IMAGE_TAG}}', og_image_tag)
             html_content = html_content.replace('{{BODY}}', post["body_html"])
             
             output_html_path = os.path.join(post["output_dir"], post["filename"].replace('.md', '.html'))
