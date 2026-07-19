@@ -4,106 +4,91 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{TITLE}} - Tomohiro Shioiri Archive</title>
+    <!-- ★ 既存の引き込んできたローカルCSSを最優先で読み込む（資産の活用） -->
     <link rel="stylesheet" href="{{RELATIVE_DEPTH}}assets/css/style.css">
+    
     <style>
         /* ==========================================================================
-           レイアウト＆レスポンシブ制御回路（既存のスタイルシートと調和させる修正）
+           既存の style.css（Minimalテーマ）に対するスクラッチ差分アドオン回路
            ========================================================================== */
-        
-        /* PC大画面（768px以上）のデフォルト配置 */
+
+        /* 1. PC大画面（768px以上）での2カラム最適化 */
         @media screen and (min-width: 768px) {
+            /* Minimalテーマが持つ width: 90% や max-width の制限を2カラム用に解放 */
             .wrapper {
+                max-width: 860px !important;
+                width: 100% !important;
                 display: flex !important;
-                flex-direction: row;
-                justify-content: space-between;
-                max-width: 860px;
-                margin: 0 auto;
-                padding: 40px 20px;
+                justify-content: space-between !important;
             }
+            /* 左右の要素の回り込み（float）を無効化し、Flexboxで厳密に等巾配置 */
             header {
-                width: 270px !important;
+                width: 260px !important;
                 float: none !important;
                 position: sticky;
                 top: 40px;
                 height: fit-content;
-                border-right: 1px solid #e5e5e5;
-                padding-right: 30px;
-                margin-bottom: 0 !important;
             }
             section {
-                width: 520px !important;
+                width: 540px !important;
                 float: none !important;
-                padding-left: 30px;
                 margin-top: 0 !important;
             }
-            /* 大画面側ではハンバーガーメニューのボタンを隠蔽 */
+            /* 大画面ではスマホ用スイッチ群を完全隔離（隠蔽） */
             #menu-toggle, .menu-btn { display: none !important; }
-            .nav-menu { display: block !important; border-top: none !important; }
+            .nav-menu { display: block !important; }
         }
-        
-        /* ナビゲーションメニューの意匠構造 */
+
+        /* 2. メニュー内の意匠・構造定義 */
         .nav-menu {
-            list-style: none;
-            padding: 0;
-            margin: 20px 0 0 0;
+            list-style: none !important;
+            padding: 0 !important;
+            margin: 20px 0 0 0 !important;
         }
-        .nav-menu li { margin: 12px 0 !important; list-style: none !important; }
-        .nav-menu a { text-decoration: none; font-weight: 600; color: #111111; }
-        .nav-menu a:hover { text-decoration: underline; }
+        .nav-menu li { margin: 10px 0 !important; list-style: none !important; }
+        .nav-menu a { font-weight: bold; text-decoration: none; }
         
-        /* メニュー内の小見出し */
         .menu-subtitle {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: #666666;
             margin: 25px 0 5px 0;
             padding-bottom: 3px;
             border-bottom: 1px dashed #e5e5e5;
             font-weight: bold;
         }
-        .sub-menu {
-            list-style: none;
-            padding-left: 10px;
-            margin: 0;
-            font-size: 0.9rem;
+        .sub-menu { list-style: none !important; padding-left: 10px !important; margin: 0 !important; }
+        .sub-menu li { margin: 6px 0 !important; list-style: none !important; font-size: 0.9rem; }
+        .sub-menu a { font-weight: normal !important; color: #444444; }
+        .disabled-link { color: #999999 !important; font-size: 0.85rem; cursor: not-allowed; }
+
+        /* 記事一覧（アーカイブ）の整列制御 */
+        .archive-list { list-style: none !important; padding-left: 0 !important; }
+        .archive-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #eeeeee;
         }
-        .sub-menu li { margin: 6px 0 !important; list-style: none !important; }
-        .sub-menu a { font-weight: normal; color: #555555; }
-        .disabled-link { color: #999999 !important; cursor: not-allowed; font-size: 0.85rem; }
+        .archive-list .date { color: #666666; font-size: 0.85rem; white-space: nowrap; }
 
-        /* 共通意匠デザイン */
-        .post-date-meta { color: #666666; font-size: 0.9rem; margin-bottom: 20px; display: block; }
-        .archive-list { list-style: none; padding-left: 0; }
-        .archive-list li { padding: 10px 0; border-bottom: 1px solid #f5f5f5; display: flex; justify-content: space-between; }
-        .archive-list .date { color: #666666; font-size: 0.9rem; margin-left: 15px; }
-
-        /* ==========================================================================
-           スマホ小画面（767px以下）のレイアウト変更・インターロック
-           ========================================================================== */
+        /* 3. スマホ小画面（767px以下）でのハンバーガー格納回路 */
         @media screen and (max-width: 767px) {
-            .wrapper {
-                display: block;
-                padding: 20px;
-            }
             header {
-                width: 100% !important;
+                position: relative !important;
                 border-bottom: 1px solid #e5e5e5;
                 padding-bottom: 15px;
-                margin-bottom: 25px;
             }
-            section {
-                width: 100% !important;
-            }
-            
-            /* スマホ環境下のみハンバーガーメニューボタンを出現させる */
+            /* スマホ時のみ三本線ボタンを出現させる */
             .menu-btn {
                 cursor: pointer;
                 float: right;
                 position: relative;
-                width: 30px;
-                height: 24px;
+                width: 28px;
+                height: 20px;
                 display: block;
                 z-index: 10;
-                margin-top: -45px; /* タイトルの位置に追従 */
+                margin-top: -38px; /* タイトル横への配置調整 */
             }
             .menu-btn span, .menu-btn span::before, .menu-btn span::after {
                 content: '';
@@ -112,25 +97,20 @@
                 width: 100%;
                 background-color: #111111;
                 position: absolute;
-                transition: all 0.3s ease-in-out;
+                transition: all 0.25s ease-in-out;
             }
-            .menu-btn span { top: 11px; }
-            .menu-btn span::before { top: -8px; }
-            .menu-btn span::after { top: 8px; }
+            .menu-btn span { top: 9px; }
+            .menu-btn span::before { top: -7px; }
+            .menu-btn span::after { top: 7px; }
             
+            /* ✕印変形ロジック */
             #menu-toggle:checked ~ .menu-btn span { background-color: transparent; }
             #menu-toggle:checked ~ .menu-btn span::before { transform: rotate(45deg); top: 0; }
             #menu-toggle:checked ~ .menu-btn span::after { transform: rotate(-45deg); top: 0; }
             
-            .nav-menu {
-                display: none;
-                clear: both;
-                border-top: 1px solid #e5e5e5;
-                padding-top: 10px;
-            }
-            #menu-toggle:checked ~ .nav-menu {
-                display: block;
-            }
+            /* 初期状態は非表示、チェック時に展開 */
+            .nav-menu { display: none; clear: both; margin-top: 15px; }
+            #menu-toggle:checked ~ .nav-menu { display: block; }
         }
     </style>
 </head>
@@ -140,9 +120,11 @@
             <h1><a href="{{RELATIVE_DEPTH}}index.html" style="color:inherit; text-decoration:none;">Tomohiro Shioiri</a></h1>
             <p>アーカイブウェブサイト</p>
             
+            <!-- スマホ開閉用インターロックスイッチ -->
             <input type="checkbox" id="menu-toggle">
             <label for="menu-toggle" class="menu-btn"><span></span></label>
             
+            <!-- 共通ナビゲーション回路 -->
             <ul class="nav-menu">
                 <li><a href="{{RELATIVE_DEPTH}}index.html">トップページ</a></li>
                 <li><a href="{{RELATIVE_DEPTH}}profile.html">プロフィール</a></li>
@@ -168,10 +150,6 @@
             <article>
                 {{BODY}}
             </article>
-            
-            <footer>
-                <p><small>Hosted on GitHub Pages — Theme by orderedlist</small></p>
-            </footer>
         </section>
     </div>
 </body>

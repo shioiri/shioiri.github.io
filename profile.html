@@ -4,98 +4,91 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>プロフィール - Tomohiro Shioiri Archive</title>
+    <!-- ★ 既存の引き込んできたローカルCSSを最優先で読み込む（資産の活用） -->
     <link rel="stylesheet" href="assets/css/style.css">
+    
     <style>
         /* ==========================================================================
-           レイアウト＆レスポンシブ制御回路（メディアクエリ）
+           既存の style.css（Minimalテーマ）に対するスクラッチ差分アドオン回路
            ========================================================================== */
-        
-        /* PC大画面（768px以上）のデフォルト配置 */
-        .wrapper {
-            display: flex;
-            max-width: 960px;
-            margin: 0 auto;
-            padding: 40px 20px;
+
+        /* 1. PC大画面（768px以上）での2カラム最適化 */
+        @media screen and (min-width: 768px) {
+            /* Minimalテーマが持つ width: 90% や max-width の制限を2カラム用に解放 */
+            .wrapper {
+                max-width: 860px !important;
+                width: 100% !important;
+                display: flex !important;
+                justify-content: space-between !important;
+            }
+            /* 左右の要素の回り込み（float）を無効化し、Flexboxで厳密に等巾配置 */
+            header {
+                width: 260px !important;
+                float: none !important;
+                position: sticky;
+                top: 40px;
+                height: fit-content;
+            }
+            section {
+                width: 540px !important;
+                float: none !important;
+                margin-top: 0 !important;
+            }
+            /* 大画面ではスマホ用スイッチ群を完全隔離（隠蔽） */
+            #menu-toggle, .menu-btn { display: none !important; }
+            .nav-menu { display: block !important; }
         }
-        header {
-            width: 260px;
-            padding-right: 30px;
-            border-right: 1px solid #e5e5e5;
-        }
-        section {
-            flex: 1;
-            padding-left: 40px;
-        }
-        
-        /* 大画面側ではハンバーガーメニューのボタンは完全に不要（隠蔽） */
-        #menu-toggle, .menu-btn { display: none; }
-        
-        /* ナビゲーションメニューの基本構造 */
+
+        /* 2. メニュー内の意匠・構造定義 */
         .nav-menu {
-            list-style: none;
-            padding: 0;
-            margin: 20px 0 0 0;
+            list-style: none !important;
+            padding: 0 !important;
+            margin: 20px 0 0 0 !important;
         }
-        .nav-menu li { margin: 12px 0; }
-        .nav-menu a { text-decoration: none; font-weight: 600; color: #111111; }
-        .nav-menu a:hover { text-decoration: underline; }
+        .nav-menu li { margin: 10px 0 !important; list-style: none !important; }
+        .nav-menu a { font-weight: bold; text-decoration: none; }
         
-        /* メニュー内の小見出し（アーカイブ・カテゴリ等の区切り） */
         .menu-subtitle {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: #666666;
-            margin: 20px 0 5px 0;
+            margin: 25px 0 5px 0;
             padding-bottom: 3px;
             border-bottom: 1px dashed #e5e5e5;
             font-weight: bold;
         }
-        .sub-menu {
-            list-style: none;
-            padding-left: 10px;
-            margin: 0;
-            font-size: 0.9rem;
+        .sub-menu { list-style: none !important; padding-left: 10px !important; margin: 0 !important; }
+        .sub-menu li { margin: 6px 0 !important; list-style: none !important; font-size: 0.9rem; }
+        .sub-menu a { font-weight: normal !important; color: #444444; }
+        .disabled-link { color: #999999 !important; font-size: 0.85rem; cursor: not-allowed; }
+
+        /* 記事一覧（アーカイブ）の整列制御 */
+        .archive-list { list-style: none !important; padding-left: 0 !important; }
+        .archive-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #eeeeee;
         }
-        .sub-menu li { margin: 6px 0; }
-        .sub-menu a { font-weight: normal; color: #555555; }
-        .disabled-link { color: #999999 !important; cursor: not-allowed; font-size: 0.85rem; }
+        .archive-list .date { color: #666666; font-size: 0.85rem; white-space: nowrap; }
 
-        /* 共通意匠デザイン */
-        .post-date-meta { color: #666666; font-size: 0.9rem; margin-bottom: 20px; display: block; }
-        .archive-list { list-style: none; padding-left: 0; }
-        .archive-list li { padding: 10px 0; border-bottom: 1px solid #f5f5f5; display: flex; justify-content: space-between; }
-        .archive-list .date { color: #666666; font-size: 0.9rem; margin-left: 15px; }
-        footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #e5e5e5; font-size: 0.8rem; color: #666666; }
-
-        /* ==========================================================================
-           スマホ小画面（767px以下）のレイアウト変更・インターロック
-           ========================================================================== */
+        /* 3. スマホ小画面（767px以下）でのハンバーガー格納回路 */
         @media screen and (max-width: 767px) {
-            .wrapper {
-                display: block; /* 横並びを解除、縦並びへ */
-                padding: 20px;
-            }
             header {
-                width: 100%;
-                padding-right: 0;
-                border-right: none;
+                position: relative !important;
                 border-bottom: 1px solid #e5e5e5;
                 padding-bottom: 15px;
-                margin-bottom: 25px;
             }
-            section {
-                padding-left: 0;
-            }
-            
-            /* スマホ環境下のみハンバーガーメニューのスイッチと三本線ボタンを出現させる */
+            /* スマホ時のみ三本線ボタンを出現させる */
             .menu-btn {
                 cursor: pointer;
                 float: right;
                 position: relative;
-                width: 30px;
-                height: 24px;
+                width: 28px;
+                height: 20px;
                 display: block;
                 z-index: 10;
-                margin-top: -35px; /* タイトルの横に配置調整 */
+                margin-top: -38px; /* タイトル横への配置調整 */
             }
             .menu-btn span, .menu-btn span::before, .menu-btn span::after {
                 content: '';
@@ -104,28 +97,20 @@
                 width: 100%;
                 background-color: #111111;
                 position: absolute;
-                transition: all 0.3s ease-in-out;
+                transition: all 0.25s ease-in-out;
             }
-            .menu-btn span { top: 11px; }
-            .menu-btn span::before { top: -8px; }
-            .menu-btn span::after { top: 8px; }
+            .menu-btn span { top: 9px; }
+            .menu-btn span::before { top: -7px; }
+            .menu-btn span::after { top: 7px; }
             
-            /* ホバー・チェック時の✕変形アニメーション */
-            #menu-toggle:checked ~ .menu-btn span, .menu-btn:hover span { background-color: transparent; }
-            #menu-toggle:checked ~ .menu-btn span::before, .menu-btn:hover span::before { transform: rotate(45deg); top: 0; }
-            #menu-toggle:checked ~ .menu-btn span::after, .menu-btn:hover span::after { transform: rotate(-45deg); top: 0; }
+            /* ✕印変形ロジック */
+            #menu-toggle:checked ~ .menu-btn span { background-color: transparent; }
+            #menu-toggle:checked ~ .menu-btn span::before { transform: rotate(45deg); top: 0; }
+            #menu-toggle:checked ~ .menu-btn span::after { transform: rotate(-45deg); top: 0; }
             
-            /* スマホ時はデフォルトでメニューリストを隠蔽 */
-            .nav-menu {
-                display: none;
-                clear: both;
-                border-top: 1px solid #e5e5e5;
-                padding-top: 10px;
-            }
-            /* チェックボックスONでメニューを展開 */
-            #menu-toggle:checked ~ .nav-menu {
-                display: block;
-            }
+            /* 初期状態は非表示、チェック時に展開 */
+            .nav-menu { display: none; clear: both; margin-top: 15px; }
+            #menu-toggle:checked ~ .nav-menu { display: block; }
         }
     </style>
 </head>
@@ -135,33 +120,26 @@
             <h1><a href="index.html" style="color:inherit; text-decoration:none;">Tomohiro Shioiri</a></h1>
             <p>アーカイブウェブサイト</p>
             
-            <!-- スマホ用制御スイッチ（大画面時はCSSで隠蔽） -->
+            <!-- スマホ開閉用インターロックスイッチ -->
             <input type="checkbox" id="menu-toggle">
             <label for="menu-toggle" class="menu-btn"><span></span></label>
             
-            <!-- 大画面では常時露出、スマホではハンバーガーで開閉する共通メニュー -->
+            <!-- 共通ナビゲーション回路 -->
             <ul class="nav-menu">
                 <li><a href="index.html">トップページ</a></li>
                 <li><a href="profile.html">プロフィール</a></li>
                 
-                <!-- 月別アーカイブ（Pythonがここに<li>タグを自動挿入します） -->
                 <div class="menu-subtitle">月別アーカイブ</div>
                 <ul class="sub-menu">
                     <li><a href='2026/07/index.html'>2026年07月</a></li>
                 </ul>
                 
-                <!-- 今後の拡張予定（準備中ステータス） -->
                 <div class="menu-subtitle">分類・検索</div>
                 <ul class="sub-menu">
                     <li><span class="disabled-link">カテゴリ (準備中)</span></li>
                     <li><span class="disabled-link">タグ (準備中)</span></li>
                     <li><span class="disabled-link">検索 (準備中)</span></li>
                 </ul>
-                
-                <!-- Google翻訳機能（将来課題としてコメントアウト化）
-                <div class="menu-subtitle">翻訳 / Translation</div>
-                <li style="margin-top:5px;"><div id="google_translate_element"></div></li>
-                -->
             </ul>
         </header>
         
@@ -172,24 +150,7 @@
             <article>
                 <p>上田市議会議員（総務委員会・広報広聴委員会所属）。</p><p><h3>基本情報</h3><br><ul><li>**氏名：** 塩入 友広（しおいり ともひろ）</li><br><li>**生年月日：** 1969年1月15日</li><br><li>**現職：** 上田市議会議員（2026年4月就任）</li><br><li>**所属委員会：** 総務委員会、広報広聴委員会</li><br><li>**経歴・バックグラウンド：** 工作機械メーカーにて制御設計（ラダー言語）に長年従事。現在、放送大学に在学中。</li></ul></p>
             </article>
-            
-            <footer>
-                <p><small>Hosted on GitHub Pages — Theme by orderedlist</small></p>
-            </footer>
         </section>
     </div>
-
-    <!-- Google翻訳スクリプト（将来課題としてコメントアウト化）
-    <script type="text/javascript">
-        function googleTranslateElementInit() {
-            new google.translate.TranslateElement({
-                pageLanguage: 'ja',
-                includedLanguages: 'en,zh-CN,ko,es,fr',
-                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-            }, 'google_translate_element');
-        }
-    </script>
-    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-    -->
 </body>
 </html>
