@@ -43,7 +43,6 @@ h2 {
    -------------------------------------------------------------------------- */
 /* タイトル直下に本文（article）が直接接続するページの行間を35pxに拡張・復元 */
 section > h2:first-of-type {
-  padding-bottom: 5px !important;
   margin-bottom: 35px !important; 
 }
 
@@ -52,7 +51,6 @@ section > h2:first-of-type {
    -------------------------------------------------------------------------- */
 /* 通常記事（.post-date-metaが存在するページ）の大タイトルのみ、底線とメタ情報の間隔を4pxに緊縮 */
 section:has(.post-date-meta) > h2:first-of-type {
-  padding-bottom: 5 !important;
   margin-bottom: 4px !important;
 }
 
