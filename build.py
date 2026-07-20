@@ -218,6 +218,7 @@ def main():
             html_content = html_content.replace('{{DYNAMIC_MONTHLY_MENU}}', m_menu_html)
             html_content = html_content.replace('{{TITLE}}', post["meta"].get('title', 'プロフィール'))
             # プロフィールにはキャプションを適用しないため空文字で消去
+            html_content = html_content.replace('{{META_INFO}}', '') # ←【この1行を割り込ませるだけ】
             html_content = html_content.replace('{{CAPTION}}', '')
             html_content = html_content.replace('{{BODY}}', post["body_html"])
             html_content = html_content.replace('{{OG_DESCRIPTION}}', '塩入友広のプロフィールページです。')
