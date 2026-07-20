@@ -262,14 +262,17 @@ def main():
                 og_image_tag = ''
                 twitter_image_tag = ''
 
-            # 【キャプション自動判定置換回路】
+           # 【キャプション自動判定置換回路（二重下線解消版）】
             caption_text = post["meta"].get("caption", "").strip()
             if caption_text:
-                # キャプションがある場合は、14pxグレーの文字と、下のメタ情報へ繋ぐ水平線（hr）をセットで出力
+                # 1. キャプションがある場合：文字と下線をセットで生成
                 caption_html = f'<div class="lead-caption">{caption_text}</div><hr class="caption-divider">'
+                # 2. 二重線を防ぐため、この記事のタイトル(h2)から臨時に底線を消去するスタイルを割り込ませる
+                caption_html += '<style>section h2 { border-bottom: none !important; padding-bottom: 0 !important; margin-bottom: 10px !important; }</style>'
             else:
-                # キャプションがない場合は、完全に空文字にする（h2の持つ底線とメタ情報が直結する）
+                # キャプションがない場合：完全に空白（もともとあったh2の底線がそのままメタ情報との区切り線になります）
                 caption_html = ''
+                
             # 個別記事（post）のHTML置換回路
             html_content = template
             html_content = html_content.replace('{{RELATIVE_DEPTH}}', dp)
