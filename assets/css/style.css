@@ -143,13 +143,13 @@ hr { border: 0; background: #e5e5e5; height: 1px; margin: 20px 0; }
 #menu-toggle { display: none !important; }
 
 /* ==========================================================================
-   6. 画面サイズによるレイアウト・ナビゲーション自動切り替え回路
+   6. 画面サイズによるレイアウト・ナビゲーション自動切り替え回路（総幅1200px/本文860px拡張版）
    ========================================================================== */
 
 /* ── 【PC大画面側：1025px以上】 ── */
 @media screen and (min-width: 1025px) {
     .wrapper {
-        max-width: 860px !important;
+        max-width: 1200px !important; /* 総幅を1200pxに拡張 */
         width: 100% !important;
         margin: 0 auto !important;
         display: flex !important;
@@ -157,13 +157,13 @@ hr { border: 0; background: #e5e5e5; height: 1px; margin: 20px 0; }
         justify-content: space-between !important;
     }
     header {
-        width: 260px !important;
+        width: 280px !important; /* 左側ヘッダー幅 */
         position: sticky !important;
         top: 40px;
         height: fit-content;
     }
     section {
-        width: 540px !important;
+        width: 860px !important; /* 【提案採用】PC時のメインカラム最大幅を「860px」に拡張 */
         margin-top: 0 !important;
     }
     .menu-btn { display: none !important; }
@@ -174,7 +174,7 @@ hr { border: 0; background: #e5e5e5; height: 1px; margin: 20px 0; }
 @media screen and (max-width: 1024px) {
     .wrapper {
         width: 90% !important;
-        max-width: 640px !important;
+        max-width: 860px !important; /* PC時のメインカラム最大幅「860px」と完全に上限を同期 */
         display: block !important;
         margin: 0 auto !important;
     }
@@ -186,7 +186,7 @@ hr { border: 0; background: #e5e5e5; height: 1px; margin: 20px 0; }
         margin-bottom: 25px !important;
     }
     section {
-        width: 100% !important;
+        width: 100% !important; /* wrapperの最大860pxに対して100%追従 */
         margin-top: 0 !important;
     }
     
