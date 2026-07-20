@@ -25,13 +25,45 @@ p, ul, ol, table, pre, dl {
   margin: 0 0 20px;
 }
 
-/* 2. タイトル直下のキャプション（リード文）および境界線の余白厳密統制 */
+/* ==========================================================================
+   2. 記事大タイトル（最初のH2）および周辺要素の余白一元管理回路
+   ========================================================================== */
+
+/* 共通：本文中を含めた通常のH2（標準の底線と余白） */
+h2 {
+  font-size: 24px;
+  color: #222222;
+  border-bottom: 1px solid #e5e5e5;
+  padding-bottom: 5px;
+  margin: 0 0 20px 0;
+}
+
+/* パターンA：キャプションが「ない」場合の記事大タイトル（最初のH2） */
+/* 底線から下のメタ情報までの間隔を4pxに固定します */
+section > h2:first-of-type {
+  padding-bottom: 0 !important;
+  margin-bottom: 4px !important;
+}
+
+/* パターンB：キャプションが「ある」場合の記事大タイトル（最初のH2） */
+/* 直下に .lead-caption が存在することを検知（隣接セレクタ）し、自動的に自身の底線を消去 */
+section > h2:first-of-type + .lead-caption {
+  /* このセレクタが起動した時点で、上の h2 自体のスタイルを上書き変更します */
+}
+/* キャプションがあるときの大タイトル自身の形状変更 */
+section > h2:first-of-type:has(+ .lead-caption) {
+  border-bottom: none !important;
+  padding-bottom: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* キャプション（リード文）自体の意匠定義 */
 .lead-caption {
   font-size: 14px !important; 
   line-height: 1.4;
   color: #666666 !important; 
   font-weight: 400;
-  margin: 4px 0 0 0 !important;   /* 【対応1】タイトルとの間隔をさらに詰め、冗長さを完全解消 */
+  margin: 4px 0 0 0 !important;   /* タイトルとの間隔（4px） */
   padding: 0 !important;
   border: none !important;
 }
@@ -41,26 +73,27 @@ p, ul, ol, table, pre, dl {
   border: 0 !important;
   background: #e5e5e5 !important;
   height: 1px !important;
-  margin: 6px 0 4px 0 !important;  /* 【対応2】水平線と下のメタ情報の間隔を極小化し、締まった印象に */
+  margin: 6px 0 4px 0 !important;  /* 水平線から下のメタ情報までの間隔（4px） */
   padding: 0 !important;
 }
 
 /* メタ情報の位置定義 */
 .post-date-meta {
   display: block !important;
-  margin: 0 0 25px 0 !important;   /* メタ情報から本文へ移る際の適切な余白（変更なし） */
+  margin: 0 0 25px 0 !important;   /* メタ情報から本文へ移る際の適切な余白 */
   color: #666 !important;
   font-size: 0.9em !important;
 }
 
-/* 3. 見出し群のスケール定義 */
-h1, h2, h3, h4, h5, h6 {
+/* ==========================================================================
+   3. 見出し群のスケール定義（その他）
+   ========================================================================== */
+h1, h3, h4, h5, h6 {
   color: #111111;
   margin: 0 0 20px;
   line-height: 1.3;
 }
 h1 { font-size: 32px; }
-h2 { font-size: 24px; color: #222222; border-bottom: 1px solid #e5e5e5; padding-bottom: 5px; }
 h3 { font-size: 18px; color: #444444; }
 
 /* 4. リンク・装飾意匠 */
@@ -98,7 +131,7 @@ hr { border: 0; background: #e5e5e5; height: 1px; margin: 20px 0; }
 #menu-toggle { display: none !important; }
 
 /* ==========================================================================
-   6. 画面サイズによるレイアウト・ナビゲーション自動切り替え回路（統合階層）
+   6. 画面サイズによるレイアウト・ナビゲーション自動切り替え回路
    ========================================================================== */
 
 /* ── 【PC大画面側：1025px以上】 ── */
