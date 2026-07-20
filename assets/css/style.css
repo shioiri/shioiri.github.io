@@ -8,7 +8,7 @@
 
 body {
   background-color: #fff;
-  padding: 50px;
+  padding: 40px 0; /* 上下の余白は40pxに固定し、左右の固定余白(50px)は完全撤去して0にする */
   font: 16px/1.6 "Noto Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   color: #333333;
   font-weight: 400;
