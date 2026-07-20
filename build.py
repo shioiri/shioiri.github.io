@@ -262,13 +262,13 @@ def main():
                 og_image_tag = ''
                 twitter_image_tag = ''
 
-            # 【キャプション自動判定置換回路（クリーン版）】
+            # 【キャプション自動判定置換回路（本文H2保護版）】
             caption_text = post["meta"].get("caption", "").strip()
             if caption_text:
-                # キャプションがある場合は、専用のラッパークラスでタイトル底線を消し、文字と水平線を配置
+                # キャプションがある場合のみ文字と水平線を出力
                 caption_html = f'<div class="lead-caption">{caption_text}</div><hr class="caption-divider">'
-                # 記事全体のsectionに「キャプション有り」を示すクラスを動的追加するための布石（後述のCSSで制御）
-                caption_html += '<style>section { position: relative; } section h2 { border-bottom: none !important; padding-bottom: 0 !important; margin-bottom: 4px !important; }</style>'
+                # 記事大タイトル（section直下の最初のh2だけ）の底線を消去し、本文中のh2は完全に保護する
+                caption_html += '<style>section > h2:first-of-type { border-bottom: none !important; padding-bottom: 0 !important; margin-bottom: 4px !important; }</style>'
             else:
                 caption_html = ''
                 
