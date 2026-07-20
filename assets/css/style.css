@@ -153,7 +153,7 @@ section div[style*="display:block; text-align:center;"] {
 
 /* 画像自体の個別表示を上書き保護（長辺400pxのインターロックをCSS側でも物理的に担保） */
 section div[style*="display:block; text-align:center;"] img {
-  max-width: 100% !important;
+  max-width: 400px !important;
   max-height: 400px !important; /* 縦長・横長問わず、長辺の上限を400pxに厳密にロック */
   width: auto !important;
   height: auto !important;
