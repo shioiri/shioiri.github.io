@@ -52,7 +52,7 @@ section > h2:first-of-type {
    -------------------------------------------------------------------------- */
 /* 通常記事（.post-date-metaが存在するページ）の大タイトルのみ、底線とメタ情報の間隔を4pxに緊縮 */
 section:has(.post-date-meta) > h2:first-of-type {
-  padding-bottom: 0 !important;
+  padding-bottom: 5 !important;
   margin-bottom: 4px !important;
 }
 
