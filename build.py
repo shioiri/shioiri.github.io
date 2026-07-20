@@ -265,10 +265,11 @@ def main():
             # 【キャプション自動判定置換回路】
             caption_text = post["meta"].get("caption", "").strip()
             if caption_text:
-                caption_html = f'<div class="lead-caption">{caption_text}</div>'
+                # キャプションがある場合は、14pxグレーの文字と、下のメタ情報へ繋ぐ水平線（hr）をセットで出力
+                caption_html = f'<div class="lead-caption">{caption_text}</div><hr class="caption-divider">'
             else:
+                # キャプションがない場合は、完全に空文字にする（h2の持つ底線とメタ情報が直結する）
                 caption_html = ''
-
             # 個別記事（post）のHTML置換回路
             html_content = template
             html_content = html_content.replace('{{RELATIVE_DEPTH}}', dp)
