@@ -262,15 +262,18 @@ def main():
                 og_image_tag = ''
                 twitter_image_tag = ''
 
-            # 【キャプション自動判定置換回路（余白厳密統制版）】
+            # 【キャプション自動判定置換回路（余白完全同期版）】
             caption_text = post["meta"].get("caption", "").strip()
             if caption_text:
-                # キャプションがある場合は文字と水平線をセットで出力
+                # 1. キャプションがある場合
                 caption_html = f'<div class="lead-caption">{caption_text}</div><hr class="caption-divider">'
-                # 大タイトル直下の余白を0にリセットし、本文中のh2（底線あり）は一切巻き込まずに完全に保護
+                # 大タイトル直下の余白を完全にゼロにする
                 caption_html += '<style>section > h2:first-of-type { border-bottom: none !important; padding-bottom: 0 !important; margin-bottom: 0 !important; }</style>'
             else:
+                # 2. キャプションがない場合
                 caption_html = ''
+                # タイトル(h2)の持つ底線から下のメタ情報までの距離を、キャプションありの直線と同じタイトな間隔(4px)に強制同期する
+                caption_html += '<style>section > h2:first-of-type { padding-bottom: 0 !important; margin-bottom: 4px !important; }</style>'
                 
             # 個別記事（post）のHTML置換回路
             html_content = template
