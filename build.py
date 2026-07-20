@@ -103,6 +103,8 @@ def generate_index_page(title, articles, depth_prefix, template, output_filepath
     index_html_content = index_html_content.replace('{{TITLE}}', title)
     index_html_content = index_html_content.replace('{{META_INFO}}', '')
     index_html_content = index_html_content.replace('{{MIDDLE_META}}', '')
+    # 一覧系ページにはキャプションを適用しないため空文字で消去
+    index_html_content = index_html_content.replace('{{CAPTION}}', '')
     index_html_content = index_html_content.replace('{{OG_DESCRIPTION}}', '記事の一覧・アーカイブページです。')
     index_html_content = index_html_content.replace('{{OG_IMAGE_TAG}}', '')
     index_html_content = index_html_content.replace('{{TWITTER_IMAGE_TAG}}', '')
@@ -215,6 +217,8 @@ def main():
             html_content = html_content.replace('{{RELATIVE_DEPTH}}', '')
             html_content = html_content.replace('{{DYNAMIC_MONTHLY_MENU}}', m_menu_html)
             html_content = html_content.replace('{{TITLE}}', post["meta"].get('title', 'プロフィール'))
+            # プロフィールにはキャプションを適用しないため空文字で消去
+            html_content = html_content.replace('{{CAPTION}}', '')
             html_content = html_content.replace('{{BODY}}', post["body_html"])
             html_content = html_content.replace('{{OG_DESCRIPTION}}', '塩入友広のプロフィールページです。')
             html_content = html_content.replace('{{OG_IMAGE_TAG}}', '')
@@ -258,15 +262,23 @@ def main():
                 og_image_tag = ''
                 twitter_image_tag = ''
 
-            # 【根本治療】個別記事（post）のHTML置換回路に、不足していたX用の置換処理を追加
+            # 【キャプション自動判定置換回路】
+            caption_text = post["meta"].get("caption", "").strip()
+            if caption_text:
+                caption_html = f'<div class="lead-caption">{caption_text}</div>'
+            else:
+                caption_html = ''
+
+            # 個別記事（post）のHTML置換回路
             html_content = template
             html_content = html_content.replace('{{RELATIVE_DEPTH}}', dp)
             html_content = html_content.replace('{{DYNAMIC_MONTHLY_MENU}}', m_menu_html)
             html_content = html_content.replace('{{TITLE}}', post["meta"].get('title', ''))
             html_content = html_content.replace('{{META_INFO}}', meta_info_html)
+            html_content = html_content.replace('{{CAPTION}}', caption_html) # キャプションのHTML配線を追加
             html_content = html_content.replace('{{OG_DESCRIPTION}}', post["meta"].get("og_description", ""))
             html_content = html_content.replace('{{OG_IMAGE_TAG}}', og_image_tag)
-            html_content = html_content.replace('{{TWITTER_IMAGE_TAG}}', twitter_image_tag) # 正確に配線完了
+            html_content = html_content.replace('{{TWITTER_IMAGE_TAG}}', twitter_image_tag)
             html_content = html_content.replace('{{BODY}}', post["body_html"])
             
             output_html_path = os.path.join(post["output_dir"], post["filename"].replace('.md', '.html'))
