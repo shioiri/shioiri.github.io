@@ -7,4 +7,4 @@ tags: "トップ"
 
 塩入友広のウェブサイトへようこそ！
 
-![塩入友広](amtrak.jpg)
+<img src="amtrak.jpg" class="content-max">

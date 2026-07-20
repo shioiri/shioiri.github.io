@@ -128,6 +128,14 @@ table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
 th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid #e5e5e5; }
 th { color: #111; background-color: #fafdff; }
 img { max-width: 100%; height: auto; }
+img.content-max {
+  display: block !important;
+  width: 100% !important;        /* 親のsection幅に対して100%（PC時は540px、スマホ時は画面幅90%） */
+  max-width: 100% !important;    /* 縮小制限を維持 */
+  height: auto !important;       /* アスペクト比を維持 */
+  margin: 20px 0 !important;     /* 上下の本文との間隔（20px）、左右のマージンは「0」で完全に端へ密着 */
+  padding: 0 !important;         /* 内側余白の完全排除 */
+}
 strong { color: #111; font-weight: 700; }
 hr { border: 0; background: #e5e5e5; height: 1px; margin: 20px 0; }
 
