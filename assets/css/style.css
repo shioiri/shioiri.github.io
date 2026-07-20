@@ -38,10 +38,14 @@ h2 {
   margin: 0 0 20px 0;
 }
 
-/* パターンA：キャプションが「ない」場合の記事大タイトル（最初のH2） */
-/* 底線から下のメタ情報までの間隔を4pxに固定します */
+/* パターンA：トップページとプロフィールページ（.post-date-metaが存在しないページ）の余白を20pxに復元 */
 section > h2:first-of-type {
   padding-bottom: 0 !important;
+  margin-bottom: 20px !important; /* 標準の行間へ復元 */
+}
+
+/* 通常記事（.post-date-metaが存在するページ）の大タイトルのみ、4pxに緊縮 */
+section:has(.post-date-meta) > h2:first-of-type {
   margin-bottom: 4px !important;
 }
 
