@@ -262,15 +262,14 @@ def main():
                 og_image_tag = ''
                 twitter_image_tag = ''
 
-           # 【キャプション自動判定置換回路（二重下線解消版）】
+            # 【キャプション自動判定置換回路（クリーン版）】
             caption_text = post["meta"].get("caption", "").strip()
             if caption_text:
-                # 1. キャプションがある場合：文字と下線をセットで生成
+                # キャプションがある場合は、専用のラッパークラスでタイトル底線を消し、文字と水平線を配置
                 caption_html = f'<div class="lead-caption">{caption_text}</div><hr class="caption-divider">'
-                # 2. 二重線を防ぐため、この記事のタイトル(h2)から臨時に底線を消去するスタイルを割り込ませる
-                caption_html += '<style>section h2 { border-bottom: none !important; padding-bottom: 0 !important; margin-bottom: 10px !important; }</style>'
+                # 記事全体のsectionに「キャプション有り」を示すクラスを動的追加するための布石（後述のCSSで制御）
+                caption_html += '<style>section { position: relative; } section h2 { border-bottom: none !important; padding-bottom: 0 !important; margin-bottom: 4px !important; }</style>'
             else:
-                # キャプションがない場合：完全に空白（もともとあったh2の底線がそのままメタ情報との区切り線になります）
                 caption_html = ''
                 
             # 個別記事（post）のHTML置換回路

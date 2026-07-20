@@ -25,23 +25,32 @@ p, ul, ol, table, pre, dl {
   margin: 0 0 20px;
 }
 
-/* 2. タイトル直下のキャプション（リード文）意匠定義 */
+/* 2. タイトル直下のキャプション（リード文）および境界線の余白厳密統制 */
 .lead-caption {
   font-size: 14px !important; 
-  line-height: 1.5;
+  line-height: 1.4;
   color: #666666 !important; 
   font-weight: 400;
-  margin: 15px 0 15px 0;     /* 上のタイトル底線、下の水平線との間に適切な余白を確保 */
-  padding: 0;
+  margin: 0 0 6px 0 !important;   /* タイトル直下の冗長な隙間を完全に殺し、直線との距離を極小化 */
+  padding: 0 !important;
   border: none !important;
 }
 
-/* キャプション直下の専用水平線の定義 */
+/* キャプション直下の専用水平線 */
 .caption-divider {
-  border: 0;
-  background: #e5e5e5;
-  height: 1px;
-  margin: 0 0 15px 0;        /* 下のメタ情報との余白 */
+  border: 0 !important;
+  background: #e5e5e5 !important;
+  height: 1px !important;
+  margin: 0 0 8px 0 !important;    /* 下のメタ情報との間の「間抜けな隙間」を完全に詰め、タイトな間隔に固定 */
+  padding: 0 !important;
+}
+
+/* メタ情報の位置定義（キャプションの有無に関わらず統一） */
+.post-date-meta {
+  display: block !important;
+  margin: 0 0 25px 0 !important;   /* メタ情報から本文（記事内容）へ移る際の適切な余白 */
+  color: #666 !important;
+  font-size: 0.9em !important;
 }
 
 /* 3. 見出し群のスケール定義 */
