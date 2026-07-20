@@ -31,7 +31,7 @@ p, ul, ol, table, pre, dl {
   line-height: 1.4;
   color: #666666 !important; 
   font-weight: 400;
-  margin: 0 0 6px 0 !important;   /* タイトル直下の冗長な隙間を完全に殺し、直線との距離を極小化 */
+  margin: 4px 0 0 0 !important;   /* 【対応1】タイトルとの間隔をさらに詰め、冗長さを完全解消 */
   padding: 0 !important;
   border: none !important;
 }
@@ -41,14 +41,14 @@ p, ul, ol, table, pre, dl {
   border: 0 !important;
   background: #e5e5e5 !important;
   height: 1px !important;
-  margin: 0 0 8px 0 !important;    /* 下のメタ情報との間の「間抜けな隙間」を完全に詰め、タイトな間隔に固定 */
+  margin: 6px 0 4px 0 !important;  /* 【対応2】水平線と下のメタ情報の間隔を極小化し、締まった印象に */
   padding: 0 !important;
 }
 
-/* メタ情報の位置定義（キャプションの有無に関わらず統一） */
+/* メタ情報の位置定義 */
 .post-date-meta {
   display: block !important;
-  margin: 0 0 25px 0 !important;   /* メタ情報から本文（記事内容）へ移る際の適切な余白 */
+  margin: 0 0 25px 0 !important;   /* メタ情報から本文へ移る際の適切な余白（変更なし） */
   color: #666 !important;
   font-size: 0.9em !important;
 }

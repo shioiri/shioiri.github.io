@@ -262,13 +262,13 @@ def main():
                 og_image_tag = ''
                 twitter_image_tag = ''
 
-            # 【キャプション自動判定置換回路（本文H2保護版）】
+            # 【キャプション自動判定置換回路（余白厳密統制版）】
             caption_text = post["meta"].get("caption", "").strip()
             if caption_text:
-                # キャプションがある場合のみ文字と水平線を出力
+                # キャプションがある場合は文字と水平線をセットで出力
                 caption_html = f'<div class="lead-caption">{caption_text}</div><hr class="caption-divider">'
-                # 記事大タイトル（section直下の最初のh2だけ）の底線を消去し、本文中のh2は完全に保護する
-                caption_html += '<style>section > h2:first-of-type { border-bottom: none !important; padding-bottom: 0 !important; margin-bottom: 4px !important; }</style>'
+                # 大タイトル直下の余白を0にリセットし、本文中のh2（底線あり）は一切巻き込まずに完全に保護
+                caption_html += '<style>section > h2:first-of-type { border-bottom: none !important; padding-bottom: 0 !important; margin-bottom: 0 !important; }</style>'
             else:
                 caption_html = ''
                 
