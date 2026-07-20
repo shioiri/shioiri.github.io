@@ -143,7 +143,7 @@ img.content-max {
   padding: 0 !important;
 }
 
-/* ── 【完全確定・正常化：長辺400px厳守 ＆ キャプション・スマホ破綻ゼロ回路】 ── */
+/* ── 【完全確定・正常化：長辺400px厳守 ＆ 縦横個別インターロック回路】 ── */
 /* 画像とキャプションを包む外枠（div）自体を、コンテンツ幅（最大620px）まで安全に広げます */
 section div[style*="display:block; text-align:center;"] {
   display: block !important;
@@ -153,22 +153,27 @@ section div[style*="display:block; text-align:center;"] {
   box-sizing: border-box !important;
 }
 
-/* 画像自体の個別表示を上書き保護（長辺400px制限 ＆ スマホ自動縮小を完全両立） */
+/* 画像自体の個別表示を上書き保護（長辺400pxの絶対死守回路） */
 section div[style*="display:block; text-align:center;"] img {
   display: block !important;
-  /* width: auto の暴走を抑制するためベース幅を100%可変にします */
-  width: 100% !important; 
-  height: auto !important;
-  /* 400px、親要素幅(100%)、画面幅(90vw)のうち、常に最も小さい値にリミッターを動的ロック */
-  max-width: min(400px, 100%, 90vw) !important; 
-  max-height: 400px !important;  /* 縦長画像の高さ上限を400pxに絶対固定 */
+  
+  /* 強制的な width:100% を完全に撤去し、アスペクト比維持の自動計算へ戻します */
+  width: auto !important;        
+  height: auto !important;       
+  
+  /* 【核心：縦横独立リミッター】 */
+  /* 横幅の上限は「400px」と「画面幅（100%）」の小さい方を採用（スマホでの横はみ出しを防止） */
+  max-width: min(400px, 100%) !important; 
+  /* 高さの上限は「400px」で完全ロック（縦長画像が縦に巨大化するのを絶対阻止） */
+  max-height: 400px !important;  
+  
   margin: 0 auto !important;     /* 620pxの広い外枠の中で、画像単体を正確に中央揃え */
 }
 
 /* 写真下のキャプション（span）の配置を完全に正常化 */
 section div[style*="display:block; text-align:center;"] span[style*="display:block; text-align:center;"] {
   display: block !important;     /* ブロック化して外枠（最大620px）の横幅をフルに活用 */
-  width: 100% !important;        /* 複雑な位置固定（relative等）を全廃し、外枠に100%同調 */
+  width: 100% !important;        /* 外枠に100%同調 */
   max-width: 100% !important;
   white-space: normal !important;/* 1行内の窮屈な改行を全廃し、端での自然な折り返しを許可 */
   text-align: center !important; /* 中央揃えを厳密に維持 */
