@@ -271,7 +271,18 @@ def main():
             else:
                 # 2. キャプションがない場合：完全に空白（後述のCSS側で、キャプションがない場合の余白を自動制御します）
                 caption_html = ''
-                                
+
+# ───【ここから追加：二重リンク自動仕分け・解除回路】───
+            # もしMarkdown側で [![タイトル](画像)](動画URL) と書かれた場合、
+            # 変換エンジンが良かれと思って生成した内側の「フルサイズ画像への<a>タグ」を
+            # 正規表現で検知し、外側の動画リンク（<a>）だけを残して内側を純粋な<img>に強制分解します。
+            post["body_html"] = re.sub(
+                r'<a href="[^"]+">(<img [^>]+>)</a>',
+                r'\1',
+                post["body_html"]
+            )
+            # ───【ここまで追加】───                              
+
             # 個別記事（post）のHTML置換回路
             html_content = template
             html_content = html_content.replace('{{RELATIVE_DEPTH}}', dp)
