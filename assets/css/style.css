@@ -143,33 +143,36 @@ img.content-max {
   padding: 0 !important;
 }
 
-/* ── 【完全確定：長辺400pxリミッター厳守 ＆ キャプション独立解放回路】 ── */
-/* 画像を包む外枠（div）は、Markdownエンジンが出力する「長辺400px制限（max-height:400px 等）」の */
-/* インラインスタイルを100%そのまま活かすため、CSS側での強制的な横幅上書き（width: 100%等）を完全に全廃します */
+/* ── 【完全確定・正常化：長辺400px厳守 ＆ キャプション・スマホ破綻ゼロ回路】 ── */
+/* 画像とキャプションを包む外枠（div）自体を、コンテンツ幅（最大620px）まで安全に広げます */
 section div[style*="display:block; text-align:center;"] {
-  max-width: 620px !important;
-  margin: 25px auto !important;
-}
-
-/* 画像自体の個別表示を上書き保護（長辺400pxのインターロックをCSS側でも物理的に担保） */
-section div[style*="display:block; text-align:center;"] img {
-  max-width: 400px !important;
-  max-height: 400px !important; /* 縦長・横長問わず、長辺の上限を400pxに厳密にロック */
-  width: auto !important;
-  height: auto !important;
-}
-
-/* 写真下のキャプション（span）のみを、画像の横幅（400px以下）の制約から100%隔離・解放します */
-section div[style*="display:block; text-align:center;"] span[style*="display:block; text-align:center;"] {
   display: block !important;
-  position: relative !important;
-  width: 620px !important;          /* 文字列の有効横幅をコンテンツ上限の620pxに完全固定 */
-  max-width: 90vw !important;        /* スマホ環境での画面はみ出しを物理的に防止 */
-  left: 50% !important;             /* 一度親要素のセンターに配置 */
-  transform: translateX(-50%) !important; /* 620px幅の基準点を中央に補正し、完全にセンタリング */
-  white-space: normal !important;   /* 適切な端での折り返しを許可し、1行内の窮屈な改行を全廃 */
-  text-align: center !important;    /* 中央揃えを厳密に維持 */
-  margin: 8px 0 0 0 !important;
+  width: 100% !important;
+  max-width: 620px !important;   /* コンテンツ幅の上限に同期 */
+  margin: 25px auto !important;
+  box-sizing: border-box !important;
+}
+
+/* 画像自体の個別表示を上書き保護（長辺400px制限 ＆ スマホ自動縮小を完全両立） */
+section div[style*="display:block; text-align:center;"] img {
+  display: block !important;
+  /* 【最重要修正】400pxと画面幅のいずれか「小さい方」を上限に採用し、スマホはみ出しを完全防止 */
+  max-width: min(400px, 100%) !important; 
+  max-height: 400px !important;  /* 縦長画像の高さ上限を400pxに絶対固定 */
+  width: auto !important;        /* アスペクト比を維持 */
+  height: auto !important;       /* アスペクト比を維持 */
+  margin: 0 auto !important;     /* 620pxの広い外枠の中で、画像単体を正確に中央揃え */
+}
+
+/* 写真下のキャプション（span）の配置を完全に正常化 */
+section div[style*="display:block; text-align:center;"] span[style*="display:block; text-align:center;"] {
+  display: block !important;     /* ブロック化して外枠（最大620px）の横幅をフルに活用 */
+  width: 100% !important;        /* 過去の複雑な位置固定（relative, transform等）を全廃し、外枠に100%同調 */
+  max-width: 100% !important;
+  white-space: normal !important;/* 1行内の窮屈な改行を全廃し、端での自然な折り返しを許可 */
+  text-align: center !important; /* 中央揃えを厳密に維持 */
+  margin: 8px auto 0 auto !important;
+  padding: 0 !important;
 }
 
 strong { color: #111; font-weight: 700; }
