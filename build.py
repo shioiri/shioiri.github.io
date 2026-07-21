@@ -8,6 +8,20 @@ from collections import defaultdict
 # SNSクローラー用のベース絶対URL定義
 BASE_URL = "https://shioiri.github.io/"
 
+def normalize_qiita_fenced_code(raw_markdown):
+    """
+    Qiita固有のコードブロック記法（```言語:タイトル）を検知し、
+    直前にタイトル見出しを挿入した上で標準的なMarkdownコードブロック（```言語）へ自動変換する回路。
+    """
+    pattern = r'```([a-zA-Z0-9_+-]*):([^\n]+)'
+    
+    def replace_func(match):
+        lang = match.group(1).strip()
+        title = match.group(2).strip()
+        return f'**{title}**\n``` {lang}'.strip()
+
+    return re.sub(pattern, replace_func, raw_markdown)
+
 def parse_markdown(filepath):
     """
     Markdownファイルを読み込み、Front Matter（メタデータ）と本文HTMLを分離・抽出する。
@@ -37,6 +51,9 @@ def parse_markdown(filepath):
         body = raw_content
 
     body_html = body.strip()
+    
+    # 【Qiitaコードブロック記法の事前正規化回路】
+    body_html = normalize_qiita_fenced_code(body_html)
     
     # 【SNS連携：1枚目の画像ファイル名抽出回路】
     first_img_match = re.search(r'!\[.*?\]\((.*?)\)', body_html)
@@ -79,7 +96,8 @@ def parse_markdown(filepath):
 
     body_html = re.sub(r'!\[(.*?)\]\((.*?)\)', replace_image_with_caption, body_html)
     
-    body_html = markdown.markdown(body_html, extensions=['tables', 'nl2br'])
+    # 【コードブロック（fenced_code / codehilite）対応マークダウン変換回路】
+    body_html = markdown.markdown(body_html, extensions=['tables', 'nl2br', 'fenced_code', 'codehilite'])
     
     return meta, body_html
 
@@ -103,7 +121,6 @@ def generate_index_page(title, articles, depth_prefix, template, output_filepath
     index_html_content = index_html_content.replace('{{TITLE}}', title)
     index_html_content = index_html_content.replace('{{META_INFO}}', '')
     index_html_content = index_html_content.replace('{{MIDDLE_META}}', '')
-    # 一覧系ページにはキャプションを適用しないため空文字で消去
     index_html_content = index_html_content.replace('{{CAPTION}}', '')
     index_html_content = index_html_content.replace('{{OG_DESCRIPTION}}', '記事の一覧・アーカイブページです。')
     index_html_content = index_html_content.replace('{{OG_IMAGE_TAG}}', '')
@@ -114,8 +131,17 @@ def generate_index_page(title, articles, depth_prefix, template, output_filepath
         f.write(index_html_content)
 
 def main():
+    print("=== ビルド処理を開始します ===")
     post_dir = '_posts'
     
+    if not os.path.exists(post_dir):
+        print(f"【エラー】フォルダ '{post_dir}' が見つかりません。現在の実行場所を確認してください。")
+        return
+
+    if not os.path.exists('template.html'):
+        print("【エラー】'template.html' が見つかりません。")
+        return
+
     with open('template.html', 'r', encoding='utf-8') as f:
         template = f.read()
         
@@ -127,7 +153,8 @@ def main():
     top_page_html = None
     top_page_title = '最新記事一覧'
 
-    # _posts フォルダ内を再帰的に走査し、HTML生成とアセットコピーをその場で実行
+    # _posts フォルダ内を再帰的に走査
+    file_count = 0
     for root, dirs, files in os.walk(post_dir):
         rel_path = os.path.relpath(root, post_dir)
         
@@ -143,6 +170,8 @@ def main():
             src_file = os.path.join(root, filename)
             
             if filename.endswith('.md'):
+                file_count += 1
+                print(f"検出されたMarkdownファイル: {src_file}")
                 meta, body_html = parse_markdown(src_file)
                 
                 if filename == 'top.md':
@@ -197,15 +226,18 @@ def main():
                 os.makedirs(output_dir, exist_ok=True)
                 dst_file = os.path.join(output_dir, filename)
                 shutil.copy2(src_file, dst_file)
-                print(f"Asset Copied: {dst_file}")
+                print(f"アセットコピー完了: {dst_file}")
 
-    # 2. 存在する「月別アーカイブ」のリンクHTML（<li>）を降順で組み立てる
+    if file_count == 0:
+        print(f"【注意】'_posts' フォルダ内に対象となる .md ファイルが1つも見つかりませんでした。")
+
+    # 月別アーカイブの表示用データ組み立て
     monthly_menu_base_list = []
     for y_m in sorted(monthly_articles.keys(), reverse=True):
         display_name = f"{y_m.replace('/', '年')}月"
         monthly_menu_base_list.append({"path": f"{y_m}/index.html", "name": display_name})
 
-    # 3. 解析済みのデータを元に、各個別HTMLを実際のファイルに出力
+    # 各個別HTMLのビルド出力
     for post in compiled_posts:
         dp = post["depth_prefix"]
         m_menu_html = ""
@@ -217,8 +249,7 @@ def main():
             html_content = html_content.replace('{{RELATIVE_DEPTH}}', '')
             html_content = html_content.replace('{{DYNAMIC_MONTHLY_MENU}}', m_menu_html)
             html_content = html_content.replace('{{TITLE}}', post["meta"].get('title', 'プロフィール'))
-            # プロフィールにはキャプションを適用しないため空文字で消去
-            html_content = html_content.replace('{{META_INFO}}', '') # ←【この1行を割り込ませるだけ】
+            html_content = html_content.replace('{{META_INFO}}', '')
             html_content = html_content.replace('{{CAPTION}}', '')
             html_content = html_content.replace('{{BODY}}', post["body_html"])
             html_content = html_content.replace('{{OG_DESCRIPTION}}', '塩入友広のプロフィールページです。')
@@ -226,7 +257,7 @@ def main():
             html_content = html_content.replace('{{TWITTER_IMAGE_TAG}}', '')
             with open('profile.html', 'w', encoding='utf-8') as f:
                 f.write(html_content)
-            print("Compiled: profile.html")
+            print("生成完了: profile.html")
             
         elif post["type"] == "post":
             os.makedirs(post["output_dir"], exist_ok=True)
@@ -248,7 +279,6 @@ def main():
 
                 meta_info_html = f'<time class="post-date-meta" style="display:block; margin-bottom:35px; color:#666; font-size:0.9em;">{meta_text}</time>'
             
-            # 【絶対パス同期回路】
             img_filename = post["meta"].get("og_image_filename")
             if img_filename:
                 clean_dir = post["output_dir"].replace('\\', '/')
@@ -263,33 +293,24 @@ def main():
                 og_image_tag = ''
                 twitter_image_tag = ''
 
-            # 【キャプション自動判定置換回路（完全クリーン版）】
             caption_text = post["meta"].get("caption", "").strip()
             if caption_text:
-                # 1. キャプションがある場合：テキストと専用の水平線（hr）のみを出力（余計なスタイルタグは一切含めない）
                 caption_html = f'<div class="lead-caption">{caption_text}</div><hr class="caption-divider">'
             else:
-                # 2. キャプションがない場合：完全に空白（後述のCSS側で、キャプションがない場合の余白を自動制御します）
                 caption_html = ''
 
-# ───【完全修正・確定版：二重リンク限定解除回路】───
-            # 外枠に動画リンク等の <a> タグが存在し、その内側に画像拡大用 <a> タグが入れ子になっている
-            # 「二重リンク状態」の箇所のみをピンポイントで検知し、内側の <a> タグだけを消去します。
-            # 外枠がない（単独の画像拡大リンクである）場合は、この正規表現にマッチしないため完全にスルーされます。
             post["body_html"] = re.sub(
                 r'(<a\s+href="(?!#[^"]+")[^"]+">[^<]*<div[^>]*>)\s*<a\s+href="[^"]+"\s+target="_blank"\s+title="[^"]*"\s+style="[^"]*">(<img\s+[^>]+>)</a>',
                 r'\1\2',
                 post["body_html"]
             )
-            # ───【ここまで修正】───
             
-            # 個別記事（post）のHTML置換回路
             html_content = template
             html_content = html_content.replace('{{RELATIVE_DEPTH}}', dp)
             html_content = html_content.replace('{{DYNAMIC_MONTHLY_MENU}}', m_menu_html)
             html_content = html_content.replace('{{TITLE}}', post["meta"].get('title', ''))
             html_content = html_content.replace('{{META_INFO}}', meta_info_html)
-            html_content = html_content.replace('{{CAPTION}}', caption_html) # キャプションのHTML配線を追加
+            html_content = html_content.replace('{{CAPTION}}', caption_html)
             html_content = html_content.replace('{{OG_DESCRIPTION}}', post["meta"].get("og_description", ""))
             html_content = html_content.replace('{{OG_IMAGE_TAG}}', og_image_tag)
             html_content = html_content.replace('{{TWITTER_IMAGE_TAG}}', twitter_image_tag)
@@ -298,31 +319,32 @@ def main():
             output_html_path = os.path.join(post["output_dir"], post["filename"].replace('.md', '.html'))
             with open(output_html_path, 'w', encoding='utf-8') as f:
                 f.write(html_content)
-            print(f"Compiled: {post['web_path']}")
+            print(f"生成完了: {post['web_path']}")
 
-    # 全体検索用JSONデータの書き出し
+    # JSON出力
     os.makedirs('assets', exist_ok=True)
     with open('assets/articles.json', 'w', encoding='utf-8') as f:
         json.dump(all_articles, f, ensure_ascii=False)
         
-    # 各種インデックスページの出力処理
     top_m_menu_html = "".join([f"<li><a href='{m['path']}'>{m['name']}</a></li>" for m in monthly_menu_base_list])
     generate_index_page(top_page_title, all_articles, '', template, 'index.html', top_m_menu_html, custom_body_html=top_page_html)
-    print("Generated: index.html")
+    print("生成完了: index.html")
     
     for year, articles in yearly_articles.items():
         os.makedirs(year, exist_ok=True)
         target_path = os.path.join(year, 'index.html')
         year_m_menu_html = "".join([f"<li><a href='../{m['path']}'>{m['name']}</a></li>" for m in monthly_menu_base_list])
         generate_index_page(f"{year}年 記事一覧", articles, '../', template, target_path, year_m_menu_html)
-        print(f"Generated: {target_path}")
+        print(f"生成完了: {target_path}")
         
     for y_m, articles in monthly_articles.items():
         os.makedirs(y_m, exist_ok=True)
         target_path = os.path.join(y_m, 'index.html')
         month_m_menu_html = "".join([f"<li><a href='../../{m['path']}'>{m['name']}</a></li>" for m in monthly_menu_base_list])
         generate_index_page(f"{y_m.replace('/', '年')}月 記事一覧", articles, '../../', template, target_path, month_m_menu_html)
-        print(f"Generated: {target_path}")
+        print(f"生成完了: {target_path}")
+
+    print("=== ビルド処理が正常に完了しました ===")
 
 if __name__ == '__main__':
     main()
