@@ -6,19 +6,21 @@ import markdown
 from collections import defaultdict
 
 # SNSクローラー用のベース絶対URL定義
-BASE_URL = "https://shioiri.github.io/"
+BASE_URL = "[https://shioiri.github.io/](https://shioiri.github.io/)"
 
 def normalize_qiita_fenced_code(raw_markdown):
     """
-    Qiita固有のコードブロック記法（```言語:タイトル）を検知し、
+    Qiita固有のコードブロック記法（```言語:タイトル）のみを行頭判定で厳密に検知し、
     直前にタイトル見出しを挿入した上で標準的なMarkdownコードブロック（```言語）へ自動変換する回路。
+    閉じる側の ``` や通常のコードブロックへの誤干渉・ペア崩れを完全に防止します。
     """
-    pattern = r'```([a-zA-Z0-9_+-]*):([^\n]+)'
+    pattern = r'(?m)^\s*```([a-zA-Z0-9_+-]*):([^\n]+)'
     
     def replace_func(match):
         lang = match.group(1).strip()
         title = match.group(2).strip()
-        return f'**{title}**\n``` {lang}'.strip()
+        lang_str = lang if lang else ""
+        return f'**{title}**\n```{lang_str}'
 
     return re.sub(pattern, replace_func, raw_markdown)
 
@@ -52,7 +54,7 @@ def parse_markdown(filepath):
 
     body_html = body.strip()
     
-    # 【Qiitaコードブロック記法の事前正規化回路】
+    # 【Qiitaコードブロック記法の事前正規化回路（厳格判定版）】
     body_html = normalize_qiita_fenced_code(body_html)
     
     # 【SNS連携：1枚目の画像ファイル名抽出回路】
