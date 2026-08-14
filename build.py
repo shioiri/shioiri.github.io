@@ -86,21 +86,33 @@ def parse_markdown(filepath):
     
     # 【不要タグ除去回路】画像ブロックを包む <p> タグや不要な <br> を完全除去
     body_html = re.sub(r'<p>\s*(<div class="img-container-block".*?</div>)\s*</p>', r'\1', body_html, flags=re.DOTALL)
-    body_html = re.sub(r'(</div>)\s*<br\s*/?>\s*(<div class="img-container-block")', r'\1\2', body_html)
+    body_html = re.sub(r'(</div>)\s*<br\s*/?>\s*(<div class="img-container-block")', r'\1\n\2', body_html)
 
-    # ── 【確定・直接置換回路：キャプションなし連続画像の隙間を物理的に直結】 ──
-    def tight_connect(match):
-        div1 = match.group(1)
-        div2 = match.group(2)
-        # 1枚目の下マージンを4pxに書き換え
-        div1_mod = re.sub(r'margin:[^;"]+', 'margin: 25px auto 4px auto', div1)
-        # 2枚目の上マージンを4pxに書き換え
-        div2_mod = re.sub(r'margin:[^;"]+', 'margin: 4px auto 25px auto', div2)
-        return f'{div1_mod}\n{div2_mod}'
+    # ── 【確実なブロック走査：キャプションなし連続画像の上下マージン直接緊縮】 ──
+    # HTML内のすべての img-container-block を抽出し、連続しているペアを確実に直結
+    parts = re.split(r'(<div class="img-container-block"[^>]*>.*?</div>)', body_html, flags=re.DOTALL)
+    new_parts = []
+    prev_was_nocap = False
+    prev_idx = -1
 
-    # data-has-caption="false" 同士が連続するパターンを捕捉してマージンを直接書き換える
-    consecutive_regex = r'(<div class="img-container-block" data-has-caption="false"[^>]*>.*?</div>)\s*(<div class="img-container-block" data-has-caption="false"[^>]*>.*?</div>)'
-    body_html = re.sub(consecutive_regex, tight_connect, body_html, flags=re.DOTALL)
+    for part in parts:
+        if part.startswith('<div class="img-container-block"'):
+            is_nocap = 'data-has-caption="false"' in part
+            if is_nocap and prev_was_nocap:
+                # 直前の1枚目の下マージンを 4px に修正
+                new_parts[prev_idx] = new_parts[prev_idx].replace('margin:25px auto;', 'margin:25px auto 4px auto;')
+                # 今回の2枚目の上マージンを 4px に修正
+                part = part.replace('margin:25px auto;', 'margin:4px auto 25px auto;')
+            prev_was_nocap = is_nocap
+            prev_idx = len(new_parts)
+            new_parts.append(part)
+        else:
+            # 画像ブロック以外のテキスト（改行や空白のみの場合は連続フラグを維持）
+            if part.strip() != "":
+                prev_was_nocap = False
+            new_parts.append(part)
+
+    body_html = "".join(new_parts)
     
     return meta, body_html
 
