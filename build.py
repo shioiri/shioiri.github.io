@@ -53,13 +53,16 @@ def parse_markdown(filepath):
     plain_text = "".join(plain_text.split())
     meta['og_description'] = plain_text[:40] + ('...' if len(plain_text) > 40 else '') if plain_text else "記事の個別ページです。"
 
-    # 【画像・キャプション配置の最適化関数（余白修整版）】
+    # 【画像・キャプション配置の最適化関数（余白動的制御版）】
     def replace_image_with_caption(match):
         alt_text = match.group(1).strip()
         img_src = match.group(2).strip()
         
+        # キャプション（alt_text）の有無により外枠のマージンを動的に切替
+        container_margin = "15px auto" if alt_text else "4px auto"
+        
         html = (
-            f'<div style="display:block; text-align:center; margin:15px auto; width:100%; max-width:400px;">'
+            f'<div style="display:block; text-align:center; margin:{container_margin}; width:100%; max-width:400px;">'
             f'<a href="{img_src}" target="_blank" title="クリックで拡大（別タブ）" style="display:block; text-decoration:none;">'
             f'<img src="{img_src}" alt="{alt_text}" style="max-width:100%; max-height:400px; width:auto; height:auto; '
             f'display:block; margin:0 auto; border:1px solid #ddd; box-shadow:0 2px 4px rgba(0,0,0,0.05); cursor:pointer;">'
