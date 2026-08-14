@@ -36,10 +36,10 @@ def parse_markdown(filepath):
         meta = {"title": "No Title", "date": "none", "categories": "", "tags": ""}
         body = raw_content
 
-    body_text = body.strip()
+    body_html = body.strip()
     
     # 【SNS連携：1枚目の画像ファイル名抽出回路】
-    first_img_match = re.search(r'!\[.*?\]\((.*?)\)', body_text)
+    first_img_match = re.search(r'!\[.*?\]\((.*?)\)', body_html)
     if first_img_match:
         img_filename = os.path.basename(first_img_match.group(1).strip())
         meta['og_image_filename'] = img_filename
@@ -47,25 +47,28 @@ def parse_markdown(filepath):
         meta['og_image_filename'] = None
 
     # 【SNS連携：冒頭40文字の要約抽出回路】
-    plain_text = re.sub(r'!\[.*?\]\(.*?\)', '', body_text)
+    plain_text = re.sub(r'!\[.*?\]\(.*?\)', '', body_html)
     plain_text = re.sub(r'<[^>]*>', '', plain_text)
     plain_text = re.sub(r'[#\*_\-`\[\]\(\)]', '', plain_text)
     plain_text = "".join(plain_text.split())
     meta['og_description'] = plain_text[:40] + ('...' if len(plain_text) > 40 else '') if plain_text else "記事の個別ページです。"
 
-    # ── 【根本治療：Markdown事前解析による連続画像・単体画像の完全分離生成回路】 ──
-    # 単体HTML生成用ヘルパー
-    def build_img_html(alt_text, img_src, margin_style):
-        has_caption = bool(alt_text.strip())
+    # ── 【画像・キャプション・リンクの適正HTML変換回路】 ──
+    # 1. リンク付き画像：[![alt](img)](url) の形式を優先変換（PDF等へのリンクを完全保護）
+    def replace_linked_image(match):
+        alt_text = match.group(1).strip()
+        img_src = match.group(2).strip()
+        link_target = match.group(3).strip()
+        has_caption = 'data-has-caption="true"' if alt_text else 'data-has-caption="false"'
+        
         html = (
-            f'<div class="img-container-block" data-has-caption="{"true" if has_caption else "false"}" '
-            f'style="display:block; text-align:center; margin:{margin_style}; width:100%; max-width:400px;">'
-            f'<a href="{img_src}" target="_blank" title="クリックで拡大（別タブ）" style="display:block; text-decoration:none;">'
+            f'<div class="img-container-block" {has_caption} style="display:block; text-align:center; margin:25px auto; width:100%; max-width:400px;">'
+            f'<a href="{link_target}" target="_blank" title="クリックで開く（別タブ）" style="display:block; text-decoration:none;">'
             f'<img src="{img_src}" alt="{alt_text}" style="max-width:100%; max-height:400px; width:auto; height:auto; '
             f'display:block; margin:0 auto; border:1px solid #ddd; box-shadow:0 2px 4px rgba(0,0,0,0.05); cursor:pointer;">'
             f'</a>'
         )
-        if has_caption:
+        if alt_text:
             html += (
                 f'<span style="display:block; text-align:center; font-size:0.85em; color:#666; '
                 f'margin:8px auto 0 auto; padding:0; font-family:sans-serif; line-height:1.2;">'
@@ -75,34 +78,62 @@ def parse_markdown(filepath):
         html += '</div>'
         return html
 
-    # 1. キャプションなし画像が2枚連続しているパターンを最優先で検知・直結HTML化
-    # 間に空行や改行があっても確実に捕捉
-    def replace_consecutive_nocap(match):
-        img1_src = match.group(1).strip()
-        img2_src = match.group(2).strip()
-        div1 = build_img_html("", img1_src, "25px auto 4px auto")
-        div2 = build_img_html("", img2_src, "4px auto 25px auto")
-        return f'\n\n{div1}\n{div2}\n\n'
+    body_html = re.sub(r'\[!\[(.*?)\]\(([^\)]+)\)\]\(([^\)]+)\)', replace_linked_image, body_html)
 
-    # ![空白](URL) の2連続パターン
-    consecutive_md_pattern = r'!\[\s*\]\(([^\)]+)\)\s*\n+\s*!\[\s*\]\(([^\)]+)\)'
-    body_text = re.sub(consecutive_md_pattern, replace_consecutive_nocap, body_text)
-
-    # 2. 残った通常の画像（単体画像、またはキャプションあり画像）を一括変換（上下25px）
+    # 2. 単独画像：![alt](img) の形式を変換（画像自身への拡大リンク）
     def replace_single_image(match):
         alt_text = match.group(1).strip()
         img_src = match.group(2).strip()
-        return f'\n\n{build_img_html(alt_text, img_src, "25px auto")}\n\n'
+        has_caption = 'data-has-caption="true"' if alt_text else 'data-has-caption="false"'
+        
+        html = (
+            f'<div class="img-container-block" {has_caption} style="display:block; text-align:center; margin:25px auto; width:100%; max-width:400px;">'
+            f'<a href="{img_src}" target="_blank" title="クリックで拡大（別タブ）" style="display:block; text-decoration:none;">'
+            f'<img src="{img_src}" alt="{alt_text}" style="max-width:100%; max-height:400px; width:auto; height:auto; '
+            f'display:block; margin:0 auto; border:1px solid #ddd; box-shadow:0 2px 4px rgba(0,0,0,0.05); cursor:pointer;">'
+            f'</a>'
+        )
+        if alt_text:
+            html += (
+                f'<span style="display:block; text-align:center; font-size:0.85em; color:#666; '
+                f'margin:8px auto 0 auto; padding:0; font-family:sans-serif; line-height:1.2;">'
+                f'{alt_text}'
+                f'</span>'
+            )
+        html += '</div>'
+        return html
 
-    body_text = re.sub(r'!\[(.*?)\]\(([^\)]+)\)', replace_single_image, body_text)
-
+    body_html = re.sub(r'!\[(.*?)\]\(([^\)]+)\)', replace_single_image, body_html)
+    
     # マークダウン変換
-    body_html = markdown.markdown(body_text, extensions=['tables', 'nl2br'])
-
-    # 【不要タグ除去回路】画像ブロックを包む <p> タグや前後の余分な <br> を完全除去
+    body_html = markdown.markdown(body_html, extensions=['tables', 'nl2br'])
+    
+    # 【不要タグ除去】画像ブロックを包む <p> タグや不要な <br> を完全除去
     body_html = re.sub(r'<p>\s*(<div class="img-container-block".*?</div>)\s*</p>', r'\1', body_html, flags=re.DOTALL)
     body_html = re.sub(r'(</div>)\s*<br\s*/?>\s*(<div class="img-container-block")', r'\1\n\2', body_html)
 
+    # ── 【キャプションなし連続画像の隙間緊縮回路】 ──
+    parts = re.split(r'(<div class="img-container-block"[^>]*>.*?</div>)', body_html, flags=re.DOTALL)
+    new_parts = []
+    prev_was_nocap = False
+    prev_idx = -1
+
+    for part in parts:
+        if part.startswith('<div class="img-container-block"'):
+            is_nocap = 'data-has-caption="false"' in part
+            if is_nocap and prev_was_nocap:
+                new_parts[prev_idx] = new_parts[prev_idx].replace('margin:25px auto;', 'margin:25px auto 4px auto;')
+                part = part.replace('margin:25px auto;', 'margin:4px auto 25px auto;')
+            prev_was_nocap = is_nocap
+            prev_idx = len(new_parts)
+            new_parts.append(part)
+        else:
+            if part.strip() != "":
+                prev_was_nocap = False
+            new_parts.append(part)
+
+    body_html = "".join(new_parts)
+    
     return meta, body_html
 
 def generate_index_page(title, articles, depth_prefix, template, output_filepath, monthly_menu_html, custom_body_html=None):
