@@ -85,22 +85,9 @@ def parse_markdown(filepath):
     # マークダウン変換
     body_html = markdown.markdown(body_html, extensions=['tables', 'nl2br'])
     
-    # ── 【根本治療：不要タグ除去 ＆ キャプションなし連続画像の直結回路】 ──
-    # 1. <p> に包まれた画像ブロックを純粋な div に解放
+    # 【不要タグ除去回路】画像ブロックを包む <p> タグや、画像直後の不要な <br> を完全除去
     body_html = re.sub(r'<p>\s*(<div class="img-container-block".*?</div>)\s*</p>', r'\1', body_html, flags=re.DOTALL)
-    
-    # 2. キャプションなし画像が連続している場合、間の <br> を消去し、2枚目に img-consecutive-tight クラスを付与
-    def tighten_consecutive_images(match):
-        first_div = match.group(1)
-        second_div_start = match.group(2)
-        second_div_rest = match.group(3)
-        # 2枚目の div のクラスに img-consecutive-tight を追加し、margin:4px に書き換え
-        tight_div_start = second_div_start.replace('class="img-container-block"', 'class="img-container-block img-consecutive-tight"')
-        tight_div_start = tight_div_start.replace('margin:25px auto;', 'margin:4px auto 25px auto;')
-        return f'{first_div}{tight_div_start}{second_div_rest}'
-
-    consecutive_pattern = r'(<div class="img-container-block" data-has-caption="false".*?</div>)\s*(?:<br\s*/?>|\n|\r\n)+\s*(<div class="img-container-block" data-has-caption="false"[^>]*>)(.*?</div>)'
-    body_html = re.sub(consecutive_pattern, tighten_consecutive_images, body_html, flags=re.DOTALL)
+    body_html = re.sub(r'(</div>)\s*<br\s*/?>\s*(<div class="img-container-block")', r'\1\2', body_html)
     
     return meta, body_html
 

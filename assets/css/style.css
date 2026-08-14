@@ -101,7 +101,7 @@ h1 { font-size: 32px; }
 h3 { font-size: 18px; color: #444444; }
 
 /* ==========================================================================
-   4. リンク・装飾意匠 ＆ 画像長辺400pxリミッター ＆ 連続画像緊縮回路
+   4. リンク・装飾意匠 ＆ 画像長辺400pxリミッター ＆ 連続画像ネイティブ緊縮回路
    ========================================================================== */
 a { color: #267CB9; text-decoration: none; }
 a:hover, a:focus { color: #069; font-weight: bold; }
@@ -143,8 +143,9 @@ img.content-max {
   padding: 0 !important;
 }
 
-/* ── 【確定版：画像基本余白（25px） ＆ 連続時のみ極小隙間直結回路】 ── */
-/* 通常時の画像ブロック外枠（div）：本文との前後バランスを25pxで完全に均一化 */
+/* ── 【確定版：通常画像余白（25px） ＆ キャプションなし連続画像自動直結回路】 ── */
+/* 通常時の画像ブロック外枠（div）：単体画像時は上下25pxを厳守 */
+section div.img-container-block,
 section div[style*="display:block; text-align:center;"] {
   display: block !important;
   width: 100% !important;
@@ -153,27 +154,34 @@ section div[style*="display:block; text-align:center;"] {
   box-sizing: border-box !important;
 }
 
-/* 【キャプションなし画像が連続した時専用】：2枚目の上部余白を4pxに緊縮して直結 */
-section div.img-consecutive-tight {
-  margin-top: 4px !important;
+/* 【核心：キャプションなし画像が連続した時の自動緊縮】
+   1枚目と2枚目の間の隙間を上下それぞれ3px（合計6px）に完全圧縮 */
+section div[data-has-caption="false"]:has(+ div[data-has-caption="false"]),
+section div[data-has-caption="false"]:has(+ p + div[data-has-caption="false"]),
+section div[data-has-caption="false"]:has(+ br + div[data-has-caption="false"]) {
+  margin-bottom: 3px !important;
+}
+
+section div[data-has-caption="false"] + div[data-has-caption="false"],
+section div[data-has-caption="false"] + br + div[data-has-caption="false"],
+section div[data-has-caption="false"] + p + div[data-has-caption="false"] {
+  margin-top: 3px !important;
 }
 
 /* 画像自体の個別表示を上書き保護（長辺400px制限 ＆ スマホ自動縮小） */
-section div[style*="display:block; text-align:center;"] img {
+section div[style*="display:block; text-align:center;"] img,
+section div.img-container-block img {
   display: block !important;
   width: auto !important;        
   height: auto !important;       
-  
-  /* 横幅上限：400pxと画面幅（100%）の小さい方を採用（スマホはみ出し防止） */
   max-width: min(400px, 100%) !important; 
-  /* 高さ上限：400pxでロック（縦長画像の巨大化防止） */
   max-height: 400px !important;  
-  
-  margin: 0 auto !important;     /* 外枠内で中央揃え */
+  margin: 0 auto !important;     
 }
 
 /* 写真下のキャプション（span）の配置 */
-section div[style*="display:block; text-align:center;"] span[style*="display:block; text-align:center;"] {
+section div[style*="display:block; text-align:center;"] span,
+section div.img-container-block span {
   display: block !important;
   width: 100% !important;        /* 外枠に100%同調 */
   max-width: 100% !important;
