@@ -58,7 +58,6 @@ def parse_markdown(filepath):
         alt_text = match.group(1).strip()
         img_src = match.group(2).strip()
         
-        # キャプション有無を判定用属性（data-has-caption）として埋め込み
         has_caption_attr = 'data-has-caption="true"' if alt_text else 'data-has-caption="false"'
         
         html = (
@@ -85,9 +84,23 @@ def parse_markdown(filepath):
     # マークダウン変換
     body_html = markdown.markdown(body_html, extensions=['tables', 'nl2br'])
     
-    # 【不要タグ除去回路】画像ブロックを包む <p> タグや、画像直後の不要な <br> を完全除去
+    # 【不要タグ除去回路】画像ブロックを包む <p> タグや不要な <br> を完全除去
     body_html = re.sub(r'<p>\s*(<div class="img-container-block".*?</div>)\s*</p>', r'\1', body_html, flags=re.DOTALL)
     body_html = re.sub(r'(</div>)\s*<br\s*/?>\s*(<div class="img-container-block")', r'\1\2', body_html)
+
+    # ── 【確定・直接置換回路：キャプションなし連続画像の隙間を物理的に直結】 ──
+    def tight_connect(match):
+        div1 = match.group(1)
+        div2 = match.group(2)
+        # 1枚目の下マージンを4pxに書き換え
+        div1_mod = re.sub(r'margin:[^;"]+', 'margin: 25px auto 4px auto', div1)
+        # 2枚目の上マージンを4pxに書き換え
+        div2_mod = re.sub(r'margin:[^;"]+', 'margin: 4px auto 25px auto', div2)
+        return f'{div1_mod}\n{div2_mod}'
+
+    # data-has-caption="false" 同士が連続するパターンを捕捉してマージンを直接書き換える
+    consecutive_regex = r'(<div class="img-container-block" data-has-caption="false"[^>]*>.*?</div>)\s*(<div class="img-container-block" data-has-caption="false"[^>]*>.*?</div>)'
+    body_html = re.sub(consecutive_regex, tight_connect, body_html, flags=re.DOTALL)
     
     return meta, body_html
 

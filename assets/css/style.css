@@ -143,29 +143,14 @@ img.content-max {
   padding: 0 !important;
 }
 
-/* ── 【確定版：通常画像余白（25px） ＆ キャプションなし連続画像自動直結回路】 ── */
-/* 通常時の画像ブロック外枠（div）：単体画像時は上下25pxを厳守 */
+/* ── 【確定版：画像ブロック外枠（div）】 ── */
 section div.img-container-block,
 section div[style*="display:block; text-align:center;"] {
   display: block !important;
   width: 100% !important;
   max-width: 620px !important;   /* コンテンツ幅の上限に同期 */
-  margin: 25px auto !important;
+  /* margin の !important を完全撤去し、build.py のインライン指定を直接生かす */
   box-sizing: border-box !important;
-}
-
-/* 【核心：キャプションなし画像が連続した時の自動緊縮】
-   1枚目と2枚目の間の隙間を上下それぞれ3px（合計6px）に完全圧縮 */
-section div[data-has-caption="false"]:has(+ div[data-has-caption="false"]),
-section div[data-has-caption="false"]:has(+ p + div[data-has-caption="false"]),
-section div[data-has-caption="false"]:has(+ br + div[data-has-caption="false"]) {
-  margin-bottom: 3px !important;
-}
-
-section div[data-has-caption="false"] + div[data-has-caption="false"],
-section div[data-has-caption="false"] + br + div[data-has-caption="false"],
-section div[data-has-caption="false"] + p + div[data-has-caption="false"] {
-  margin-top: 3px !important;
 }
 
 /* 画像自体の個別表示を上書き保護（長辺400px制限 ＆ スマホ自動縮小） */
