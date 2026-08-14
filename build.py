@@ -53,13 +53,13 @@ def parse_markdown(filepath):
     plain_text = "".join(plain_text.split())
     meta['og_description'] = plain_text[:40] + ('...' if len(plain_text) > 40 else '') if plain_text else "記事の個別ページです。"
 
-    # 【画像・キャプション配置の最適化関数】
+    # 【画像・キャプション配置の最適化関数（余白修整版）】
     def replace_image_with_caption(match):
         alt_text = match.group(1).strip()
         img_src = match.group(2).strip()
         
         html = (
-            f'<div style="display:block; text-align:center; margin:25px auto; width:100%; max-width:400px;">'
+            f'<div style="display:block; text-align:center; margin:15px auto; width:100%; max-width:400px;">'
             f'<a href="{img_src}" target="_blank" title="クリックで拡大（別タブ）" style="display:block; text-decoration:none;">'
             f'<img src="{img_src}" alt="{alt_text}" style="max-width:100%; max-height:400px; width:auto; height:auto; '
             f'display:block; margin:0 auto; border:1px solid #ddd; box-shadow:0 2px 4px rgba(0,0,0,0.05); cursor:pointer;">'
@@ -69,7 +69,7 @@ def parse_markdown(filepath):
         if alt_text:
             html += (
                 f'<span style="display:block; text-align:center; font-size:0.85em; color:#666; '
-                f'margin:8px auto 0 auto; padding:0; font-family:sans-serif; line-height:1.2;">'
+                f'margin:6px auto 0 auto; padding:0; font-family:sans-serif; line-height:1.2;">'
                 f'{alt_text}'
                 f'</span>'
             )
@@ -103,7 +103,6 @@ def generate_index_page(title, articles, depth_prefix, template, output_filepath
     index_html_content = index_html_content.replace('{{TITLE}}', title)
     index_html_content = index_html_content.replace('{{META_INFO}}', '')
     index_html_content = index_html_content.replace('{{MIDDLE_META}}', '')
-    # 一覧系ページにはキャプションを適用しないため空文字で消去
     index_html_content = index_html_content.replace('{{CAPTION}}', '')
     index_html_content = index_html_content.replace('{{OG_DESCRIPTION}}', '記事の一覧・アーカイブページです。')
     index_html_content = index_html_content.replace('{{OG_IMAGE_TAG}}', '')
@@ -217,8 +216,7 @@ def main():
             html_content = html_content.replace('{{RELATIVE_DEPTH}}', '')
             html_content = html_content.replace('{{DYNAMIC_MONTHLY_MENU}}', m_menu_html)
             html_content = html_content.replace('{{TITLE}}', post["meta"].get('title', 'プロフィール'))
-            # プロフィールにはキャプションを適用しないため空文字で消去
-            html_content = html_content.replace('{{META_INFO}}', '') # ←【この1行を割り込ませるだけ】
+            html_content = html_content.replace('{{META_INFO}}', '')
             html_content = html_content.replace('{{CAPTION}}', '')
             html_content = html_content.replace('{{BODY}}', post["body_html"])
             html_content = html_content.replace('{{OG_DESCRIPTION}}', '塩入友広のプロフィールページです。')
@@ -266,22 +264,16 @@ def main():
             # 【キャプション自動判定置換回路（完全クリーン版）】
             caption_text = post["meta"].get("caption", "").strip()
             if caption_text:
-                # 1. キャプションがある場合：テキストと専用の水平線（hr）のみを出力（余計なスタイルタグは一切含めない）
                 caption_html = f'<div class="lead-caption">{caption_text}</div><hr class="caption-divider">'
             else:
-                # 2. キャプションがない場合：完全に空白（後述のCSS側で、キャプションがない場合の余白を自動制御します）
                 caption_html = ''
 
-# ───【完全修正・確定版：二重リンク限定解除回路】───
-            # 外枠に動画リンク等の <a> タグが存在し、その内側に画像拡大用 <a> タグが入れ子になっている
-            # 「二重リンク状態」の箇所のみをピンポイントで検知し、内側の <a> タグだけを消去します。
-            # 外枠がない（単独の画像拡大リンクである）場合は、この正規表現にマッチしないため完全にスルーされます。
+            # 【二重リンク限定解除回路】
             post["body_html"] = re.sub(
                 r'(<a\s+href="(?!#[^"]+")[^"]+">[^<]*<div[^>]*>)\s*<a\s+href="[^"]+"\s+target="_blank"\s+title="[^"]*"\s+style="[^"]*">(<img\s+[^>]+>)</a>',
                 r'\1\2',
                 post["body_html"]
             )
-            # ───【ここまで修正】───
             
             # 個別記事（post）のHTML置換回路
             html_content = template
@@ -289,7 +281,7 @@ def main():
             html_content = html_content.replace('{{DYNAMIC_MONTHLY_MENU}}', m_menu_html)
             html_content = html_content.replace('{{TITLE}}', post["meta"].get('title', ''))
             html_content = html_content.replace('{{META_INFO}}', meta_info_html)
-            html_content = html_content.replace('{{CAPTION}}', caption_html) # キャプションのHTML配線を追加
+            html_content = html_content.replace('{{CAPTION}}', caption_html)
             html_content = html_content.replace('{{OG_DESCRIPTION}}', post["meta"].get("og_description", ""))
             html_content = html_content.replace('{{OG_IMAGE_TAG}}', og_image_tag)
             html_content = html_content.replace('{{TWITTER_IMAGE_TAG}}', twitter_image_tag)
