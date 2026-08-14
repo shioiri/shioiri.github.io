@@ -53,16 +53,16 @@ def parse_markdown(filepath):
     plain_text = "".join(plain_text.split())
     meta['og_description'] = plain_text[:40] + ('...' if len(plain_text) > 40 else '') if plain_text else "記事の個別ページです。"
 
-    # 【画像・キャプション配置の最適化関数（余白動的制御版）】
+    # 【画像・キャプション配置の最適化関数】
     def replace_image_with_caption(match):
         alt_text = match.group(1).strip()
         img_src = match.group(2).strip()
         
-        # キャプションの有無による外枠マージンの動的切替（なし: 上下4px / あり: 上下15px）
-        container_margin = "15px auto" if alt_text else "4px auto"
+        # キャプション有無を判定用属性（data-has-caption）として埋め込み
+        has_caption_attr = 'data-has-caption="true"' if alt_text else 'data-has-caption="false"'
         
         html = (
-            f'<div style="display:block; text-align:center; margin:{container_margin}; width:100%; max-width:400px;">'
+            f'<div class="img-container-block" {has_caption_attr} style="display:block; text-align:center; margin:25px auto; width:100%; max-width:400px;">'
             f'<a href="{img_src}" target="_blank" title="クリックで拡大（別タブ）" style="display:block; text-decoration:none;">'
             f'<img src="{img_src}" alt="{alt_text}" style="max-width:100%; max-height:400px; width:auto; height:auto; '
             f'display:block; margin:0 auto; border:1px solid #ddd; box-shadow:0 2px 4px rgba(0,0,0,0.05); cursor:pointer;">'
@@ -72,7 +72,7 @@ def parse_markdown(filepath):
         if alt_text:
             html += (
                 f'<span style="display:block; text-align:center; font-size:0.85em; color:#666; '
-                f'margin:6px auto 0 auto; padding:0; font-family:sans-serif; line-height:1.2;">'
+                f'margin:8px auto 0 auto; padding:0; font-family:sans-serif; line-height:1.2;">'
                 f'{alt_text}'
                 f'</span>'
             )
@@ -85,16 +85,22 @@ def parse_markdown(filepath):
     # マークダウン変換
     body_html = markdown.markdown(body_html, extensions=['tables', 'nl2br'])
     
-    # ── 【根本治療：画像ブロック周辺の不要タグ・余白を完全駆除】 ──
+    # ── 【根本治療：不要タグ除去 ＆ キャプションなし連続画像の直結回路】 ──
     # 1. <p> に包まれた画像ブロックを純粋な div に解放
-    body_html = re.sub(r'<p>\s*(<div style="display:block; text-align:center;.*?</div>)\s*</p>', r'\1', body_html, flags=re.DOTALL)
+    body_html = re.sub(r'<p>\s*(<div class="img-container-block".*?</div>)\s*</p>', r'\1', body_html, flags=re.DOTALL)
     
-    # 2. 画像ブロック同士の間に挟まった <br /> や改行を完全に消去して直結
-    body_html = re.sub(
-        r'(</div>)\s*(?:<br\s*/?>|\n|\r\n)+\s*(<div style="display:block; text-align:center;)',
-        r'\1\2',
-        body_html
-    )
+    # 2. キャプションなし画像が連続している場合、間の <br> を消去し、2枚目に img-consecutive-tight クラスを付与
+    def tighten_consecutive_images(match):
+        first_div = match.group(1)
+        second_div_start = match.group(2)
+        second_div_rest = match.group(3)
+        # 2枚目の div のクラスに img-consecutive-tight を追加し、margin:4px に書き換え
+        tight_div_start = second_div_start.replace('class="img-container-block"', 'class="img-container-block img-consecutive-tight"')
+        tight_div_start = tight_div_start.replace('margin:25px auto;', 'margin:4px auto 25px auto;')
+        return f'{first_div}{tight_div_start}{second_div_rest}'
+
+    consecutive_pattern = r'(<div class="img-container-block" data-has-caption="false".*?</div>)\s*(?:<br\s*/?>|\n|\r\n)+\s*(<div class="img-container-block" data-has-caption="false"[^>]*>)(.*?</div>)'
+    body_html = re.sub(consecutive_pattern, tighten_consecutive_images, body_html, flags=re.DOTALL)
     
     return meta, body_html
 

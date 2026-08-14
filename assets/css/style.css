@@ -101,7 +101,7 @@ h1 { font-size: 32px; }
 h3 { font-size: 18px; color: #444444; }
 
 /* ==========================================================================
-   4. リンク・装飾意匠 ＆ 画像長辺400pxリミッター ＆ キャプション解放回路
+   4. リンク・装飾意匠 ＆ 画像長辺400pxリミッター ＆ 連続画像緊縮回路
    ========================================================================== */
 a { color: #267CB9; text-decoration: none; }
 a:hover, a:focus { color: #069; font-weight: bold; }
@@ -143,43 +143,43 @@ img.content-max {
   padding: 0 !important;
 }
 
-/* ── 【完全確定・正常化：長辺400px厳守 ＆ 余白連動・インターロック回路】 ── */
-/* 画像とキャプションを包む外枠（div）自体を、コンテンツ幅（最大620px）まで安全に広げます */
+/* ── 【確定版：画像基本余白（25px） ＆ 連続時のみ極小隙間直結回路】 ── */
+/* 通常時の画像ブロック外枠（div）：本文との前後バランスを25pxで完全に均一化 */
 section div[style*="display:block; text-align:center;"] {
   display: block !important;
   width: 100% !important;
   max-width: 620px !important;   /* コンテンツ幅の上限に同期 */
-  /* 【修正】!important を撤去し、build.py からの動的マージン指定を優先適用 */
+  margin: 25px auto !important;
   box-sizing: border-box !important;
 }
 
-/* 画像ブロックが連続して配置された場合、隣接する2枚目以降の上マージンを強制的に詰める */
-section div[style*="display:block; text-align:center;"] + div[style*="display:block; text-align:center;"] {
+/* 【キャプションなし画像が連続した時専用】：2枚目の上部余白を4pxに緊縮して直結 */
+section div.img-consecutive-tight {
   margin-top: 4px !important;
 }
 
-/* 画像自体の個別表示を上書き保護（長辺400pxの絶対死守回路） */
+/* 画像自体の個別表示を上書き保護（長辺400px制限 ＆ スマホ自動縮小） */
 section div[style*="display:block; text-align:center;"] img {
   display: block !important;
   width: auto !important;        
   height: auto !important;       
   
-  /* 横幅上限：400pxと画面幅の最小値（スマホはみ出し防止） */
+  /* 横幅上限：400pxと画面幅（100%）の小さい方を採用（スマホはみ出し防止） */
   max-width: min(400px, 100%) !important; 
-  /* 高さ上限：400px（縦長画像の巨大化防止） */
+  /* 高さ上限：400pxでロック（縦長画像の巨大化防止） */
   max-height: 400px !important;  
   
   margin: 0 auto !important;     /* 外枠内で中央揃え */
 }
 
-/* 写真下のキャプション（span）の配置を完全に正常化 */
+/* 写真下のキャプション（span）の配置 */
 section div[style*="display:block; text-align:center;"] span[style*="display:block; text-align:center;"] {
-  display: block !important;     /* ブロック化して外枠の横幅を活用 */
-  width: 100% !important;        /* 外枠に同調 */
+  display: block !important;
+  width: 100% !important;        /* 外枠に100%同調 */
   max-width: 100% !important;
-  white-space: normal !important;/* 適切な端での折り返しを許可 */
+  white-space: normal !important;/* 端での適切な折り返しを許可 */
   text-align: center !important; /* 中央揃えを厳密に維持 */
-  margin: 6px auto 0 auto !important;
+  margin: 8px auto 0 auto !important;
   padding: 0 !important;
 }
 
