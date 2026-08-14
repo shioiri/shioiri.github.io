@@ -58,7 +58,7 @@ def parse_markdown(filepath):
         alt_text = match.group(1).strip()
         img_src = match.group(2).strip()
         
-        # キャプション（alt_text）の有無により外枠のマージンを動的に切替
+        # キャプションの有無による外枠マージンの動的切替
         container_margin = "15px auto" if alt_text else "4px auto"
         
         html = (
@@ -82,7 +82,11 @@ def parse_markdown(filepath):
 
     body_html = re.sub(r'!\[(.*?)\]\((.*?)\)', replace_image_with_caption, body_html)
     
+    # マークダウン変換
     body_html = markdown.markdown(body_html, extensions=['tables', 'nl2br'])
+    
+    # ── 【画像ブロックを包む不要な <p> タグの完全除去回路】 ──
+    body_html = re.sub(r'<p>\s*(<div style="display:block; text-align:center;.*?</div>)\s*</p>', r'\1', body_html, flags=re.DOTALL)
     
     return meta, body_html
 
@@ -264,7 +268,7 @@ def main():
                 og_image_tag = ''
                 twitter_image_tag = ''
 
-            # 【キャプション自動判定置換回路（完全クリーン版）】
+            # 【キャプション自動判定置換回路】
             caption_text = post["meta"].get("caption", "").strip()
             if caption_text:
                 caption_html = f'<div class="lead-caption">{caption_text}</div><hr class="caption-divider">'
