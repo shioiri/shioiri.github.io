@@ -58,7 +58,7 @@ def parse_markdown(filepath):
         alt_text = match.group(1).strip()
         img_src = match.group(2).strip()
         
-        # キャプションの有無による外枠マージンの動的切替
+        # キャプションの有無による外枠マージンの動的切替（なし: 上下4px / あり: 上下15px）
         container_margin = "15px auto" if alt_text else "4px auto"
         
         html = (
@@ -85,8 +85,16 @@ def parse_markdown(filepath):
     # マークダウン変換
     body_html = markdown.markdown(body_html, extensions=['tables', 'nl2br'])
     
-    # ── 【画像ブロックを包む不要な <p> タグの完全除去回路】 ──
+    # ── 【根本治療：画像ブロック周辺の不要タグ・余白を完全駆除】 ──
+    # 1. <p> に包まれた画像ブロックを純粋な div に解放
     body_html = re.sub(r'<p>\s*(<div style="display:block; text-align:center;.*?</div>)\s*</p>', r'\1', body_html, flags=re.DOTALL)
+    
+    # 2. 画像ブロック同士の間に挟まった <br /> や改行を完全に消去して直結
+    body_html = re.sub(
+        r'(</div>)\s*(?:<br\s*/?>|\n|\r\n)+\s*(<div style="display:block; text-align:center;)',
+        r'\1\2',
+        body_html
+    )
     
     return meta, body_html
 
