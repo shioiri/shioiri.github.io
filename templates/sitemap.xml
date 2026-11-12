@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+{#
+  検索エンジン向けのページ一覧。build.py の write_feed_and_sitemap() から呼ばれる。
+#}
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+{% for page in pages %}
+  <url><loc>{{ env.base_url }}{{ page.path }}</loc></url>
+{% endfor %}
+{% for post in posts %}
+  <url><loc>{{ env.base_url }}{{ post.path }}</loc><lastmod>{{ (post.updated or post.published).isoformat() }}</lastmod></url>
+{% endfor %}
+{% for archive_path in archive_paths %}
+  <url><loc>{{ env.base_url }}{{ archive_path }}</loc></url>
+{% endfor %}
+</urlset>

@@ -1,0 +1,26 @@
+{#
+  個別記事のページ。build.py の write_posts() から呼ばれる。
+  post:  記事の情報（build.py の load_post() が作る辞書）
+  older: 1つ古い記事（前の記事）。最も古い記事では None
+  newer: 1つ新しい記事（次の記事）。最も新しい記事では None
+#}
+{% extends "base.html" %}
+{% block content %}
+      <article class="post">
+{% with link_title = false %}{% include "_post_header.html" %}{% endwith %}
+
+        <div class="post-body">
+{{ post.body_html | safe }}
+        </div>
+
+        <nav class="post-nav">
+{% if older %}
+          <a class="post-nav-older" href="{{ older.path }}"><span class="post-nav-label">← 前の記事</span>{{ older.title }}</a>
+{% endif %}
+{% if newer %}
+          <a class="post-nav-newer" href="{{ newer.path }}"><span class="post-nav-label">次の記事 →</span>{{ newer.title }}</a>
+{% endif %}
+        </nav>
+{% with comments = post.comments %}{% include "_comments.html" %}{% endwith %}
+      </article>
+{% endblock %}

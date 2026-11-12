@@ -1,0 +1,43 @@
+{#
+  ランディングページ（選挙期間中の案内など）。build.py の write_landing_pages() から呼ばれる。
+  サイドメニューを持たず、サイトの他のページからはリンクしない。
+  このページからは、ホームページ（トップページ）へのリンクだけを置く。
+  page: ページの情報（build.py の load_landing_pages() が作る辞書）
+#}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+{% set root = "../" %}
+{# ランディングページは、サイトの外から直接案内するためのページなので、検索結果には出さない #}
+{% set page_noindex = true %}
+{% include "_head.html" %}
+</head>
+<body>
+  <div class="landing">
+    <header class="landing-header">
+      <p class="site-title"><a href="../index.html">{{ site.title }}</a></p>
+    </header>
+
+    <main>
+      <article class="page">
+        <header class="post-header">
+          <h1 class="page-title">{{ page.title }}</h1>
+{% if page.caption %}
+          <p class="post-caption">{{ page.caption }}</p>
+{% endif %}
+        </header>
+        <div class="post-body">
+{{ page.body_html | safe }}
+        </div>
+      </article>
+    </main>
+
+    <footer class="landing-footer">
+{% if site.contact %}
+      <p>連絡先：<a href="mailto:{{ site.contact }}">{{ site.contact }}</a></p>
+{% endif %}
+      <p><a href="../index.html">{{ site.author }}のホームページへ</a></p>
+    </footer>
+  </div>
+</body>
+</html>

@@ -1,0 +1,62 @@
+# 原稿（content/ など）が main ブランチに push されたとき、GitHub のサーバー上で
+# build.py を実行してサイトを生成し、GitHub Pages に公開する。
+# 生成結果（docs/）はリポジトリに入れない（履歴の容量を増やさないため）。
+#
+# 生成がエラーで停止した場合は公開を行わず、公開中のサイトは前の状態のまま残る。
+# 結果はリポジトリの「Actions」タブで確認できる。
+#
+# 注意：選挙期日の当日は、選挙運動のためのウェブサイトを更新できない（公職選挙法）。
+#       push すると自動で公開されるため、当日は push しないこと。
+
+name: サイトを生成して公開する
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:   # 「Actions」タブから手動でも実行できるようにする
+
+# GitHub Pages に公開するために必要な権限
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 連続して push した場合、公開の処理が同時に走らないよう順番に実行する
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 原稿を取り出す
+        uses: actions/checkout@v7
+
+      - name: Python を用意する
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: ライブラリを入れる
+        run: pip install -r requirements.txt
+
+      - name: サイトを生成する（docs/ を作る）
+        run: python3 build.py
+
+      - name: 生成結果を公開用にまとめる
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: docs
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: GitHub Pages に公開する
+        id: deployment
+        uses: actions/deploy-pages@v5

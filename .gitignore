@@ -1,0 +1,4 @@
+__pycache__/
+.DS_Store
+# 生成結果。GitHub Actions が push のたびに生成して公開するため、リポジトリには入れない
+docs/

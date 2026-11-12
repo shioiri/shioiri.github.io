@@ -1,0 +1,24 @@
+---
+title: 最近のコメント
+time: '15:20'
+timezone: '+09:00'
+---
+<p>最近のコメントを表示させようと、巷に出回っているスタイルシートを使おうとすると順序が逆になってしまうという件。これはMovableTypeのバージョンが2.64以降で、データベースにPostgreSQLを使っている場合に発生する問題のようですが、3.11、3.121でも同様に不具合となってしまうようです。<br />
+前回、<a href="2004110301.html">このエントリー</a>で紹介したパッチを当てる方法でいけるのですが、どうも変更が必要なのはContext.pmというファイルだけのようですので、ここに紹介しておきます。</p>
+<!--more-->
+
+<p>ファイル Context.pm と CONTEXT.PM.ORG を比較しています<br />
+***** Context.pm<br />
+{ blog_id => $blog_id, visible => 1 },<br />
+{ 'aggregate_sort' => { 'column' => 'created_on',<br />
+'function' => 'max',<br />
+'direction' => 'descend' },<br />
+limit => $n } ];<br />
+***** CONTEXT.PM.ORG<br />
+{ blog_id => $blog_id, visible => 1 },<br />
+{ 'sort' => 'created_on',<br />
+direction => 'descend',<br />
+unique => 1,<br />
+limit => $n } ];<br />
+*****<br />
+・・・でも、これでどうして順序が直るのか僕には判らないわけで・・・</p>

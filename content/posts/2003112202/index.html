@@ -1,0 +1,34 @@
+---
+title: Hello! WORLD!!
+time: '17:34'
+timezone: '+09:00'
+---
+<p>■2003-11-16 MovableTypeを知ってしまった。井の中の蛙、大海を知らず。<br />
+以下、セットアップのメモ。<br />
+まずはここから。日本語化パッチ。<br />
+<a href="http://rebecca.ac/milano/mt/archives/000168.html">http://rebecca.ac/milano/mt/archives/000168.html</a><br />
+その説明書。<br />
+<a href="http://rebecca.ac/milano/mt/readme/">http://rebecca.ac/milano/mt/readme/</a><br />
+先進的でイケてるというので、UTF-8をチョイス。<br />
+作業中、14番で一旦挫折。はるちゃんにデータベースをインストールしてもらうように頼む。<br />
+■2003-11-17 はるちゃんにPostgreSQLをインストールしてもらう。<br />
+しかしドライバが認識されない。<br />
+<a href="http://www2h.biglobe.ne.jp/~hnakamur/technolab/howto/blog/mt/mt.htm">http://www2h.biglobe.ne.jp/~hnakamur/technolab/howto/blog/mt/mt.htm</a><br />
+<a href="http://bloggers.ja.bz/sunouchi/archives/000046.php">http://bloggers.ja.bz/sunouchi/archives/000046.php</a><br />
+はるちゃんにヘルプ。<br />
+■2003-11-18 はるちゃんにデータベース関係の設定をしてもらう。<br />
+ObjectDriver DBI::postgres に修正。これ重要。<br />
+<a href="https://web.archive.org/web/20041206040618/http://www.daijizaitenn.org:80/shuu-henn/mt/archives/000004.html">http://www.daijizaitenn.org/shuu-henn/mt/archives/000004.html</a><br />
+pgsql.pm じゃなくて postgres.pm が正しいってことみたい。この場合。<br />
+以上、はるちゃんからの情報。<br />
+■2003-11-20 しおいりが東京へ出張している間に、はるちゃんがすべての作業をすすめてくれた。<br />
+インストールしてもらったPostgreSQLはEUC-JP専用になっているとのこと。<br />
+<a href="http://rebecca.ac/milano/mt/readme/">http://rebecca.ac/milano/mt/readme/</a> の9.で「先進的でイケてる気がする」というヒトコトに<br />
+そそられUTF-8を選択したわけだが、それがアダとなっていたようだ。<br />
+以下、はるちゃんから。<br />
+> 実は、index.html を表示させたときの文字コードが矛盾して<br />
+> しまって小一時間悩んでしまったんだけど、これはケータイ用<br />
+> に、サーバに念のために設定した AddDefaultCharset が悪さ<br />
+> をしていることが判明したので、off に修正して動作するよう<br />
+> になったのでした。<br />
+■2003-11-22 MovableTypeのディレクトリを変更し、再インストール。</p>

@@ -1,0 +1,858 @@
+/* ==========================================================================
+   Tomohiro Shioiri Archive スタイルシート
+
+   サイトの見た目（大きさ・余白・色・配置）はすべてこのファイルで決める。
+   HTML（build.py とテンプレートが出力）には見た目の指定を書かない。
+
+   目次
+     1. 基礎        全体の文字・色・余白
+     2. 見出し・本文の要素
+     3. 記事の見出し部分（タイトル・キャプション・日付）
+     4. 画像（figure）
+     5. 一覧
+     6. ヘッダーとメニュー
+     7. 画面幅による切り替え（1024px 以下：1カラム＋ハンバーガーメニュー）
+     8. ランディングページ
+     9. 印刷
+   ========================================================================== */
+
+
+/* 1. 基礎 ----------------------------------------------------------------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* スクロールバーの幅を常に確保する。
+   これがないと、スクロールバーが出る長いページと出ない短いページ（プロフィール等）とで
+   本文の幅と位置がずれ、ページを移動するたびにレイアウトが左右に動いて見える。 */
+html {
+  scrollbar-gutter: stable;
+}
+
+body {
+  margin: 0;
+  padding: 40px 0;
+  background-color: #fff;
+  color: #333;
+  font: 16px/1.6 "Noto Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #267cb9;
+  text-decoration: none;
+}
+
+/* リンクにポインタを重ねたとき：色を濃くし、下線で示す（太字にはしない。太字にすると文字幅が変わり、行の折り返しが動くため）。
+   例外はサイト名と記事タイトルのリンクで、下線を付けず、色だけを変える（6. と 3. で指定する） */
+a:hover,
+a:focus {
+  color: #069;
+  text-decoration: underline;
+}
+
+
+/* 2. 見出し・本文の要素 ------------------------------------------------- */
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0 0 20px;
+  color: #111;
+  line-height: 1.3;
+}
+
+h1 { font-size: 32px; }
+
+h2 {
+  padding-bottom: 5px;
+  border-bottom: 1px solid #e5e5e5;
+  color: #222;
+  font-size: 24px;
+}
+
+h3 {
+  color: #444;
+  font-size: 18px;
+}
+
+p, ul, ol, table, pre, dl, blockquote {
+  margin: 0 0 20px;
+}
+
+strong {
+  color: #111;
+  font-weight: 700;
+}
+
+blockquote {
+  padding-left: 15px;
+  border-left: 2px solid #ddd;
+  color: #666;
+}
+
+code, pre {
+  font-family: Monaco, Consolas, "Courier New", monospace;
+}
+
+pre {
+  overflow-x: auto;
+  padding: 8px 15px;
+  border: 1px solid #e5e5e5;
+  border-radius: 5px;
+  background: #f8f8f8;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 8px 10px;
+  border-bottom: 1px solid #e5e5e5;
+  text-align: left;
+}
+
+th {
+  background-color: #fafdff;
+  color: #111;
+}
+
+hr {
+  height: 1px;
+  margin: 20px 0;
+  border: 0;
+  background: #e5e5e5;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+
+
+/* 3. 記事の見出し部分 ---------------------------------------------------- */
+
+/* ページのタイトル（記事・固定ページ・一覧ページ共通） */
+.page-title {
+  margin-bottom: 35px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #e5e5e5;
+  color: #222;
+  font-size: 24px;
+}
+
+/* 記事では、タイトル・キャプション・日付を1つのまとまりとして詰めて並べる。
+   区切り線は日付の上（.post-meta の border-top）に引く。 */
+.post-header .page-title {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.post-caption {
+  margin: 4px 0 0;
+  color: #666;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+/* トップページ・月別一覧の記事タイトル（記事ページへのリンク）。
+   通常は見出しと同じ色で、ポインタを重ねたときだけ青（他のリンクと同じ色）にする */
+.post-header .page-title a {
+  color: #222;
+}
+
+.post-header .page-title a:hover,
+.post-header .page-title a:focus {
+  color: #267cb9;
+  text-decoration: none;
+}
+
+.post-meta {
+  margin: 6px 0 25px;
+  padding-top: 4px;
+  border-top: 1px solid #e5e5e5;
+  color: #666;
+  font-size: 0.9em;
+}
+
+
+/* 4. 画像（figure） ------------------------------------------------------ */
+
+/* 画像ブロック：中央寄せ、長辺 400px まで */
+figure {
+  margin: 25px auto;
+  text-align: center;
+}
+
+figure img {
+  display: block;
+  width: auto;
+  max-width: min(400px, 100%);
+  height: auto;
+  max-height: 400px;
+  margin: 0 auto;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+figcaption {
+  margin-top: 8px;
+  color: #666;
+  font-size: 0.85em;
+  line-height: 1.2;
+}
+
+/* 説明のない画像が続く場合は、画像どうしの間隔を詰めて1組に見せる */
+figure.no-caption:has(+ figure.no-caption) {
+  margin-bottom: 4px;
+}
+
+figure.no-caption + figure.no-caption {
+  margin-top: 4px;
+}
+
+/* 本文の幅いっぱいに表示する画像。原稿では ![](画像.jpg){: .wide } と書く */
+figure.wide {
+  margin: 20px 0;
+}
+
+/* ページの本文が画像から始まる場合（見出しのないトップページ）は、画像の上の余白を付けない */
+.site-main > .post-body:first-child > :first-child {
+  margin-top: 0;
+}
+
+figure.wide img {
+  width: 100%;
+  max-width: 100%;
+  max-height: none;
+  border: none;
+  box-shadow: none;
+}
+
+
+/* 5. 一覧 ---------------------------------------------------------------- */
+
+/* トップページ：最新記事を全文で並べる。記事どうしの間に区切り線を引く */
+.home-post {
+  margin-top: 50px;
+  padding-top: 30px;
+  border-top: 3px double #e5e5e5;
+}
+
+.more-link {
+  margin-top: 10px;
+}
+
+/* 月別一覧のページ番号 */
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px 12px;
+  margin-top: 50px;
+  padding-top: 15px;
+  border-top: 1px solid #e5e5e5;
+}
+
+.pagination .current {
+  color: #111;
+  font-weight: 700;
+}
+
+.home-more {
+  margin-top: 50px;
+  color: #666;
+  font-size: 0.9em;
+}
+
+.list-heading {
+  margin-top: 40px;
+  padding: 0 0 0 10px;
+  border-bottom: none;
+  border-left: 4px solid #333;
+  font-size: 18px;
+}
+
+.post-list {
+  padding: 0;
+  list-style: none;
+}
+
+.post-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.post-list time {
+  color: #666;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+
+/* 前の記事・次の記事：前（古い記事）を左、次（新しい記事）を右に置く */
+.post-nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  margin-top: 40px;
+  padding-top: 15px;
+  border-top: 1px solid #e5e5e5;
+  font-size: 0.9em;
+}
+
+.post-nav a {
+  display: block;
+  max-width: 48%;
+}
+
+.post-nav-newer {
+  margin-left: auto;  /* 前の記事がないとき（最も古い記事）も右端に置く */
+  text-align: right;
+}
+
+.post-nav-label {
+  display: block;
+  color: #666;
+  font-size: 0.85em;
+}
+
+/* 旧サイトから転載したコメント */
+.comments {
+  margin-top: 50px;
+}
+
+.comments-heading {
+  font-size: 18px;
+}
+
+.comment-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.comment {
+  margin: 0 0 15px;
+}
+
+.comment .comment-list {
+  margin-top: 15px;
+  padding-left: 20px;
+  border-left: 2px solid #eee;
+}
+
+.comment-meta {
+  margin: 0 0 4px;
+  color: #666;
+  font-size: 0.85em;
+}
+
+.comment-author {
+  color: #333;
+  font-weight: 700;
+}
+
+.comment-body {
+  white-space: pre-line;  /* 本文中の改行をそのまま表示する */
+}
+
+.comments-closed {
+  margin-top: 20px;
+  color: #999;
+  font-size: 0.8em;
+}
+
+
+/* カテゴリ・タグの一覧 */
+.term-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  padding: 0;
+  list-style: none;
+}
+
+.term-count {
+  color: #999;
+  font-size: 0.85em;
+}
+
+
+/* サイト内検索 */
+.search-form {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.search-form input {
+  flex: 1;
+  min-width: 0;
+  padding: 6px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;  /* 16px 未満だと、iPhone では入力時に画面が拡大される */
+}
+
+.search-form button,
+.search-more {
+  padding: 6px 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: #f8f8f8;
+  font-size: 0.9em;
+  cursor: pointer;
+}
+
+.search-status {
+  color: #666;
+  font-size: 0.9em;
+}
+
+.search-results {
+  padding: 0;
+  list-style: none;
+}
+
+.search-results li {
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.search-results time {
+  margin-left: 10px;
+  white-space: nowrap;
+  color: #666;
+  font-size: 0.85em;
+}
+
+.search-results p {
+  margin: 4px 0 0;
+  color: #555;
+  font-size: 0.85em;
+}
+
+
+/* 6. ヘッダーとメニュー -------------------------------------------------- */
+
+/* メニューの一番下の人物写真とスローガン */
+.site-portrait {
+  display: flex;
+  align-items: flex-start;
+  margin: 30px 0 0;
+}
+
+/* 画像は 2 倍の解像度（223×800px）で用意し、半分の大きさで表示する（高解像度の画面で粗く見えないようにするため） */
+.site-portrait img {
+  display: block;
+  width: auto;
+  height: 400px;
+}
+
+/* スローガン：写真の右に縦書きで表示する（writing-mode: vertical-rl は、上から下へ書き、行は右から左へ進む） */
+.site-slogan {
+  margin: 10px 0 0 24px;
+  color: #222;
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.15em;
+  writing-mode: vertical-rl;
+}
+
+/* 小画面の帯（.mobile-bar）。大画面では表示しない（7. で小画面のときだけ表示する） */
+.mobile-bar {
+  display: none;
+}
+
+.site-title {
+  margin: 0 0 20px;
+  font-size: 32px;
+  font-style: italic;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.site-title a,
+.mobile-bar-title a {
+  color: #222;
+}
+
+/* サイト名（トップページへのリンク）も、記事タイトルと同じく、ポインタを重ねたときだけ青にする */
+.site-title a:hover,
+.site-title a:focus,
+.mobile-bar-title a:hover,
+.mobile-bar-title a:focus {
+  color: #267cb9;
+  text-decoration: none;
+}
+
+.site-subtitle {
+  margin: 0;
+  font-size: 20px;
+}
+
+/* メニュー開閉用のチェックボックスは常に非表示（ボタンの label から操作する） */
+.menu-toggle {
+  display: none;
+}
+
+/* ハンバーガーボタン（大画面では非表示。7. で表示する） */
+.menu-button {
+  display: none;
+}
+
+.nav-list,
+.nav-sublist {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nav-list {
+  margin-top: 20px;
+}
+
+.nav-list li {
+  margin: 10px 0;
+}
+
+.nav-list a {
+  font-weight: 700;
+}
+
+.nav-heading {
+  margin: 25px 0 5px;
+  padding-bottom: 3px;
+  border-bottom: 1px dashed #e5e5e5;
+  color: #666;
+  font-weight: 700;
+}
+
+.nav-sublist {
+  padding-left: 10px;
+}
+
+/* 「分類・検索」の中の項目：文字の大きさは上のメニュー（トップページ等）と同じ。
+   間隔は上のメニュー（10px）より詰め、日付順を開いた中の年の間隔と同じ 6px にする */
+.nav-sublist li {
+  margin: 6px 0;
+}
+
+/* 日付順と年：クリックで開閉する。クリックできる点でリンクと同じく青で表示し、
+   ポインタを重ねたときは下線で示す */
+.nav-dates > summary,
+.nav-years summary {
+  color: #267cb9;
+  cursor: pointer;
+}
+
+.nav-dates > summary:hover,
+.nav-years summary:hover {
+  color: #069;
+  text-decoration: underline;
+}
+
+/* 日付順の中の年（クリックで開閉）と、その中の月 */
+/* 日付順を開いた中（年の一覧、年を開いた中の「○○年の全記事」と月）は、
+   項目の間隔を上のメニューより詰め、すべて同じ 6px にそろえる */
+.nav-years {
+  margin: 6px 0 0;
+  padding-left: 10px;
+  list-style: none;
+}
+
+.nav-years > li {
+  margin: 6px 0 0;
+}
+
+/* 年の上下の間隔は、外側の li の余白（6px）で取る */
+.nav-years summary {
+  margin: 0;
+}
+
+/* 年を開いた中：1行目に「○○年の全記事」、その下に月を 6 か月ずつ横に並べる（グリッド） */
+.nav-months {
+  display: grid;
+  grid-template-columns: repeat(6, max-content);
+  gap: 2px 10px;
+  margin: 6px 0 0;
+  padding-left: 18px;
+  list-style: none;
+}
+
+/* 行の間隔は上の gap で取り、項目ごとの上下の余白は付けない */
+.nav-months li {
+  margin: 0;
+}
+
+/* 「○○年の全記事」は 1 行を占め、月の 1 行目との間を他の項目と同じ 6px（gap 2px ＋ 4px）にする */
+.nav-months li:first-child {
+  grid-column: 1 / -1;
+  margin-bottom: 4px;
+}
+
+/* 月：小さめの文字、行の高さを詰める */
+.nav-months li:not(:first-child) {
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.nav-sublist .disabled {
+  color: #999;
+  font-size: 0.85rem;
+}
+
+
+/* 全ページ共通のフッター（本文の下） */
+.site-footer {
+  margin-top: 50px;
+  padding-top: 15px;
+  border-top: 1px solid #e5e5e5;
+  color: #666;
+  font-size: 0.85em;
+}
+
+.site-footer p {
+  margin: 0;
+}
+
+/* 項目の途中（「CC BY」と「4.0」の間など）では改行しない。改行は区切りの位置で行う。
+   リンクの色は他のリンクと同じ青の太字（1. の a の指定）にする */
+.site-footer a,
+.footer-item {
+  white-space: nowrap;
+}
+
+.footer-sep {
+  margin: 0 4px;
+  color: #ccc;
+}
+
+
+/* 7. 画面幅による切り替え ------------------------------------------------ */
+
+/* 大画面（1025px 以上）：左にメニュー（280px）、右に本文（620px）の2カラム */
+@media screen and (min-width: 1025px) {
+  .wrapper {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  /* メニューは、本文をスクロールしても画面の上端（から 40px）に留める。
+     align-self: flex-start：横並び（flex）の中でメニューの欄が本文と同じ高さに引き伸ばされると、
+     留まる余地がなくなるため、欄の高さを内容の高さに留める。
+     max-height / overflow-y：「日付順」を開いてメニューが画面に収まらないときは、メニューの中だけをスクロールさせる。
+     高さは画面の高さから上の余白（top: 40px）だけを引き、下は本文と同じく画面の下端まで使う。
+     scrollbar-width: none：スクロールバーは表示しない。表示すると、その幅だけ欄が狭まり、サイト名が2行に折り返すため。 */
+  .site-header {
+    position: sticky;
+    top: 40px;
+    align-self: flex-start;
+    width: 280px;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+    scrollbar-width: none;
+  }
+
+  .site-main {
+    width: 620px;
+  }
+}
+
+/* 小画面（1024px 以下）：1カラム。メニューはハンバーガーボタンで開閉する */
+@media screen and (max-width: 1024px) {
+  .wrapper {
+    width: 90%;
+    max-width: 620px;
+    margin: 0 auto;
+  }
+
+  /* 帯を画面の上端から始めるため、ページ上部の余白をなくす */
+  body {
+    padding-top: 0;
+  }
+
+  /* 開いたメニューの後ろで本文がスクロールしないようにする */
+  body:has(.menu-toggle:checked) {
+    overflow: hidden;
+  }
+
+  /* 帯：サイト名（左）とハンバーガーボタン（右）。スクロールしても画面の上端に留める */
+  .mobile-bar {
+    display: block;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background-color: #fff;
+    border-bottom: 1px solid #e5e5e5;
+  }
+
+  /* 帯の中身の左右の位置を、本文（.wrapper）と揃える */
+  .mobile-bar-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 90%;
+    max-width: 620px;
+    height: 64px;
+    margin: 0 auto;
+  }
+
+  .mobile-bar-title {
+    margin: 0;
+    font-size: 26px;
+    font-style: italic;
+    font-weight: 700;
+    line-height: 1.1;
+  }
+
+  .mobile-bar-subtitle {
+    margin: 2px 0 0;
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  /* 帯にサイト名と説明があるため、ヘッダーでは表示しない。ヘッダーにはメニュー（開いたときだけ表示）だけが残る */
+  .site-branding {
+    display: none;
+  }
+
+  /* 帯と本文の間の余白 */
+  .site-main {
+    padding-top: 30px;
+  }
+
+  /* メニュー：開いたときは、帯の下に画面全体を覆って表示する。メニューの中だけをスクロールできる */
+  .site-nav {
+    display: none;
+  }
+
+  .menu-toggle:checked ~ .wrapper .site-nav {
+    display: block;
+    position: fixed;
+    top: 65px;  /* 帯の高さ（64px）＋帯の下線（1px） */
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 10;
+    overflow-y: auto;
+    /* 左右の余白：本文（.wrapper：幅 90%・最大 620px の中央寄せ）と同じ位置に揃える。
+       position: fixed の要素では、% は画面の幅に対する割合になる */
+    padding: 0 max(5%, calc((100% - 620px) / 2)) 40px;
+    background-color: #fff;
+  }
+
+  /* 三本線：中央の線（span）と、その上下の線（::before と ::after）で描く */
+  .menu-button {
+    display: block;
+    position: relative;
+    width: 28px;
+    height: 20px;
+    cursor: pointer;
+  }
+
+  .menu-button span,
+  .menu-button span::before,
+  .menu-button span::after {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background-color: #111;
+    transition: all 0.25s ease-in-out;
+  }
+
+  .menu-button span { top: 9px; }
+  .menu-button span::before { top: -7px; }
+  .menu-button span::after { top: 7px; }
+
+  /* 開いているときは三本線を「×」に変える */
+  .menu-toggle:checked ~ .mobile-bar .menu-button span { background-color: transparent; }
+  .menu-toggle:checked ~ .mobile-bar .menu-button span::before { top: 0; transform: rotate(45deg); }
+  .menu-toggle:checked ~ .mobile-bar .menu-button span::after { top: 0; transform: rotate(-45deg); }
+}
+
+
+/* 8. ランディングページ（サイドメニューのない1カラムのページ） */
+.landing {
+  width: 90%;
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+.landing-header {
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.landing-header .site-title {
+  margin: 0;
+}
+
+/* タイトルとキャプションの下に区切り線を引く（記事の日付欄の代わり） */
+.landing .post-header {
+  margin-bottom: 25px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.landing-footer {
+  margin-top: 50px;
+  padding-top: 15px;
+  border-top: 1px solid #e5e5e5;
+  color: #666;
+  font-size: 0.9em;
+}
+
+.landing-footer p {
+  margin: 0 0 8px;
+}
+
+
+/* 9. 印刷 ---------------------------------------------------------------- */
+
+@media print {
+  body {
+    padding: 0;
+    color: #000;
+    font-size: 12pt;
+  }
+
+  .site-nav,
+  .mobile-bar {
+    display: none;
+  }
+
+  /* サイト名と説明（上田市議会議員　塩入友広）を近づけて1組にし、その下の記事タイトルとの間を空ける */
+  .site-title {
+    margin: 0;
+    font-size: 18pt;
+    line-height: 1.2;
+  }
+
+  .site-subtitle {
+    font-size: 10.5pt;
+    line-height: 1.4;
+  }
+
+  .site-header {
+    margin-bottom: 30px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #ccc;
+  }
+}

@@ -1,0 +1,16 @@
+{#
+  記事の一覧ページ（年別・月別）。タイトルと日付だけを並べる。
+  posts: 表示する記事のリスト（新しい順）
+#}
+{% extends "base.html" %}
+{% block content %}
+      <h1 class="page-title">{{ title }}</h1>
+      <ul class="post-list">
+{% for post in posts %}
+        <li>
+          <a href="{{ post.path }}">{{ post.title }}</a>
+          <time datetime="{{ post.published.isoformat() }}">{{ post.published.isoformat() }}</time>
+        </li>
+{% endfor %}
+      </ul>
+{% endblock %}

@@ -1,0 +1,18 @@
+---
+title: WordPress - Postie パッチメモ その２
+time: '00:41'
+timezone: '+09:00'
+---
+<p>大きな画像を指定の幅に自動的で縮小してくれるのはいいんだけど、<br />
+小さな画像も指定の幅に拡大してしまうという不具合が発覚。<br />
+これ、なんとかならないのかな、と思って、<a href="http://www.economysizegeek.com/?page_id=395">プラグイン作者のブログ</a>を読み進めたら、こんなコメントが書き込まれていました。</p>
+<blockquote>I don’t like the way Postie resizes images. It only lets you specify the maximum width. What this does is result in images that are in landscape mode ending up a lot smaller than images that are in portrait mode. Aesthetically, it’s not a good look. I’ve posted the changes I made to fix this at: <a href="http://thejoshis.org/donutello/?p=6">http://thejoshis.org/donutello/?p=6</a></blockquote>
+<p>早速の彼のブログから長々としたパッチをもらい、これでOK!と喜んでいたら、さらにそこへはこんなコメント。</p>
+<blockquote>This can be done easier by changing only the DetermineScale as so… The width you set in the options is the max width or height. It won’t enlarge images that are smaller than that.</p>
+<blockquote>
+function DetermineScale($width,$height, $max_width, $max_height) {<br />
+$max_dim = ($width &gt; $height) ? $width : $height;<br />
+return ($max_dim &gt; $max_width) ? ($max_width/$max_dim) : 1;<br />
+}</blockquote>
+</blockquote>
+<p>すばらしい！！　先人たちの知恵に感謝。</p>

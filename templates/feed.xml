@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+{#
+  Atom 形式のフィード（新着記事の配信用）。build.py の write_feed_and_sitemap() から呼ばれる。
+  時刻のない記事は、その日の 0 時（サイトの既定の時差）として出力する。
+#}
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>{{ site.title_suffix }}</title>
+  <link href="{{ env.base_url }}"/>
+  <link rel="self" href="{{ env.base_url }}feed.xml"/>
+  <id>{{ env.base_url }}</id>
+  <updated>{{ feed_updated.isoformat() }}T00:00:00{{ site.timezone }}</updated>
+  <author><name>{{ site.author }}</name></author>
+{% for post in posts %}
+  <entry>
+    <title>{{ post.title }}</title>
+    <link href="{{ env.base_url }}{{ post.path }}"/>
+    <id>{{ env.base_url }}{{ post.path }}</id>
+    <published>{{ post.published.isoformat() }}T{{ post.time or '00:00' }}:00{{ post.timezone }}</published>
+{% if post.updated %}
+    <updated>{{ post.updated.isoformat() }}T00:00:00{{ site.timezone }}</updated>
+{% else %}
+    <updated>{{ post.published.isoformat() }}T{{ post.time or '00:00' }}:00{{ post.timezone }}</updated>
+{% endif %}
+    <summary>{{ post.description }}</summary>
+  </entry>
+{% endfor %}
+</feed>

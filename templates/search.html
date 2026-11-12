@@ -1,0 +1,22 @@
+{#
+  サイト内検索のページ。build.py の write_search_page() から呼ばれる。
+  検索そのものは、閲覧者のブラウザで assets/js/search.js が行う。
+  index_url:  検索用データ（search.json）の URL
+  script_url: 検索プログラムの URL
+#}
+{% extends "base.html" %}
+{% block content %}
+      <h1 class="page-title">検索</h1>
+
+      <form class="search-form" action="search.html" method="get" role="search">
+        <input type="search" name="q" id="search-input" aria-label="検索する言葉" placeholder="検索する言葉（空白で区切ると、すべてを含む記事）">
+        <button type="submit">検索</button>
+      </form>
+
+      <p class="search-status" id="search-status"></p>
+      <ol class="search-results" id="search-results"></ol>
+      <button type="button" class="search-more" id="search-more" hidden>さらに表示</button>
+
+      <noscript><p>検索には JavaScript を有効にしてください。</p></noscript>
+      <script src="{{ script_url }}" data-index="{{ index_url }}"></script>
+{% endblock %}

@@ -1,0 +1,7 @@
+- id: 22
+  author: SE日記
+  date: '2003-12-04 11:45'
+  timezone: '+09:00'
+  body: |-
+    MovableTypeをインストール
+    LinuxサーバにMovableTypeをインストールしてみました。インストール対象のシステムは RedHat Linux 8.0 です。 MovableType のインストールについては、ひらたさんの「MovableType 日本語化手順」(http://rebecca.ac/milano/mt/readme/) を参考にさせていただきました。 ...

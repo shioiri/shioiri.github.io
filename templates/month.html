@@ -1,0 +1,34 @@
+{#
+  月別一覧の1ページ。build.py の write_archives() から呼ばれる。
+  記事の本文を、config.yaml の archive_entries 件ずつ表示する。
+  posts:      このページに表示する記事（新しい順）
+  page_links: ページ番号のリンク [{'number': 1, 'path': '202608.html'}, ...]
+  page_number: このページの番号（1 から）
+  newer_page / older_page: 前後のページのパス（なければ None）
+#}
+{% extends "base.html" %}
+{% block content %}
+      <h1 class="page-title">{{ title }}</h1>
+
+{% for post in posts %}
+{% include "_post_excerpt.html" %}
+{% endfor %}
+
+{% if page_links | length > 1 %}
+      <nav class="pagination">
+{% if newer_page %}
+        <a href="{{ newer_page }}">← 新しい記事</a>
+{% endif %}
+{% for link in page_links %}
+{% if link.number == page_number %}
+        <span class="current">{{ link.number }}</span>
+{% else %}
+        <a href="{{ link.path }}">{{ link.number }}</a>
+{% endif %}
+{% endfor %}
+{% if older_page %}
+        <a href="{{ older_page }}">古い記事 →</a>
+{% endif %}
+      </nav>
+{% endif %}
+{% endblock %}

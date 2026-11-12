@@ -1,0 +1,19 @@
+---
+title: WordPress - Postie パッチメモ
+time: '19:05'
+timezone: '+09:00'
+---
+<p>最近、MTの挙動が不安定なのだ。<br />
+エントリーを投稿すると、同じ記事が二重、三重にエントリーされたり。<br />
+こないだはデータベースが危うく飛びそうになったり。<br />
+<a href="http://moblog.uva.ne.jp/">moblogゲートウェイ</a>もときどき調子悪いので、そろそろ<a href="http://ja.wordpress.org/">ワードプレス</a>に乗り換えようと思う。<br />
+インストールは極めて順調。近日中に移転オープンできると思います。<br />
+メール投稿のプラグインには<a href="http://www.economysizegeek.com/?page_id=395">Postie</a>をチョイス。<br />
+ただ、WP2.3以降ではPostieにパッチをあてないといけないらしい。<br />
+カテゴリーのプルダウンメニューに何も表示されず困っていたのだけど、ソースの一部を<a href="http://www.google.co.jp/search?q=%3Cselect+name%3D%22DEFAULT_POST_CATEGORY%22+id%3D%22DEFAULT_POST_CATEGORY%22%3E&amp;sourceid=navclient-ff&amp;ie=UTF-8&amp;rlz=1B3GGGL_ja___JP211&amp;aq=t">ググって</a>みたら見事にヒット。こういうのって、超うれしいよねー。<br />
+<a href="http://stairway27.net/blog/2007/11/25/fixing-postie-for-wordpress-23/">ここ</a>にある「this zip archive」をクリックするとパッチがダウンロードできます。<br />
+Entropy in the Stairway - <a href="http://stairway27.net/blog/">http://stairway27.net/blog/</a><br />
+Thanks a lot!<br />
+あと、CRONジョブのシェルスクリプトには「?」とか使っちゃいけないんだって！<br />
+はるちゃんありがとね！<br />
+<img src="https://ext.netlify.app/snow.gif" /></p>

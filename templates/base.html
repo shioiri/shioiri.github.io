@@ -1,0 +1,110 @@
+{#
+  全ページ共通の枠組み。各ページのテンプレートは {% extends "base.html" %} でこれを引き継ぎ、
+  {% block content %} の部分だけを差し替える。
+
+  build.py から渡される値:
+    site         config.yaml の site
+    env          config.yaml の environments のうち、選んだ環境の設定
+    nav_pages    メニューに表示する固定ページの一覧
+    nav_years    メニューに表示する年・月の一覧
+    current_year 表示中のページの年（メニューのその年を開いておく。該当なしは空）
+    css_version  style.css の内容から作った識別子（更新時にブラウザの保存分を使わせないため）
+    title, path, description, og_image, og_type   ページごとの値
+  <head> の中身は _head.html にある（ランディングページと共用）。
+#}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+{% set root = "" %}
+{% include "_head.html" %}
+</head>
+<body>
+  {# ハンバーガーメニュー：チェックボックスの ON/OFF で開閉する（JavaScript 不使用）。
+     CSS の「~」（後ろにある兄弟要素）で帯のボタンとメニューの表示を切り替えるため、
+     チェックボックスは帯（.mobile-bar）とページ本体（.wrapper）より前に置く。 #}
+  <input type="checkbox" id="menu-toggle" class="menu-toggle">
+
+  {# 小画面（1024px 以下）で画面の上端に固定する帯：サイト名・説明とハンバーガーボタン。
+     大画面では表示しない（サイト名と説明は左のメニュー欄の .site-branding に表示する）。 #}
+  <div class="mobile-bar">
+    <div class="mobile-bar-inner">
+      <div class="mobile-bar-branding">
+        <p class="mobile-bar-title"><a href="index.html">{{ site.title }}</a></p>
+        <p class="mobile-bar-subtitle">{{ site.subtitle }}</p>
+      </div>
+      <label for="menu-toggle" class="menu-button" aria-label="メニューを開閉"><span></span></label>
+    </div>
+  </div>
+
+  <div class="wrapper">
+    <header class="site-header">
+      <div class="site-branding">
+        <p class="site-title"><a href="index.html">{{ site.title }}</a></p>
+        <p class="site-subtitle">{{ site.subtitle }}</p>
+      </div>
+
+      <nav class="site-nav">
+        <ul class="nav-list">
+          <li><a href="index.html">トップページ</a></li>
+{% for page in nav_pages %}
+          <li><a href="{{ page.path }}">{{ page.title }}</a></li>
+{% endfor %}
+        </ul>
+
+        <p class="nav-heading">分類・検索</p>
+        <ul class="nav-sublist">
+          {# 「日付順」をクリックすると年の一覧が開き、年をクリックするとその年の月の一覧が開く
+             （<details> 要素。JavaScript 不使用）。「日付順」は最初は閉じておく。
+             表示中のページの年（current_year）は、「日付順」を開いたときに月まで開いた状態にする。 #}
+          <li>
+            <details class="nav-dates">
+              <summary>日付順</summary>
+              <ul class="nav-years">
+{% for year in nav_years %}
+                <li>
+                  <details{% if year.key == current_year %} open{% endif %}>
+                    <summary>{{ year.label }}</summary>
+                    <ul class="nav-months">
+                      <li><a href="{{ year.path }}">{{ year.label }}の全記事</a></li>
+{% for month in year.months %}
+                      <li><a href="{{ month.path }}">{{ month.label }}</a></li>
+{% endfor %}
+                    </ul>
+                  </details>
+                </li>
+{% endfor %}
+              </ul>
+            </details>
+          </li>
+          <li><a href="categories.html">カテゴリ</a></li>
+          <li><a href="tags.html">タグ</a></li>
+          <li><a href="search.html">検索</a></li>
+        </ul>
+
+        {# 人物写真とスローガン：メニューの一番下に表示する（大画面では左メニュー欄、小画面では開いたメニューの中）。
+           写真はプロフィールへリンクする。スローガン（config.yaml の slogan）は写真の右に縦書きで表示する。 #}
+        <div class="site-portrait">
+          <a href="profile.html"><img src="assets/images/portrait.jpg" width="223" height="800" alt="塩入友広"></a>
+          <p class="site-slogan">{{ site.slogan }}</p>
+        </div>
+      </nav>
+    </header>
+
+    <main class="site-main">
+{% block content %}{% endblock %}
+
+      {# 全ページ共通のフッター。連絡先は config.yaml の contact（公職選挙法 第142条の3 第3項の表示義務に対応）。
+         CC BY 4.0 の対象範囲は、サイトポリシーのページ（content/pages/site-policy）の「このサイトの内容の利用」に書いている。 #}
+      <footer class="site-footer">
+        <p>
+          <span class="footer-item">{{ site.author }} {{ site.title }}</span>
+          <span class="footer-sep">|</span> <a href="mailto:{{ site.contact }}">{{ site.contact }}</a>
+          <span class="footer-sep">|</span> <a href="site-policy.html">サイトポリシー</a>
+          <span class="footer-sep">|</span> <a href="feed.xml">フィード</a>
+          <span class="footer-sep">|</span> <a href="site-policy.html#license">CC BY 4.0</a>
+        </p>
+      </footer>
+    </main>
+  </div>
+</body>
+</html>

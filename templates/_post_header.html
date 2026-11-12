@@ -1,0 +1,32 @@
+{#
+  記事の見出し部分（タイトル・キャプション・日付・分類）。post.html と home.html から読み込む。
+  link_title: true ならタイトルを記事ページへのリンクにする（トップページ用）
+#}
+        <header class="post-header">
+{% if link_title %}
+          <h2 class="page-title"><a href="{{ post.path }}">{{ post.title }}</a></h2>
+{% else %}
+          <h1 class="page-title">{{ post.title }}</h1>
+{% endif %}
+{% if post.caption %}
+          <p class="post-caption">{{ post.caption }}</p>
+{% endif %}
+          <p class="post-meta">
+{# 時刻がある記事（旧サイトから移した記事）は時刻も表示する。時差が日本時間と異なる場合は時差も添える #}
+{% if post.time %}
+            <time datetime="{{ post.published.isoformat() }}T{{ post.time }}{{ post.timezone }}">{{ post.published.isoformat() }} {{ post.time }}{% if post.timezone != site.timezone %}（UTC{{ post.timezone }}）{% endif %}</time>
+{% else %}
+            <time datetime="{{ post.published.isoformat() }}">{{ post.published.isoformat() }}</time>
+{% endif %}
+{% if post.updated %}
+            （更新 <time datetime="{{ post.updated.isoformat() }}">{{ post.updated.isoformat() }}</time>）
+{% endif %}
+{% if post.categories %}
+            | {% for category in post.categories %}<a href="{{ category.path }}">{{ category.name }}</a>{% if not loop.last %}, {% endif %}{% endfor %}
+{% endif %}
+{% if post.tags %}
+            | {% for tag in post.tags %}<a href="{{ tag.path }}">#{{ tag.name }}</a>{% if not loop.last %} {% endif %}{% endfor %}
+
+{% endif %}
+          </p>
+        </header>

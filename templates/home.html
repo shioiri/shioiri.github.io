@@ -1,0 +1,30 @@
+{#
+  トップページ。build.py の write_pages() から呼ばれる。
+  intro_html: content/pages/top の本文（最新記事の上に表示）
+  list_posts: 一覧（タイトルと日付）で表示する最新の記事（config.yaml の top_list_entries 件）
+  posts:      全文で表示する最新の記事（config.yaml の top_entries 件）
+#}
+{% extends "base.html" %}
+{% block content %}
+      {# トップページは見出し（h1）を表示せず、content/pages/top の本文（写真）から始める。
+         title は管理用で、画面には表示しない（ブラウザのタブ等には head_title を使う） #}
+      <div class="post-body">
+{{ intro_html | safe }}
+
+        <h2>最新の記事</h2>
+      </div>
+      <ul class="post-list">
+{% for post in list_posts %}
+        <li>
+          <a href="{{ post.path }}">{{ post.title }}</a>
+          <time datetime="{{ post.published.isoformat() }}">{{ post.published.isoformat() }}</time>
+        </li>
+{% endfor %}
+      </ul>
+
+{% for post in posts %}
+{% include "_post_excerpt.html" %}
+{% endfor %}
+
+      <p class="home-more">過去の記事は、メニューの「日付順」から年・月を選んでご覧ください。</p>
+{% endblock %}

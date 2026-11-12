@@ -1,0 +1,13 @@
+{#
+  カテゴリ・タグの一覧ページ。build.py の write_taxonomies() から呼ばれる。
+  terms: [{'name': 名前, 'path': 記事一覧ページのパス, 'count': 記事数}, ...]（記事数の多い順）
+#}
+{% extends "base.html" %}
+{% block content %}
+      <h1 class="page-title">{{ title }}</h1>
+      <ul class="term-list">
+{% for term in terms %}
+        <li><a href="{{ term.path }}">{{ term.name }}</a> <span class="term-count">({{ term.count }})</span></li>
+{% endfor %}
+      </ul>
+{% endblock %}

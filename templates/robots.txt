@@ -1,0 +1,13 @@
+{#
+  検索エンジンのクローラ向けの指示。build.py の write_feed_and_sitemap() から呼ばれる。
+  サイトのルート（https://shioiri.github.io/robots.txt）に置いたものだけが読まれる。
+  noindex の環境（staging）ではすべてのページの巡回を断る。
+#}
+User-agent: *
+{% if env.noindex %}
+Disallow: /
+{% else %}
+Allow: /
+{% endif %}
+
+Sitemap: {{ env.base_url }}sitemap.xml

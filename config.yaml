@@ -1,0 +1,22 @@
+# サイトの設定。build.py が読み込む。
+
+# すべての環境で共通の設定
+site:
+  title: SHIOIRI Tomohiro            # ヘッダーに表示するサイト名
+  subtitle: 上田市議会議員　塩入友広   # サイト名の下に表示する説明
+  slogan: 活性化で価値向上              # PC 表示の左メニュー欄で、人物写真の右に縦書きで表示する
+  title_suffix: 塩入友広              # ブラウザのタブ・検索結果に「ページ名 - ○○」の形で表示
+  author: 塩入友広                     # フィード（feed.xml）の著者名
+  contact: shioiri@gmail.com            # ランディングページに表示する連絡先（公職選挙法 第142条の3 第3項の表示義務に対応）
+  timezone: "+09:00"                 # 時刻の既定の時差（日本時間）。これと異なる時差だけを画面に表示する
+  description_length: 40              # SNS用の説明文に使う本文の文字数（caption がない場合）
+  feed_entries: 20                    # フィードに載せる記事の件数
+  archive_entries: 10                 # 月別一覧の1ページに表示する記事の件数
+  top_list_entries: 20                # トップページにタイトルと日付の一覧で表示する最新記事の件数
+  top_entries: 3                      # トップページに全文を表示する最新記事の件数（一覧の下に表示）
+
+# 環境ごとの設定。python3 build.py <環境名> で選ぶ（省略時は production）
+environments:
+  production:
+    base_url: https://shioiri.github.io/          # 公開URL（末尾の / を付ける）
+    noindex: false                                # true にすると検索エンジンへの登録を拒否

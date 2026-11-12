@@ -1,0 +1,22 @@
+{#
+  旧サイトから転載したコメント。post.html と page.html から読み込む。
+  comments: 返信関係を入れ子にしたコメントのリスト（build.py の load_comments() が作る）
+  本文は CSS の white-space: pre-line で改行を表示する（HTML として解釈しない）。
+#}
+{% if comments %}
+        <section class="comments">
+          <h2 class="comments-heading">コメント</h2>
+          <ol class="comment-list">
+{% for comment in comments recursive %}
+            <li class="comment" id="comment-{{ comment.id }}">
+              <p class="comment-meta"><span class="comment-author">{{ comment.author }}</span> <time>{{ comment.date }}{% if comment.timezone and comment.timezone != site.timezone %}（UTC{{ comment.timezone }}）{% endif %}</time></p>
+              <div class="comment-body">{{ comment.body }}</div>
+{% if comment.children %}
+              <ol class="comment-list">{{ loop(comment.children) }}</ol>
+{% endif %}
+            </li>
+{% endfor %}
+          </ol>
+          <p class="comments-closed">現在はコメントを受け付けていません。</p>
+        </section>
+{% endif %}

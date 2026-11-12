@@ -1,0 +1,36 @@
+---
+title: MT3.11-ja
+time: '18:43'
+timezone: '+09:00'
+---
+<p>MovableTypeを3.11-jaにアップグレードしてみました。<br />
+参考にさせていただいたサイトはこちら。<br />
+公式サイト<br />
+<a href="http://www.movabletype.jp/manual/mtupgrade.html">http://www.movabletype.jp/manual/mtupgrade.html</a><br />
+みらのさんとこ<br />
+<a href="http://rebecca.ac/milano/install/archives/cat_5.html">http://rebecca.ac/milano/install/archives/cat_5.html</a><br />
+> 以下に該当する人は手間を乗り越えてアップグレードすることをオススメします。<br />
+><br />
+> ・新しモノ好き<br />
+> ・コメントスパムに悩まされていて、対策したいと思っている<br />
+> ・IE以外のブラウザをメインで使用しているが、Bookmarkletやタグ挿入ボタンを使ってみたいと思っている<br />
+> ・テンプレートの編集作業が苦でなく、むしろ楽しめる<br />
+・・・ハイ。新しモノ大好きですから。<br />
+で、こちらの記事がなければまずアップグレードはできなかっただろう、と。<br />
+ほんと感謝です。<br />
+エラーメッセージ中にあった「blog_custom_dynamic_templates」をググって一発。<br />
+Google検索って便利だなー。<br />
+<a href="http://s-dog.net/archives/2004/10/mt31.html">http://s-dog.net/archives/2004/10/mt31.html</a></p>
+<!--more-->
+
+<p>その不具合とは、まさに先ほどのサイトで紹介されていたもの、ズバリ。<br />
+Upgrading your databases:<br />
+Running 'alter table mt_blog add blog_custom_dynamic_templates varchar(25)'<br />
+An error occurred while upgrading the schema:<br />
+ERROR:  ALTER TABLE: column name "blog_custom_dynamic_templates" already exists in table "mt_blog" on alter table mt_blog add blog_custom_dynamic_templates varchar(25) at /www/shioiri.jp/cgi-bin/mt/mt-upgrade31.cgi line 286.<br />
+という表示がされてしまうというもの。<br />
+いやー、ほんと助かりました。<br />
+あ、あとですね、前にMT2.64＋PostgreSQLで限定的に発生するというRecent Commnentsの順序が逆になっちゃうという件も再発しちゃいまして、こちらは2.64と同じパッチが有効でした。<br />
+<a href="http://www.mylog.jp/blogs/q-box/archives/002191.html">BLOG質問箱</a>参照。<br />
+どーもMovableTypeはPostgreSQLと相性悪いんかな。<br />
+MySQL試してみようかな。</p>

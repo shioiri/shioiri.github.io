@@ -1,0 +1,16 @@
+{#
+  記事1件分の、一覧用の表示（トップページ・月別一覧で使う）。
+  本文を表示するが、「続きを読む」の区切りがある記事は区切りの前まで（excerpt_html）を表示する。
+#}
+      <article class="post home-post">
+{% with link_title = true %}{% include "_post_header.html" %}{% endwith %}
+
+        <div class="post-body">
+{% if post.excerpt_html %}
+{{ post.excerpt_html | safe }}
+          <p class="more-link"><a href="{{ post.path }}#more">続きを読む</a></p>
+{% else %}
+{{ post.body_html | safe }}
+{% endif %}
+        </div>
+      </article>

@@ -1,0 +1,13 @@
+{#
+  固定ページ（プロフィールなど）。build.py の write_pages() から呼ばれる。
+#}
+{% extends "base.html" %}
+{% block content %}
+      <article class="page">
+        <h1 class="page-title">{{ page.title }}</h1>
+        <div class="post-body">
+{{ page.body_html | safe }}
+        </div>
+{% with comments = page.comments %}{% include "_comments.html" %}{% endwith %}
+      </article>
+{% endblock %}
