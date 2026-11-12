@@ -289,6 +289,18 @@ def rewrite_local_paths(root, source_dir, media_prefix, site_root):
             link.set('href', f'{media_prefix}/{href}')
 
 
+def rewrite_local_paths_in_html(body, source_dir, media_prefix):
+    """HTML で書いた原稿の src・href のうち、原稿フォルダ内に実在するファイルを指すものを、
+    公開時の位置に書き換える（例: src="01.jpg" → src="2026021501/01.jpg"）。
+    HTML の本文は変換せずに使うため、Markdown の原稿とは別にここで書き換える。"""
+    def replace(match):
+        value = match.group(3)
+        if is_local_path(value) and (source_dir / value).is_file():
+            value = f'{media_prefix}/{value}'
+        return f'{match.group(1)}{match.group(2)}{value}{match.group(2)}'
+    return re.sub(r'(\b(?:src|href)=)(["\'])([^"\']*)\2', replace, body)
+
+
 def convert_image_paragraphs(root):
     """画像だけで構成された段落（<p>）を、画像1枚ごとの <figure> に置き換える。
     文章の中に混ざった画像は対象外とし、そのまま残す。"""
@@ -389,6 +401,7 @@ def convert_body(source_path, body, media_prefix, site_root):
     media_prefix: 原稿フォルダ内の画像の公開時の置き場所、site_root: このページから見たサイトの最上位"""
     if source_path.name == MARKDOWN_SOURCE:
         return markdown_to_html(body, source_path.parent, media_prefix, site_root)
+    body = rewrite_local_paths_in_html(body, source_path.parent, media_prefix)
     first_image = re.search(r'<img\b[^>]*\bsrc=["\']([^"\']+)', body)
     return body, first_image.group(1) if first_image else None
 
