@@ -14,7 +14,7 @@ site:
   archive_entries: 10                 # 月別一覧の1ページに表示する記事の件数
   top_list_entries: 20                # トップページにタイトルと日付の一覧で表示する最新記事の件数
   top_entries: 3                      # トップページに全文を表示する最新記事の件数（一覧の下に表示）
-  analytics_id: ""                    # Google アナリティクスの測定ID（G-XXXXXXXXXX）。空のときはアクセス解析を使わない
+  analytics_id: "G-XQ3MMF5JJE"                  # Google アナリティクスの測定ID（G-XXXXXXXXXX）。空のときはアクセス解析を使わない
 
 # 環境ごとの設定。python3 build.py <環境名> で選ぶ（省略時は production）
 environments:
