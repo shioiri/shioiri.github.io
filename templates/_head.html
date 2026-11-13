@@ -24,6 +24,18 @@
   <link rel="canonical" href="{{ env.base_url }}{{ path }}">
   <link rel="stylesheet" href="{{ root }}assets/css/style.css?v={{ css_version }}">
   <link rel="alternate" type="application/atom+xml" title="{{ site.title_suffix }}" href="{{ root }}feed.xml">
+{% if site.analytics_id %}
+
+  {# Google アナリティクス（GA4）のタグ。config.yaml の analytics_id が空でないときだけ出力する。
+     Google が案内する標準のタグ（gtag.js）をそのまま使う #}
+  <script async src="https://www.googletagmanager.com/gtag/js?id={{ site.analytics_id }}"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', '{{ site.analytics_id }}');
+  </script>
+{% endif %}
 
   <meta property="og:type" content="{{ og_type }}">
   <meta property="og:title" content="{{ share_title }}">
