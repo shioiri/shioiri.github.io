@@ -258,6 +258,13 @@ figure.wide img {
   margin-top: 10px;
 }
 
+/* 固定ページに差し込んだ最新の記事：直前に見出し「最新の記事」があるため、記事の間の区切り線と余白は付けない */
+.page-latest .home-post {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+}
+
 /* 月別一覧のページ番号 */
 .pagination {
   display: flex;

@@ -1,13 +1,28 @@
 {#
   固定ページ（プロフィールなど）。build.py の write_pages() から呼ばれる。
+  body_parts:  本文。latest_category を書いたページは、差し込む位置（<!--latest-->）の前と後の2つに分かれる
+  latest_post: latest_category のカテゴリの最新の記事（書いていないページは None）
 #}
 {% extends "base.html" %}
 {% block content %}
       <article class="page">
         <h1 class="page-title">{{ page.title }}</h1>
+{% if latest_post %}
         <div class="post-body">
-{{ page.body_html | safe }}
+{{ body_parts[0] | safe }}
+          <h2>最新の記事</h2>
         </div>
+        <div class="page-latest">
+{% with post = latest_post %}{% include "_post_excerpt.html" %}{% endwith %}
+        </div>
+        <div class="post-body">
+{{ body_parts[1] | safe }}
+        </div>
+{% else %}
+        <div class="post-body">
+{{ body_parts[0] | safe }}
+        </div>
+{% endif %}
 {% with comments = page.comments %}{% include "_comments.html" %}{% endwith %}
       </article>
 {% endblock %}

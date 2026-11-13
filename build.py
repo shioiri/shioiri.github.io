@@ -96,6 +96,10 @@ TERM_FORBIDDEN = re.compile(r'[/\\?#%:*"<>|]')
 # 「続きを読む」の区切り。本文の段落の間に、この1行を書く（WordPress と同じ書き方）
 MORE_MARKER = '<!--more-->'
 
+# 固定ページに、指定したカテゴリの最新の記事を差し込む位置。原稿の Front Matter に
+# latest_category: "しおいり通信" のように書き、本文の段落の間にこの1行を書く
+LATEST_MARKER = '<!--latest-->'
+
 # 区切りが段落の途中にないことを確かめるために、開始と終了の数を比べるタグ
 BLOCK_TAGS_TO_BALANCE = ['p', 'div', 'ul', 'ol', 'li', 'blockquote', 'table', 'figure']
 
@@ -117,7 +121,8 @@ PAGE_NAME_PATTERN = re.compile(r'[a-z][a-z0-9-]*')
 
 # Front Matter に書いてよい項目
 POST_KEYS = {'title', 'caption', 'date', 'time', 'timezone', 'updated', 'categories', 'tags', 'hidden', 'image'}
-PAGE_KEYS = {'title', 'caption', 'order', 'hidden', 'menu', 'head_title', 'description', 'image'}
+PAGE_KEYS = {'title', 'caption', 'order', 'hidden', 'menu', 'head_title', 'description', 'image',
+             'latest_category'}
 LANDING_KEYS = {'title', 'caption', 'hidden'}
 
 # ランディングページのフォルダ名：英小文字・数字・ハイフン。例 26（公開 URL は …/26/）
@@ -605,6 +610,9 @@ def load_pages(site, env):
         if not isinstance(menu, bool):
             fail(f'{rel(source_path)}: menu には true か false を書いてください')
         body_html, first_image = convert_body(source_path, body, name, '')
+        latest_category = meta.get('latest_category', '')
+        if latest_category and body_html.count(LATEST_MARKER) != 1:
+            fail(f'{rel(source_path)}: latest_category を書いたページには、本文に「{LATEST_MARKER}」を1か所書いてください')
         caption = meta.get('caption', '')
         # 検索結果・SNS 用の説明文：description を書いた場合はそれを使い、なければ自動で作る
         description = meta.get('description') or make_description(caption, body_html, site['description_length'])
@@ -622,6 +630,7 @@ def load_pages(site, env):
             'head_title': meta.get('head_title', ''),
             'caption': caption,
             'body_html': body_html,
+            'latest_category': latest_category,
             'comments': load_comments(folder),
             'description': description,
             'og_image': absolute_url(env['base_url'], first_image) if first_image else None,
@@ -827,12 +836,27 @@ def write_pages(templates, common, pages, posts):
                    list_posts=posts[:common['site']['top_list_entries']],
                    posts=posts[:common['site']['top_entries']])
         else:
+            # latest_category を書いたページは、本文を差し込む位置の前後に分け、間にそのカテゴリの最新の記事を表示する
+            latest_post = None
+            body_parts = [page['body_html']]
+            if page['latest_category']:
+                latest_post = latest_in_category(posts, page['latest_category'], page)
+                body_parts = page['body_html'].split(LATEST_MARKER)
             render(templates, common, 'page.html', page['path'],
                    current_year='',
                    title=page['title'], path=page['path'],
                    description=page['description'], og_image=page['og_image'],
-                   og_type='website', head_title=page['head_title'], page=page)
+                   og_type='website', head_title=page['head_title'], page=page,
+                   body_parts=body_parts, latest_post=latest_post)
         copy_media(page['source_dir'], page['name'])
+
+
+def latest_in_category(posts, category, page):
+    """指定したカテゴリの記事のうち、最も新しいものを返す（posts は新しい順に並んでいる）。"""
+    for post in posts:
+        if category in [term['name'] for term in post['categories']]:
+            return post
+    fail(f'{page["name"]}: latest_category のカテゴリ「{category}」の記事がありません')
 
 
 def month_page_path(key, number):
