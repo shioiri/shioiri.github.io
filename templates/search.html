@@ -4,7 +4,7 @@
   言葉での検索は、閲覧者のブラウザで assets/js/search.js が行い、結果を検索欄の下に表示する。
   themes / topics: テーマ（カテゴリ）・話題（タグ）の一覧 [{'name', 'path', 'count'}, ...]
   notes:      テーマ・話題の説明（build.py の TAXONOMY_NOTES）
-  nav_years:  年・月の一覧（メニューと共通）
+  nav_years:  年・月の一覧（メニューと共通）。このページでは、月は1月から順に並べる
   index_url:  検索用データ（search.json）の URL
   script_url: 検索プログラムの URL
 #}
@@ -39,7 +39,7 @@
 {% for year in nav_years %}
           <li>
             <a class="date-list-year" href="{{ year.path }}">{{ year.label }}</a>
-            <span class="date-list-months">{% for month in year.months %}<a href="{{ month.path }}">{{ month.label }}</a>{% endfor %}</span>
+            <span class="date-list-months">{% for month in year.months|reverse %}<a href="{{ month.path }}">{{ month.label }}</a>{% endfor %}</span>
           </li>
 {% endfor %}
         </ul>
