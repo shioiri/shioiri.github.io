@@ -109,7 +109,7 @@ POST_ID_PATTERN = re.compile(r'\d{10}')
 PAGE_NAME_PATTERN = re.compile(r'[a-z][a-z0-9-]*')
 
 # Front Matter に書いてよい項目
-POST_KEYS = {'title', 'caption', 'date', 'time', 'timezone', 'updated', 'categories', 'tags', 'hidden'}
+POST_KEYS = {'title', 'caption', 'date', 'time', 'timezone', 'updated', 'categories', 'tags', 'hidden', 'image'}
 PAGE_KEYS = {'title', 'caption', 'order', 'hidden', 'menu', 'head_title', 'description', 'image'}
 LANDING_KEYS = {'title', 'caption', 'hidden'}
 
@@ -497,6 +497,19 @@ def load_posts(site, env):
     return posts, hidden_paths
 
 
+def image_path(meta, source_path, media_prefix):
+    """原稿の image（SNS 用の画像）に書いた画像の、サイトの最上位から見たパスを返す。
+    「assets/images/」で始まる場合は共通の画像（static/assets/images/）、それ以外は原稿と同じフォルダの画像。
+    ファイルがない場合はエラーで停止する。"""
+    if meta['image'].startswith(SHARED_IMAGE_PREFIX):
+        if not (STATIC_DIR / meta['image']).is_file():
+            fail(f'{rel(source_path)}: image に書いた共通の画像 {meta["image"]} が static/ にありません')
+        return meta['image']
+    if not (source_path.parent / meta['image']).is_file():
+        fail(f'{rel(source_path)}: image に書いたファイル {meta["image"]} がフォルダにありません')
+    return f'{media_prefix}/{meta["image"]}'
+
+
 def load_post(folder, site, env):
     """記事フォルダ1件を読み込み、テンプレートに渡す情報を辞書にまとめる。非表示の記事なら None を返す。"""
     post_id = folder.name
@@ -531,6 +544,12 @@ def load_post(folder, site, env):
     body_html, first_image = convert_body(source_path, body, post_id, '')
     excerpt_html, body_html = split_more(body_html, source_path)
     caption = meta.get('caption', '')
+    # image を書いた場合は、その画像を SNS 用の画像にし、記事のタイトルの上にも表示する。
+    # 書かない場合は、本文の最初の画像を SNS 用の画像にする（タイトルの上には表示しない）
+    header_image = None
+    if 'image' in meta:
+        header_image = image_path(meta, source_path, post_id)
+        first_image = header_image
     return {
         'id': post_id,
         'source_dir': folder,
@@ -546,6 +565,7 @@ def load_post(folder, site, env):
         'tags': term_links('tag', to_list(meta.get('tags'))),
         'body_html': body_html,
         'excerpt_html': excerpt_html,
+        'header_image': header_image,
         'comments': load_comments(folder),
         'description': make_description(caption, body_html, site['description_length']),
         'og_image': absolute_url(env['base_url'], first_image) if first_image else None,
@@ -581,17 +601,9 @@ def load_pages(site, env):
         caption = meta.get('caption', '')
         # 検索結果・SNS 用の説明文：description を書いた場合はそれを使い、なければ自動で作る
         description = meta.get('description') or make_description(caption, body_html, site['description_length'])
-        # SNS 用の画像：image にファイル名を書いた場合はそのファイル、なければ本文の最初の画像。
-        # 「assets/images/」で始まる場合は共通の画像（static/assets/images/）から探す
+        # SNS 用の画像：image に書いた場合はその画像、なければ本文の最初の画像
         if 'image' in meta:
-            if meta['image'].startswith(SHARED_IMAGE_PREFIX):
-                if not (STATIC_DIR / meta['image']).is_file():
-                    fail(f'{rel(source_path)}: image に書いた共通の画像 {meta["image"]} が static/ にありません')
-                first_image = meta['image']
-            else:
-                if not (folder / meta['image']).is_file():
-                    fail(f'{rel(source_path)}: image に書いたファイル {meta["image"]} がフォルダにありません')
-                first_image = f'{name}/{meta["image"]}'
+            first_image = image_path(meta, source_path, name)
         pages[name] = {
             'name': name,
             'source_dir': folder,

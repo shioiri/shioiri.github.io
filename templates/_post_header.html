@@ -1,8 +1,12 @@
 {#
   記事の見出し部分（タイトル・キャプション・日付・分類）。post.html と home.html から読み込む。
   link_title: true ならタイトルを記事ページへのリンクにする（トップページ用）
+  原稿に image（SNS 用の画像）を書いた記事は、その画像をタイトルの上に表示する。
 #}
         <header class="post-header">
+{% if post.header_image %}
+          <p class="post-header-image">{% if link_title %}<a href="{{ post.path }}">{% endif %}<img src="{{ post.header_image }}" alt=""{% if link_title %} loading="lazy"{% endif %}>{% if link_title %}</a>{% endif %}</p>
+{% endif %}
 {% if link_title %}
           <h2 class="page-title"><a href="{{ post.path }}">{{ post.title }}</a></h2>
 {% else %}

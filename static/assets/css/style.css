@@ -220,6 +220,17 @@ figure.wide {
   margin: 20px 0;
 }
 
+/* 記事のタイトルの上に表示する画像（原稿の image に書いた画像）。本文の幅いっぱいに表示する */
+.post-header-image {
+  margin: 0 0 20px;
+}
+
+.post-header-image img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
 /* ページの本文が画像から始まる場合（見出しのないトップページ）は、画像の上の余白を付けない */
 .site-main > .post-body:first-child > :first-child {
   margin-top: 0;
