@@ -211,6 +211,6 @@ GitHub のサイト上で原稿を直して保存（コミット）した場合�
 | `2026.html` | 年別の記事一覧（タイトルと日付） |
 | `profile.html` など | 固定ページ |
 | `feed.xml` / `sitemap.xml` | 新着配信（Atom）／検索エンジン向けページ一覧 |
-| `categories.html` / `tags.html` | カテゴリ・タグの一覧（記事数の多い順） |
+| `categories.html` / `tags.html` | カテゴリ・タグの一覧（記事数の多い順）。画面では「テーマ別一覧」「話題別一覧」と呼ぶ |
 | `category-○○.html` / `tag-○○.html` | 各カテゴリ・タグの記事一覧 |
-| `search.html` / `search.json` | サイト内検索のページ／検索用データ（全記事のタイトルと本文）。検索は閲覧者のブラウザで `static/assets/js/search.js` が行い、外部の検索サービスは使わない |
+| `search.html` / `search.json` | 「記事を探す」ページ（言葉での検索と、テーマ別・年月別・話題別の一覧）／検索用データ（全記事のタイトルと本文）。検索は閲覧者のブラウザで `static/assets/js/search.js` が行い、外部の検索サービスは使わない |

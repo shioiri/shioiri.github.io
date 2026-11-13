@@ -1,10 +1,12 @@
 {#
-  カテゴリ・タグの一覧ページ。build.py の write_taxonomies() から呼ばれる。
+  テーマ（カテゴリ）・話題（タグ）の一覧ページ。build.py の write_taxonomies() から呼ばれる。
   terms: [{'name': 名前, 'path': 記事一覧ページのパス, 'count': 記事数}, ...]（記事数の多い順）
+  note:  見出しの下に添える説明（build.py の TAXONOMY_NOTES）
 #}
 {% extends "base.html" %}
 {% block content %}
       <h1 class="page-title">{{ title }}</h1>
+      <p class="find-note">{{ note }}ほかの探し方は<a href="search.html">記事を探す</a>のページにあります。</p>
       <ul class="term-list">
 {% for term in terms %}
         <li><a href="{{ term.path }}">{{ term.name }}</a> <span class="term-count">({{ term.count }})</span></li>

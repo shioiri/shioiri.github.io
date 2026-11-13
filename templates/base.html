@@ -51,14 +51,14 @@
 {% endfor %}
         </ul>
 
-        <p class="nav-heading">分類・検索</p>
+        <p class="nav-heading">記事を探す</p>
         <ul class="nav-sublist">
-          {# 「日付順」をクリックすると年の一覧が開き、年をクリックするとその年の月の一覧が開く
-             （<details> 要素。JavaScript 不使用）。「日付順」は最初は閉じておく。
-             表示中のページの年（current_year）は、「日付順」を開いたときに月まで開いた状態にする。 #}
+          {# 「年・月別一覧」をクリックすると年の一覧が開き、年をクリックするとその年の月の一覧が開く
+             （<details> 要素。JavaScript 不使用）。「年・月別一覧」は最初は閉じておく。
+             表示中のページの年（current_year）は、「年・月別一覧」を開いたときに月まで開いた状態にする。 #}
           <li>
             <details class="nav-dates">
-              <summary>日付順</summary>
+              <summary>年・月別一覧</summary>
               <ul class="nav-years">
 {% for year in nav_years %}
                 <li>
@@ -76,9 +76,9 @@
               </ul>
             </details>
           </li>
-          <li><a href="categories.html">カテゴリ</a></li>
-          <li><a href="tags.html">タグ</a></li>
-          <li><a href="search.html">検索</a></li>
+          <li><a href="categories.html">テーマ別一覧</a></li>
+          <li><a href="tags.html">話題別一覧</a></li>
+          <li><a href="search.html">言葉で検索</a></li>
         </ul>
 
         {# 人物写真とスローガン：メニューの一番下に表示する（大画面では左メニュー欄、小画面では開いたメニューの中）。

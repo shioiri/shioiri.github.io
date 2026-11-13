@@ -77,10 +77,17 @@ COMMENTS_FILE = 'comments.yaml'
 COMMENT_KEYS = {'id', 'parent', 'author', 'date', 'timezone', 'body'}
 
 # カテゴリとタグ：Front Matter の項目名 →（ページ名の接頭辞, 画面での呼び名）
+# 画面では、カテゴリを「テーマ」、タグを「話題」と呼ぶ（一覧ページの名前は「テーマ別一覧」「話題別一覧」）。
 # 各カテゴリ・タグの記事一覧は「category-上田市.html」のような名前のページになる
 TAXONOMIES = {
-    'categories': ('category', 'カテゴリ'),
-    'tags': ('tag', 'タグ'),
+    'categories': ('category', 'テーマ'),
+    'tags': ('tag', '話題'),
+}
+
+# 一覧ページと「記事を探す」ページで、見出しの下に添える説明（初めての閲覧者向け）
+TAXONOMY_NOTES = {
+    'categories': '記事を内容の分野ごとに分けた一覧です。',
+    'tags': '記事に出てくる地名や事柄ごとの一覧です。1つの記事に、複数の話題が付くことがあります。',
 }
 
 # カテゴリ名・タグ名に使えない文字（ファイル名や URL として扱えないもの）
@@ -875,13 +882,26 @@ def write_search_index(posts, pages):
     return hashlib.sha256(data.encode('utf-8')).hexdigest()[:8]
 
 
-def write_search_page(templates, common, index_version):
-    """検索ページ（search.html）を書き出す。"""
+def write_search_page(templates, common, posts, index_version):
+    """「記事を探す」ページ（search.html）を書き出す。
+    言葉での検索欄の下に、テーマ別・年月別・話題別の一覧を並べ、記事の探し方を1ページにまとめる。"""
     render(templates, common, 'search.html', 'search.html',
-           current_year='', title='検索', path='search.html',
-           description='サイト内の記事を検索します', og_image=None, og_type='website',
+           current_year='', title='記事を探す', path='search.html',
+           description='言葉での検索、テーマ別・年月別・話題別の一覧から、記事を探せます',
+           og_image=None, og_type='website',
+           themes=make_terms(posts, 'categories'), topics=make_terms(posts, 'tags'),
+           notes=TAXONOMY_NOTES,
            index_url=f'{SEARCH_INDEX_NAME}?v={index_version}',
            script_url=f'assets/js/search.js?v={file_version(SEARCH_SCRIPT_FILE)}')
+
+
+def make_terms(posts, key):
+    """カテゴリ（key='categories'）またはタグ（key='tags'）の一覧を作る。記事数の多い順、同じなら名前順。
+    戻り値の例: [{'name': '上田市', 'path': 'tag-上田市.html', 'count': 46}, ...]"""
+    prefix = TAXONOMIES[key][0]
+    groups = group_by_term(posts, key)
+    return [{'name': name, 'path': term_page(prefix, name)[1], 'count': len(group)}
+            for name, group in sorted(groups.items(), key=lambda item: (-len(item[1]), item[0]))]
 
 
 def write_taxonomies(templates, common, posts):
@@ -891,13 +911,12 @@ def write_taxonomies(templates, common, posts):
     paths = []
     for key, (prefix, label) in TAXONOMIES.items():
         groups = group_by_term(posts, key)
-        # 一覧は記事数の多い順、同じなら名前順
-        terms = [{'name': name, 'path': term_page(prefix, name)[1], 'count': len(group)}
-                 for name, group in sorted(groups.items(), key=lambda item: (-len(item[1]), item[0]))]
+        terms = make_terms(posts, key)
         index_path = f'{key}.html'
+        title = f'{label}別一覧'
         render(templates, common, 'terms.html', index_path,
-               current_year='', title=label, path=index_path,
-               description=f'{label}の一覧', og_image=None, og_type='website', terms=terms)
+               current_year='', title=title, path=index_path,
+               description=title, og_image=None, og_type='website', terms=terms, note=TAXONOMY_NOTES[key])
         paths.append(index_path)
 
         for term in terms:
@@ -976,7 +995,7 @@ def main():
     write_archives(templates, common, posts)
     taxonomy_paths = write_taxonomies(templates, common, posts)
     write_feed_and_sitemap(templates, common, posts, pages, taxonomy_paths)
-    write_search_page(templates, common, write_search_index(posts, pages))
+    write_search_page(templates, common, posts, write_search_index(posts, pages))
 
     # 5. ランディングページ（他のページとの重なりを確かめるため、最後に書き出す）
     write_landing_pages(templates, common, landing_pages)

@@ -1,22 +1,57 @@
 {#
-  サイト内検索のページ。build.py の write_search_page() から呼ばれる。
-  検索そのものは、閲覧者のブラウザで assets/js/search.js が行う。
+  「記事を探す」ページ。build.py の write_search_page() から呼ばれる。
+  記事の探し方（言葉での検索、テーマ別・年月別・話題別の一覧）を1ページにまとめる。
+  言葉での検索は、閲覧者のブラウザで assets/js/search.js が行い、結果を検索欄の下に表示する。
+  themes / topics: テーマ（カテゴリ）・話題（タグ）の一覧 [{'name', 'path', 'count'}, ...]
+  notes:      テーマ・話題の説明（build.py の TAXONOMY_NOTES）
+  nav_years:  年・月の一覧（メニューと共通）
   index_url:  検索用データ（search.json）の URL
   script_url: 検索プログラムの URL
 #}
 {% extends "base.html" %}
 {% block content %}
-      <h1 class="page-title">検索</h1>
+      <h1 class="page-title">記事を探す</h1>
 
-      <form class="search-form" action="search.html" method="get" role="search">
-        <input type="search" name="q" id="search-input" aria-label="検索する言葉" placeholder="検索する言葉（空白で区切ると、すべてを含む記事）">
-        <button type="submit">検索</button>
-      </form>
+      <div class="post-body">
+        <h2 id="words">言葉で検索</h2>
+        <form class="search-form" action="search.html" method="get" role="search">
+          <input type="search" name="q" id="search-input" aria-label="検索する言葉" placeholder="検索する言葉（空白で区切ると、すべてを含む記事）">
+          <button type="submit">検索</button>
+        </form>
 
-      <p class="search-status" id="search-status"></p>
-      <ol class="search-results" id="search-results"></ol>
-      <button type="button" class="search-more" id="search-more" hidden>さらに表示</button>
+        <p class="search-status" id="search-status"></p>
+        <ol class="search-results" id="search-results"></ol>
+        <button type="button" class="search-more" id="search-more" hidden>さらに表示</button>
 
-      <noscript><p>検索には JavaScript を有効にしてください。</p></noscript>
+        <noscript><p>検索には JavaScript を有効にしてください。</p></noscript>
+
+        <h2 id="themes">テーマ別一覧（カテゴリ）</h2>
+        <p class="find-note">{{ notes.categories }}</p>
+        <ul class="term-list">
+{% for term in themes %}
+          <li><a href="{{ term.path }}">{{ term.name }}</a> <span class="term-count">({{ term.count }})</span></li>
+{% endfor %}
+        </ul>
+
+        <h2 id="dates">年・月別一覧</h2>
+        <p class="find-note">年を選ぶとその年の全記事、月を選ぶとその月の記事を表示します。</p>
+        <ul class="date-list">
+{% for year in nav_years %}
+          <li>
+            <a class="date-list-year" href="{{ year.path }}">{{ year.label }}</a>
+            <span class="date-list-months">{% for month in year.months %}<a href="{{ month.path }}">{{ month.label }}</a>{% endfor %}</span>
+          </li>
+{% endfor %}
+        </ul>
+
+        <h2 id="topics">話題別一覧（タグ）</h2>
+        <p class="find-note">{{ notes.tags }}</p>
+        <ul class="term-list">
+{% for term in topics %}
+          <li><a href="{{ term.path }}">{{ term.name }}</a> <span class="term-count">({{ term.count }})</span></li>
+{% endfor %}
+        </ul>
+      </div>
+
       <script src="{{ script_url }}" data-index="{{ index_url }}"></script>
 {% endblock %}
