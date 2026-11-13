@@ -578,6 +578,18 @@ figure.wide img {
   font-weight: 700;
 }
 
+/* 見出し「記事を探す」は「記事を探す」ページへのリンク。サイト名と同じく、
+   ふだんは濃いグレー、ポインタを重ねたときだけ青にし、下線は付けない */
+.nav-heading a {
+  color: #222;
+}
+
+.nav-heading a:hover,
+.nav-heading a:focus {
+  color: #267cb9;
+  text-decoration: none;
+}
+
 .nav-sublist {
   padding-left: 10px;
 }
