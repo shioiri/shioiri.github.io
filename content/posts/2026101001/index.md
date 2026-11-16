@@ -19,6 +19,7 @@ image: "og.jpg"
 
 （初出時、「その時、誤ったスイッチ操作が行われました。手順書が間違っていたのです。（以下略）」と記載しておりましたが、これは俗説で、手順書や操作の誤りではなかったことが判明しましたので、訂正しました。）  
 ※出典元：[Don Eyles (2004), "Tales from the Lunar Module Guidance Computer"](https://klabs.org/history/apollo_11_alarms/eyles_2004/eyles_2004.htm)
+{: .source }
 
 [![マーガレット・ハミルトン](01.jpg)](https://ja.wikipedia.org/wiki/%E3%83%9E%E3%83%BC%E3%82%AC%E3%83%AC%E3%83%83%E3%83%88%E3%83%BB%E3%83%8F%E3%83%9F%E3%83%AB%E3%83%88%E3%83%B3_(%E7%A7%91%E5%AD%A6%E8%80%85))
 

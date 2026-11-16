@@ -396,6 +396,12 @@ figure.wide img {
   font-size: 0.9em;
 }
 
+/* 本文の出典・注記：段落の次の行に {: .source } と書くと、小さめの薄い字で表示する */
+.post-body .source {
+  color: #888;
+  font-size: 0.85em;
+}
+
 /* 「記事を探す」ページの年・月別一覧：1年を1行にし、年の右に月を並べる（幅が足りなければ折り返す） */
 .date-list {
   padding: 0;
